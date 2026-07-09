@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Admin</title>
+
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- SWEETALERT -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body class="login-page">
+
+    <!-- PARTICLES -->
+    <div class="login-particles">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="login-box">
+
+        <div class="login-header">
+            <img src="/images/logo.png" alt="Logo">
+            <h2>BIMBEL AKSI</h2>
+        </div>
+
+        <form action="/login" method="POST" onsubmit="handleLogin(event)">
+
+            <label>Username</label>
+            <input
+                type="text"
+                name="username"
+                autocomplete="off"
+                required
+            >
+
+            <label>Password</label>
+
+            <div class="password-wrapper">
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    required
+                >
+
+                <span class="toggle-password" onclick="togglePassword()">
+
+                    <!-- Eye -->
+                    <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+
+                    <!-- Eye Slash -->
+                    <svg id="eyeSlash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M1 1l22 22"/>
+                        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8"/>
+                    </svg>
+
+                </span>
+
+            </div>
+
+            <button id="loginBtn" type="submit">
+                Login
+            </button>
+
+        </form>
+
+    </div>
+
+<script>
+
+const loginError = `<%= error || '' %>`;
+
+/* ================================
+   TOGGLE PASSWORD
+================================ */
+
+function togglePassword(){
+
+    const input = document.getElementById("password");
+    const eyeOpen = document.getElementById("eyeOpen");
+    const eyeSlash = document.getElementById("eyeSlash");
+
+    if(input.type === "password"){
+
+        input.type = "text";
+        eyeOpen.style.display = "block";
+        eyeSlash.style.display = "none";
+
+    }else{
+
+        input.type = "password";
+        eyeOpen.style.display = "none";
+        eyeSlash.style.display = "block";
+
+    }
+
+}
+
+/* ================================
+   LOGIN LOADING
+================================ */
+
+function handleLogin(){
+
+    const btn = document.getElementById("loginBtn");
+
+    btn.disabled = true;
+    btn.innerHTML = "⏳ Memproses...";
+
+}
+
+/* ================================
+   INIT
+================================ */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    document.getElementById("eyeOpen").style.display="none";
+    document.getElementById("eyeSlash").style.display="block";
+
+    const btn = document.querySelector("button");
+    btn.disabled = false;
+    btn.innerHTML = "Login";
+
+    if (loginError && loginError.trim() !== "") {
+        Swal.fire({
+
+            icon:"error",
+
+            title:"Login Gagal",
+
+            text:loginError,
+
+            width:380,
+
+            allowOutsideClick:true,
+
+            confirmButtonText:"OK",
+
+            confirmButtonColor:"#2563eb",
+
+            customClass:{
+                popup:"login-swal"
+            }
+
+        });
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>

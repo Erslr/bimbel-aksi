@@ -1,0 +1,139 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="content">
+
+  <h2 class="judul-riwayat">
+  Riwayat Pembayaran Siswa
+  </h2>
+
+  <div class="info-riwayat-box">
+
+  <div class="info-row">
+    <div class="label">Nama Siswa</div>
+    <div class="separator">:</div>
+    <div class="value"><%= siswa.nama_lengkap %></div>
+  </div>
+
+  <div class="info-row">
+    <div class="label">Jenjang</div>
+    <div class="separator">:</div>
+    <div class="value"><%= siswa.jenjang %></div>
+  </div>
+
+  <div class="info-row">
+    <div class="label">Kelas</div>
+    <div class="separator">:</div>
+    <div class="value"><%= siswa.kelas_sekolah %></div>
+  </div>
+
+</div>
+
+<div class="riwayat-action">
+
+<a
+ href="/pembayaran/riwayat/<%= riwayat[0].id_siswa %>/export"
+ class="btn-export-modern">
+
+ ⬇ Export Excel
+
+</a>
+
+</div>
+
+<br><br>
+
+ <div class="table-wrapper">
+
+
+<table class="riwayat-table">
+
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Bulan Tagihan</th>
+      <th>Tanggal Bayar</th>
+      <th>Metode</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  <% riwayat.forEach((r,i)=>{ %>
+
+    <tr>
+
+      <td><%= i+1 %></td>
+
+      <td>
+        <%= new Date(r.tanggal_tagihan)
+        .toLocaleDateString('id-ID') %>
+      </td>
+
+      <td>
+        <%= r.tanggal_bayar
+        ? new Date(r.tanggal_bayar)
+        .toLocaleDateString('id-ID')
+        : '-' %>
+      </td>
+
+      <td>
+        <%= r.metode_pembayaran || '-' %>
+      </td>
+
+      <td>
+
+      <% if(r.status === 'lunas'){ %>
+
+        <span style="
+        background:#dcfce7;
+        color:#166534;
+        padding:5px 12px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:bold;">
+        LUNAS
+        </span>
+
+      <% } else if(r.status === 'menunggu'){ %>
+
+        <span style="
+        background:#fed7aa;
+        color:#9a3412;
+        padding:5px 12px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:bold;">
+        MENUNGGU
+        </span>
+
+      <% } else { %>
+
+        <span style="
+        background:#fee2e2;
+        color:#b91c1c;
+        padding:5px 12px;
+        border-radius:20px;
+        font-size:12px;
+        font-weight:bold;">
+        BELUM
+        </span>
+
+      <% } %>
+
+      </td>
+
+    </tr>
+
+  <% }) %>
+
+  </tbody>
+
+</table>
+
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>

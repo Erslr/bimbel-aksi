@@ -1,0 +1,82 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="content">
+
+  <h2 class="page-title">🏫 Assign Kelas Bimbel</h2>
+
+  <div class="detail-card assign-card">
+
+  <form action="/siswa/assign-kelas/<%= siswa.id_siswa %>" method="POST">
+
+    <div class="detail-grid">
+
+      <div class="label">Nama Lengkap</div>
+      <div class="separator">:</div>
+      <div class="value"><%= siswa.nama_lengkap %></div>
+
+      <div class="label">Asal Sekolah</div>
+      <div class="separator">:</div>
+      <div class="value"><%= siswa.asal_sekolah %></div>
+
+      <div class="label">Kelas Sekolah</div>
+      <div class="separator">:</div>
+      <div class="value"><%= siswa.kelas_sekolah %></div>
+
+      <div class="label">Pilih Kelas Bimbel</div>
+      <div class="separator">:</div>
+
+      <div class="value">
+        <select name="id_kelas" required class="kelas-select">
+
+          <option value="">-- Pilih Kelas Bimbel --</option>
+
+          <% kelas.forEach(item => { %>
+
+            <% 
+              const kapasitas = item.kapasitas || 0;
+              const terisi = item.jumlah_siswa || 0;
+              const sisa = kapasitas - terisi;
+              const penuh = sisa <= 0;
+            %>
+
+            <option
+              value="<%= item.id_kelas %>"
+              <%= siswa.id_kelas == item.id_kelas ? 'selected' : '' %>
+              <%= penuh ? 'disabled' : '' %>
+            >
+              <%= item.nama_kelas %>
+              | Tempat: <%= item.tempat_les || '-' %>
+              | Jadwal: <%= item.jadwal || '-' %>
+              | <%= item.hari || '-' %>
+              | <%= item.jam_mulai || '-' %> - <%= item.jam_selesai || '-' %>
+              | Tentor: <%= item.nama_tentor || '-' %>
+              | Kuota: <%= terisi %>/<%= kapasitas %>
+              <%= penuh ? '(PENUH)' : '' %>
+            </option>
+
+          <% }) %>
+
+        </select>
+      </div>
+
+    </div>
+
+    <div class="detail-actions">
+
+      <button type="submit" class="btn-success">
+        💾 Simpan Kelas
+      </button>
+
+      <a href="/siswa/detail/<%= siswa.id_siswa %>" class="btn-secondary">
+        ← Kembali
+      </a>
+
+    </div>
+
+  </form>
+
+</div>
+</div>
+
+<%- include('../partials/footer') %>

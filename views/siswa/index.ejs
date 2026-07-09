@@ -1,0 +1,258 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="content">
+
+<!-- ================= HEADER ================= -->
+<div class="page-header">
+
+  <h2>👨‍🎓 Data Siswa</h2>
+
+  <a href="/pendaftaran-siswa" class="btn-add">
+    + Tambah Siswa Baru
+  </a>
+
+</div>
+
+  <!-- FILTER + EXPORT -->
+  <div class="siswa-filter">
+    <form method="GET" action="/siswa">
+
+  <!-- STATUS -->
+  <div>
+    <label>Status:</label>
+    <select name="status">
+
+      <option value="semua"
+        <%= filterStatus==='semua'?'selected':'' %>>
+        Semua
+      </option>
+
+      <option value="aktif"
+        <%= filterStatus==='aktif'?'selected':'' %>>
+        Aktif
+      </option>
+
+      <option value="nonaktif"
+        <%= filterStatus==='nonaktif'?'selected':'' %>>
+        Nonaktif
+      </option>
+
+      <option value="baru"
+        <%= filterStatus==='baru'?'selected':'' %>>
+        Baru
+      </option>
+
+    </select>
+  </div>
+
+  <!-- JENJANG -->
+  <div>
+    <label>Jenjang:</label>
+
+    <select name="jenjang">
+
+      <option value="semua"
+        <%= filterJenjang==='semua'?'selected':'' %>>
+        Semua
+      </option>
+
+      <option value="SMP"
+        <%= filterJenjang==='SMP'?'selected':'' %>>
+        SMP
+      </option>
+
+      <option value="SMA"
+        <%= filterJenjang==='SMA'?'selected':'' %>>
+        SMA
+      </option>
+
+      <option value="SMK"
+        <%= filterJenjang==='SMK'?'selected':'' %>>
+        SMK
+      </option>
+
+    </select>
+  </div>
+
+  <div>
+    <label>Search:</label>
+
+    <input
+    type="text"
+    name="keyword"
+    value="<%= keyword %>"
+    placeholder="🔍 Cari nama, WA, sekolah..."
+    class="search-input"
+    autocomplete="off"
+>
+  </div>
+
+  <!-- BUTTON -->
+  <button type="submit" class="btn-filter">
+    Filter
+  </button>
+
+  <a href="/siswa"
+      style="
+        padding:5px 10px;
+        background:#6c757d;
+        color:white;
+        text-decoration:none;
+        border-radius:4px;
+      ">
+      Reset
+    </a>
+
+</form>
+    <a href="/siswa/export/excel?status=<%= filterStatus %>&jenjang=<%= filterJenjang %>" class="btn-export">
+        ⬇ Export Excel
+    </a>
+  </div>
+
+  <div class="info-data">
+
+<% if(totalData === 0){ %>
+
+    <span class="info-kosong">
+        👨‍🎓 Tidak ada data yang sesuai
+    </span>
+
+<% } else if(totalData === 1){ %>
+
+    <span class="info-satu">
+        👨‍🎓 Ditemukan <strong>1</strong> siswa
+    </span>
+
+<% } else { %>
+
+    <span class="info-banyak">
+        👨‍🎓 Ditemukan <strong><%= totalData %></strong> siswa
+    </span>
+
+<% } %>
+
+</div>
+
+  <div class="table-wrapper siswa-table">
+    <table class="data-table">
+
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Lengkap</th>
+          <th>Nama Panggilan</th>
+          <th>Tempat Lahir</th>
+          <th>Tanggal Lahir</th>
+          <th>Alamat</th>
+          <th>Jenis Kelamin</th>
+          <th>WA Siswa</th>
+          <th>Asal Sekolah</th>
+          <th>Kelas Sekolah</th>
+          <th>Jenjang</th>
+          <th>Organisasi</th>
+          <th>Nama Orang Tua</th>
+          <th>WA Orang Tua</th>
+          <th>Pekerjaan Orang Tua</th>
+          <th>Hari Les</th>
+          <th>Tanggal Masuk</th>
+          <th>Mata Pelajaran</th>
+          <th>Jurusan Impian</th>
+          <th>Kampus Impian</th>
+          <th>Sumber Informasi</th>
+          <th>Kelas Bimbel</th>
+          <th>Harga Bulanan</th>
+          <th>Status</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (!siswa || siswa.length === 0) { %>
+          <tr>
+            <td colspan="25" align="center">Belum ada data siswa</td>
+          </tr>
+        <% } else { %>
+          <% siswa.forEach((item,index)=>{ 
+            const tglLahir = item.tanggal_lahir ? new Date(item.tanggal_lahir).toLocaleDateString('id-ID') : '-';
+            const tglMasuk = item.tanggal_masuk ? new Date(item.tanggal_masuk).toLocaleDateString('id-ID') : '-';
+          %>
+          <tr>
+            <td><%= index+1 %></td>
+            <td><%= item.nama_lengkap %></td>
+            <td><%= item.nama_panggilan %></td>
+            <td><%= item.tempat_lahir %></td>
+            <td><%= tglLahir %></td>
+            <td><%= item.alamat %></td>
+            <td><%= item.jenis_kelamin %></td>
+            <td><%= item.wa_siswa %></td>
+            <td><%= item.asal_sekolah %></td>
+            <td><%= item.kelas_sekolah %></td>
+            <td><%= item.jenjang %></td>
+            <td><%= item.organisasi %></td>
+            <td><%= item.nama_ortu %></td>
+            <td><%= item.wa_ortu %></td>
+            <td><%= item.pekerjaan_ortu %></td>
+            <td><%= item.hari_les %></td>
+            <td><%= tglMasuk %></td>
+            <td><%= item.mapel %></td>
+            <td><%= item.jurusan_impian %></td>
+            <td><%= item.kampus_impian %></td>
+            <td><%= item.sumber_info %></td>
+            <td><%= item.nama_kelas||'-' %></td>
+            <td class="harga-text"><%= item.harga_bulanan?('Rp '+Number(item.harga_bulanan).toLocaleString('id-ID')):'Belum diatur' %></td>
+            <td align="center">
+              <% if(item.status_siswa==='baru'){ %>
+
+                <span class="status-baru">
+                  Baru
+                </span>
+
+              <% }else if(item.status_siswa==='aktif'){ %>
+
+                <span class="status-aktif">
+                  Aktif
+                </span>
+
+              <% }else{ %>
+
+                <span class="status-nonaktif">
+                  Nonaktif
+                </span>
+
+              <% } %>
+
+            </td>
+            <td>
+              <a href="/siswa/detail/<%= item.id_siswa %>" class="btn-detail">
+                🔍 Detail
+              </a>
+            </td>
+          </tr>
+          <% }) %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const input = document.querySelector('input[name="keyword"]');
+
+    let timer;
+
+    input.addEventListener("keyup", function () {
+
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+
+            this.form.submit();
+
+        }, 400);
+
+    });
+
+});
+</script>
+<%- include('../partials/footer') %>

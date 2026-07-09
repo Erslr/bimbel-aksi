@@ -1,0 +1,526 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="content">
+  <h2>💳 Pembayaran Siswa</h2>
+
+  <!-- FILTER + EXPORT -->
+<div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; align-items:center;">
+
+  <form method="GET" action="/pembayaran"
+    style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+
+    <!-- BULAN -->
+    <select name="bulan" required>
+
+      <option value="">Bulan</option>
+
+      <% for(let i=1;i<=12;i++){ %>
+
+        <option value="<%= i %>"
+          <%= bulan == i ? 'selected' : '' %>>
+          <%= i %>
+        </option>
+
+      <% } %>
+
+    </select>
+
+    <!-- TAHUN -->
+    <select name="tahun" required>
+
+      <option value="">Tahun</option>
+
+      <% for(let y=new Date().getFullYear()-1;y<=new Date().getFullYear()+1;y++){ %>
+
+        <option value="<%= y %>"
+          <%= tahun == y ? 'selected' : '' %>>
+          <%= y %>
+        </option>
+
+      <% } %>
+
+    </select>
+
+    <!-- STATUS -->
+    <select name="status">
+
+      <option value="semua"
+        <%= filterStatus==='semua'?'selected':'' %>>
+        Semua Status
+      </option>
+
+      <option value="belum"
+        <%= filterStatus==='belum'?'selected':'' %>>
+        Belum Bayar
+      </option>
+
+      <option value="menunggu"
+        <%= filterStatus==='menunggu'?'selected':'' %>>
+        Menunggu
+      </option>
+
+      <option value="lunas"
+        <%= filterStatus==='lunas'?'selected':'' %>>
+        Lunas
+      </option>
+
+    </select>
+
+    <!-- JENJANG -->
+    <select name="jenjang">
+
+      <option value="semua"
+        <%= filterJenjang==='semua'?'selected':'' %>>
+        Semua Jenjang
+      </option>
+
+      <option value="SMP"
+        <%= filterJenjang==='SMP'?'selected':'' %>>
+        SMP
+      </option>
+
+      <option value="SMA"
+        <%= filterJenjang==='SMA'?'selected':'' %>>
+        SMA
+      </option>
+
+      <option value="SMK"
+        <%= filterJenjang==='SMK'?'selected':'' %>>
+        SMK
+      </option>
+
+    </select>
+
+    <!-- SEARCH -->
+<div>
+  <label>Search:</label>
+
+  <input
+    type="text"
+    name="keyword"
+    value="<%= keyword %>"
+    placeholder="🔍 Cari nama, kelas, status..."
+    class="search-input"
+    autocomplete="off"
+  >
+</div>
+
+    <!-- BUTTON -->
+    <button type="submit">
+      Filter
+    </button>
+    
+    <a href="/pembayaran"
+      style="
+        padding:5px 10px;
+        background:#6c757d;
+        color:white;
+        text-decoration:none;
+        border-radius:4px;
+      ">
+      Reset
+    </a>
+
+  </form>
+
+  <!-- EXPORT -->
+  <% if (bulan && tahun) { %>
+
+    <a
+      href="/pembayaran/export/excel?bulan=<%= bulan %>&tahun=<%= tahun %>&status=<%= filterStatus %>&jenjang=<%= filterJenjang %>&keyword=<%= keyword %>"
+      style="
+        padding:5px 10px;
+        background:#27ae60;
+        color:white;
+        text-decoration:none;
+        border-radius:4px;
+      "
+    >
+      ⬇ Export Excel
+    </a>
+
+  <% } %>
+
+</div>
+
+<div class="info-data">
+
+<% if(totalData === 0){ %>
+
+    <span class="info-kosong">
+        💳 Tidak ada data yang sesuai
+    </span>
+
+<% } else if(totalData === 1){ %>
+
+    <span class="info-satu">
+        💳 Ditemukan <strong>1</strong> pembayaran
+    </span>
+
+<% } else { %>
+
+    <span class="info-banyak">
+        💳 Ditemukan <strong><%= totalData %></strong> pembayaran
+    </span>
+
+<% } %>
+
+</div>
+
+  <div class="table-wrapper">
+    <table border="1" cellpadding="6" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Jenjang</th>
+          <th>Kelas</th>
+          <th>Tanggal Tagihan</th>
+          <th>Jumlah</th>
+          <th>Status Bayar</th>
+          <th>Status WA</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if (!pembayaran || pembayaran.length === 0) { %>
+          <tr>
+            <td colspan="9" align="center">
+                Tidak ada data pembayaran yang sesuai
+            </td>
+          </tr>
+        <% } else { %>
+
+          <% pembayaran.forEach((p, i) => {
+            const today = new Date();
+            const tagihan = new Date(p.tanggal_tagihan);
+            const terlambat = p.status === 'belum' && tagihan < today;
+          %>
+
+          <tr class="<%= terlambat ? 'row-terlambat' : '' %>">
+            <td><%= i + 1 %></td>
+            <td>
+              <%= p.nama_lengkap %>
+            </td>
+            <td><%= p.jenjang || '-' %></td>
+            <td><%= p.kelas_sekolah || '-' %></td>
+
+            <td><%= tagihan.toLocaleDateString('id-ID') %></td>
+
+            <td align="right">
+              Rp <%= Number(p.jumlah || 0).toLocaleString('id-ID') %>
+            </td>
+
+            <!-- STATUS BAYAR -->
+            <td align="center">
+
+              <% if (p.status === 'belum' && terlambat) { %>
+
+                <span style="
+                  background:#fee2e2;
+                  color:#b91c1c;
+                  padding:5px 12px;
+                  border-radius:20px;
+                  font-size:12px;
+                  font-weight:bold;
+                ">
+                  Terlambat
+                </span>
+
+              <% } else if (p.status === 'belum') { %>
+
+                <span style="
+                  background:#fef9c3;
+                  color:#854d0e;
+                  padding:5px 12px;
+                  border-radius:20px;
+                  font-size:12px;
+                  font-weight:bold;
+                ">
+                  Belum Bayar
+                </span>
+
+              <% } else if (p.status === 'menunggu') { %>
+
+                <span style="
+                  background:#fed7aa;
+                  color:#9a3412;
+                  padding:5px 12px;
+                  border-radius:20px;
+                  font-size:12px;
+                  font-weight:bold;
+                ">
+                  Menunggu
+                </span>
+
+              <% } else { %>
+
+                <span style="
+                  background:#dcfce7;
+                  color:#166534;
+                  padding:5px 12px;
+                  border-radius:20px;
+                  font-size:12px;
+                  font-weight:bold;
+                ">
+                  Lunas
+                </span>
+
+              <% } %>
+
+            </td>
+            
+            <!-- STATUS WHATSAPP -->
+            <td align="center">
+              <% if (p.wa_terkirim) { %>
+                <span style="color:green;font-weight:bold;">📩 WA Terkirim</span>
+              <% } else { %>
+                <span style="color:#999;">-</span>
+              <% } %>
+            </td>
+
+            <!-- AKSI -->
+            <td>
+              <% if (p.status === 'belum') { %>
+
+                <form action="/pembayaran/bayar/<%= p.id_pembayaran %>" method="POST"onsubmit="return konfirmasiBayar(this)"style="display:flex;gap:5px;"
+>
+                  <select name="metode_pembayaran" required>
+                    <option value="">Metode</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Transfer">Transfer</option>
+                  </select>
+                  <button type="submit">Bayar</button>
+                </form>
+
+              <% } else if (p.status === 'menunggu') { %>
+
+                <button
+                  onclick="verifikasiPembayaran('<%= p.id_pembayaran %>')"
+                >
+                  ✓ Verifikasi
+                </button>
+
+                <a
+                  href="/pembayaran/riwayat/<%= p.id_siswa %>"
+                  style="
+                    background:#3498db;
+                    color:white;
+                    padding:5px 10px;
+                    text-decoration:none;
+                    border-radius:4px;
+                  "
+                >
+                  Riwayat
+                </a>
+
+              <% } else { %>
+
+                <a
+                  href="/pembayaran/riwayat/<%= p.id_siswa %>"
+                  style="
+                    background:#3498db;
+                    color:white;
+                    padding:5px 10px;
+                    text-decoration:none;
+                    border-radius:4px;
+                  "
+                >
+                  Riwayat
+                </a>
+
+              <% } %>
+            </td>
+          </tr>
+
+          <% }) %>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+const success = "<%= success %>";
+const error = "<%= error %>";
+
+if (success === "bayar") {
+
+    Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Pembayaran berhasil diproses.",
+        timer: 1800,
+        showConfirmButton: false,
+         width: "330px"
+    });
+
+}
+
+if (success === "generate") {
+
+    Swal.fire({
+        icon: "success",
+        title: "Berhasil",
+        text: "Tagihan pembayaran berhasil dibuat.",
+        timer: 1800,
+        showConfirmButton: false,
+         width: "330px"
+    });
+
+}
+
+if (error === "bayar") {
+
+    Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Pembayaran gagal diproses.",
+         width: "330px"
+    });
+
+}
+
+if (error === "generate") {
+
+    Swal.fire({
+        icon: "error",
+        title: "Gagal",
+        text: "Tagihan pembayaran gagal dibuat.",
+         width: "330px"
+    });
+
+}
+
+if (error === "load") {
+
+    Swal.fire({
+        icon: "error",
+        title: "Terjadi Kesalahan",
+        text: "Data pembayaran gagal dimuat.",
+         width: "330px"
+    });
+
+}
+
+// ================================
+// KONFIRMASI BAYAR ADMIN
+// ================================
+function konfirmasiBayar(form){
+
+    Swal.fire({
+        title:"Konfirmasi Pembayaran?",
+        text:"Pembayaran akan dipindahkan ke status menunggu.",
+        icon:"question",
+         width: "330px",
+        showCancelButton:true,
+        confirmButtonText:"Ya, Bayar",
+        cancelButtonText:"Batal",
+        confirmButtonColor:"#28a745",
+        cancelButtonColor:"#d33"
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+            form.submit();
+        }
+
+    });
+
+    return false;
+}
+
+async function verifikasiPembayaran(id) {
+
+    const konfirmasi = await Swal.fire({
+        title: "Verifikasi Pembayaran?",
+        text: "Status pembayaran akan diubah menjadi Lunas.",
+        icon: "question",
+         width: "330px",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Verifikasi",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#d33"
+    });
+
+    if (!konfirmasi.isConfirmed) return;
+
+    try {
+
+        const res = await fetch(`/pembayaran/verifikasi/${id}`, {
+            method: "POST"
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+
+            await Swal.fire({
+                icon: "success",
+                title: "Berhasil",
+                text: "Pembayaran berhasil diverifikasi.",
+                timer: 1500,
+                showConfirmButton: false
+            });
+
+            /// buka WhatsApp jika tersedia
+              if (data.waLink) {
+
+                  window.open(data.waLink, "_blank");
+
+              }
+
+              // reload halaman setelah proses selesai
+              setTimeout(() => {
+                  location.reload();
+              }, 1000);
+           
+        } else {
+
+            Swal.fire({
+                icon: "error",
+                title: "Gagal",
+                text: "Verifikasi pembayaran gagal."
+            });
+
+        }
+
+    } catch (err) {
+
+        console.error(err);
+
+        Swal.fire({
+            icon: "error",
+            title: "Terjadi Kesalahan",
+            text: "Tidak dapat memverifikasi pembayaran."
+        });
+
+    }
+
+}
+
+// ================================
+// AUTO SEARCH
+// ================================
+const searchInput = document.querySelector('input[name="keyword"]');
+
+if (searchInput) {
+
+    let timer;
+
+    searchInput.addEventListener('input', function () {
+
+        clearTimeout(timer);
+
+        timer = setTimeout(() => {
+
+            this.form.submit();
+
+        }, 500);
+
+    });
+
+}
+</script>
+<%- include('../partials/footer') %>

@@ -1,0 +1,196 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="content">
+
+  <!-- ================= HEADER ================= -->
+  <div class="page-header">
+    <h2>👨‍🏫 Data Tentor</h2>
+
+    <a href="/tentor/add" class="btn-add">
+      + Tambah Tentor
+    </a>
+  </div>
+
+  <!-- ================= TABLE ================= -->
+  <div class="table-wrapper">
+
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>No WA</th>
+          <th>Alamat</th>
+          <th>Mapel</th>
+          <th>Status</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <% if (tentor.length === 0) { %>
+          <tr>
+            <td colspan="7" style="text-align:center; padding:20px;">
+              Data tentor belum ada
+            </td>
+          </tr>
+        <% } %>
+
+        <% tentor.forEach((t, i) => { %>
+          <tr>
+
+            <td><%= i + 1 %></td>
+
+            <td>
+              <%= t.nama_tentor %>
+            </td>
+
+            <td>
+                <%= t.no_wa || '-' %>
+            </td>
+
+            <td>
+                <%= t.alamat || '-' %>
+            </td>
+
+            <td>
+              <span class="badge-mapel">
+                <%= t.mapel || '-' %>
+              </span>
+            </td>
+            <td align="center">
+
+              <% if (t.status === 'aktif') { %>
+
+                <span style="
+                  background:#dcfce7;
+                  color:#166534;
+                  padding:5px 12px;
+                  border-radius:20px;
+                  font-size:12px;
+                  font-weight:bold;
+                ">
+                  Aktif
+                </span>
+
+              <% } else { %>
+
+                <span style="
+                  background:#fee2e2;
+                  color:#991b1b;
+                  padding:5px 12px;
+                  border-radius:20px;
+                  font-size:12px;
+                  font-weight:bold;
+                ">
+                  Nonaktif
+                </span>
+
+              <% } %>
+
+            </td>
+            <!-- ================= AKSI ================= -->
+            <td class="aksi">
+
+              <a href="/tentor/edit/<%= t.id_tentor %>" class="btn-edit">
+                ✏️ Edit
+              </a>
+
+              <a href="#"
+                onclick="hapusTentor('<%= t.id_tentor %>')"
+                class="btn-delete">
+                🗑 Hapus
+              </a>
+
+            </td>
+
+          </tr>
+        <% }) %>
+
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // =============================
+    // SweetAlert Notifikasi
+    // =============================
+    const success = "<%= success || '' %>";
+    const error = "<%= error || '' %>";
+
+    if (success) {
+
+        const pesan = {
+            tambah: "Data tentor berhasil ditambahkan.",
+            edit: "Data tentor berhasil diperbarui.",
+            hapus: "Data tentor berhasil dihapus."
+        };
+
+        Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            text: pesan[success],
+            confirmButtonColor: "#3085d6",
+            width: "330px"
+        });
+
+    }
+
+    if (error) {
+
+        const pesan = {
+            tambah: "Data tentor gagal ditambahkan.",
+            edit: "Data tentor gagal diperbarui.",
+            hapus: "Data tentor gagal dihapus."
+        };
+
+        Swal.fire({
+            icon: "error",
+            title: "Gagal",
+            text: pesan[error],
+            confirmButtonColor: "#d33",
+            width: "330px"
+        });
+
+    }
+
+});
+
+
+// =============================
+// SweetAlert Hapus Data Tentor
+// =============================
+function hapusTentor(id){
+
+    Swal.fire({
+        title: "Yakin ingin menghapus?",
+        text: "Data tentor yang dihapus tidak dapat dikembalikan.",
+        icon: "warning",
+        width: "330px",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Ya, Hapus",
+        cancelButtonText: "Batal"
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            window.location.href = "/tentor/delete/" + id;
+
+        }
+
+    });
+
+}
+
+</script>
+
+<%- include('../partials/footer') %>

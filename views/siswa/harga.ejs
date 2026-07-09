@@ -1,0 +1,44 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="content">
+
+  <div class="harga-wrapper">
+    <div class="harga-card">
+
+      <h2>💰 Atur Harga Bulanan</h2>
+
+      <p class="siswa-info">
+        Siswa: <strong><%= siswa.nama_lengkap %></strong>
+      </p>
+
+      <form method="POST">
+
+        <label>Harga Bulanan (Rp)</label>
+
+        <div class="input-group">
+          <span class="prefix">Rp</span>
+          <input 
+            type="number" 
+            name="harga_bulanan" 
+            value="<%= siswa.harga_bulanan || '' %>"
+            required
+            min="1"
+          >
+        </div>
+
+        <div class="btn-group">
+          <button type="submit" class="btn-primary">💾 Simpan</button>
+          <a href="/siswa/detail/<%= siswa.id_siswa %>" class="btn-secondary">
+            ← Kembali
+          </a>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>

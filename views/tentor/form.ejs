@@ -1,0 +1,139 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+  .content {
+    padding: 30px;
+    background: #f5f7fb;
+    min-height: 100vh;
+  }
+
+  .card-form {
+    max-width: 800px;
+    background: #ffffff;
+    margin: auto;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  }
+
+  .card-form h2 {
+    margin-bottom: 25px;
+    color: #4c1d95;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  label {
+    font-size: 13px;
+    color: #555;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  textarea {
+    resize: none;
+    min-height: 90px;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 2px rgba(139,92,246,.15);
+  }
+
+  .actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .btn-secondary {
+    background: #e5e7eb;
+    color: #333;
+    padding: 12px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .btn-primary:hover { opacity: .9; }
+  .btn-secondary:hover { background: #d1d5db; }
+</style>
+
+<div class="content">
+  <div class="card-form">
+    <h2><%= tentor ? '✏️ Edit Data Tentor' : '➕ Tambah Data Tentor' %></h2>
+
+    <form method="POST" action="<%= tentor ? '/tentor/edit/' + tentor.id_tentor : '/tentor/add' %>">
+
+      <div class="form-grid">
+        <div>
+          <label>Nama Tentor</label>
+          <input type="text" name="nama_tentor" required
+            value="<%= tentor ? tentor.nama_tentor : '' %>">
+        </div>
+
+        <div>
+          <label>No WhatsApp</label>
+          <input type="text" name="no_wa"
+            value="<%= tentor ? tentor.no_wa : '' %>">
+        </div>
+
+        <div style="grid-column: span 2;">
+          <label>Alamat</label>
+          <textarea name="alamat"><%= tentor ? tentor.alamat : '' %></textarea>
+        </div>
+
+        <div>
+          <label>Mata Pelajaran</label>
+          <input type="text" name="mapel"
+            value="<%= tentor ? tentor.mapel : '' %>">
+        </div>
+
+        <div>
+          <label>Status</label>
+          <select name="status" required>
+            <option value="">-- Pilih Status --</option>
+            <option value="aktif"
+              <%= tentor && tentor.status === 'aktif' ? 'selected' : '' %>>
+              Aktif
+            </option>
+            <option value="nonaktif"
+              <%= tentor && tentor.status === 'nonaktif' ? 'selected' : '' %>>
+              Nonaktif
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn-primary">Simpan Data</button>
+        <a href="/tentor" class="btn-secondary">Batal</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,41 @@
+<footer class="footer">
+  &copy; 2026 Bimbel AKSI. All Rights Reserved.
+</footer>
+
+<!-- Lucide Icon -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  lucide.createIcons();
+</script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+function konfirmasiLogout(){
+
+    Swal.fire({
+        title:"Logout?",
+        text:"Anda akan keluar dari sistem.",
+        icon:"warning",
+        width: "330px",
+        showCancelButton:true,
+        confirmButtonText:"Ya, Logout",
+        cancelButtonText:"Batal",
+        confirmButtonColor:"#d33"
+    }).then((result)=>{
+
+        if(result.isConfirmed){
+
+            window.location.href="/logout";
+
+        }
+
+    });
+
+}
+
+</script>
+</body>
+</html>

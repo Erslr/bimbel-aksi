@@ -1,0 +1,2517 @@
+/* ============================= */
+/* GLOBAL */
+/* ============================= */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* ✅ FIX scroll kanan body */
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f4f6f9;
+}
+
+/* ============================= */
+/* SIDEBAR */
+/* ============================= */
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background: #2c3e50;
+  color: #ffffff;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.sidebar-logo img {
+  width: 38px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.sidebar-logo span {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sidebar h3 {
+  margin: 0;
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.sidebar hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 15px 0;
+}
+
+/* MENU */
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 14px;
+  margin: 6px 0;
+
+  border-radius: 10px;
+
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 15px;
+
+  transition: all 0.25s ease;
+}
+
+/* ICON */
+.sidebar a svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.6;
+  flex-shrink: 0;
+}
+
+/* HOVER */
+.sidebar a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(3px);
+}
+
+/* ACTIVE */
+.sidebar a.active {
+  background: #1abc9c;
+  font-weight: 600;
+}
+
+/* ICON ACTIVE */
+.sidebar a.active svg {
+  stroke-width: 2;
+}
+
+/* ============================= */
+/* MAIN CONTENT */
+/* ============================= */
+/* support class .content & .main-content */
+.content,
+.main-content {
+  width: calc(100% - 220px);
+  margin-left: 220px;
+  padding: 25px;
+  min-height: calc(100vh - 60px);
+  background: #f4f6f9;
+}
+/* ============================= */
+/* DASHBOARD CARD */
+/* ============================= */
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+/* Card */
+.card {
+  position: relative;
+  overflow: hidden;
+
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 20px;
+
+  border-left: 6px solid #3498db;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+
+  transition: all .3s ease;
+
+  cursor: pointer;
+}
+
+/* Efek garis glossy */
+.card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:4px;
+  background:rgba(255,255,255,.4);
+}
+
+/* Hover */
+.card:hover{
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0,0,0,.15);
+}
+
+/* ============================= */
+/* WARNA CARD */
+/* ============================= */
+
+.card.total{
+  border-left-color:#3498db;
+}
+
+.card.aktif{
+  border-left-color:#2ecc71;
+}
+
+.card.nonaktif{
+  border-left-color:#e74c3c;
+}
+
+.card.assign{
+  border-left-color:#f39c12;
+}
+
+.card.kelas{
+  border-left-color:#9b59b6;
+}
+
+.card.tentor{
+  border-left-color:#1abc9c;
+}
+
+.card.laki{
+  border-left-color:#0465a5;
+}
+
+.card.perempuan{
+  border-left-color:#e91e63;
+}
+
+/* ============================= */
+/* JUDUL */
+/* ============================= */
+
+.card h4{
+  margin:0;
+  margin-bottom:8px;
+  font-size:14px;
+  color:#666;
+  font-weight:600;
+}
+.card:hover h4{
+    color:#333;
+}
+
+/* ============================= */
+/* ANGKA */
+/* ============================= */
+
+.card .value{
+  font-size:32px;
+  font-weight:700;
+  letter-spacing:.5px;
+}
+.card:hover h4{
+    color:#333;
+}
+
+/* Warna angka mengikuti card */
+
+.card.total .value{
+  color:#3498db;
+}
+
+.card.aktif .value{
+  color:#2ecc71;
+}
+
+.card.nonaktif .value{
+  color:#e74c3c;
+}
+
+.card.assign .value{
+  color:#f39c12;
+}
+
+.card.kelas .value{
+  color:#9b59b6;
+}
+
+.card.tentor .value{
+  color:#1abc9c;
+}
+
+.card.laki .value{
+  color:#0465a5;
+}
+
+.card.perempuan .value{
+  color:#e91e63;
+}
+
+/* ============================= */
+/* SECTION BOX */
+/* ============================= */
+.section-box {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 20px;
+}
+
+/* ============================= */
+/* QUICK MENU */
+/* ============================= */
+.quick-menu {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.quick-menu a {
+  text-decoration: none;
+  color: #2c3e50;
+  background: #ecf0f1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: 0.25s;
+}
+
+.quick-menu a:hover {
+  background: #dfe6e9;
+}
+
+/* ============================= */
+/* GLOBAL TABLE RESPONSIVE */
+/* untuk semua halaman tabel */
+/* ============================= */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;          /* ✅ scroll hanya tabel */
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* scrollbar halus */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 10px;
+}
+
+/* table fix */
+.table-wrapper table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+}
+
+.table-wrapper th,
+.table-wrapper td {
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+  font-size: 13px;
+  text-align: center;
+  white-space: nowrap; /* ✅ biar tidak turun */
+}
+
+.table-wrapper th {
+  background: #2c3e50;
+  color: #ffffff;
+}
+
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+.footer {
+  width: calc(100% - 220px);
+  margin-left: 220px;
+  padding: 15px 10px;
+  text-align: center;
+  font-size: 13px;
+  color: #555;
+  background: #ffffff;
+  border-top: 1px solid #ddd;
+}
+
+/* ===================================================== */
+/* 🔥 LOGIN PAGE - ULTRA SMOOTH PREMIUM */
+/* ===================================================== */
+
+/* CENTER + BACKGROUND */
+body.login-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding:0;
+
+  
+  overflow: hidden;
+  position: relative;
+
+  background:
+  linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.75)),
+    url('/images/bg-login.jpeg') no-repeat center center/cover !important;
+
+  animation: zoomBg 28s ease-in-out infinite alternate;
+}
+
+/* BG ZOOM */
+@keyframes zoomBg {
+  from {
+    background-size: 100%;
+  }
+
+  to {
+    background-size: 112%;
+  }
+}
+
+/* OVERLAY BLUR */
+body.login-page::before {
+  display: none;
+}
+
+/* ================================= */
+/* 🔥 FLOATING LIGHT EFFECT */
+/* ================================= */
+
+body.login-page::after {
+  display: none;
+}
+
+@keyframes floatingLight {
+
+  0% {
+    transform:
+      translateY(0px)
+      translateX(0px)
+      scale(1);
+  }
+
+  50% {
+    transform:
+      translateY(30px)
+      translateX(-20px)
+      scale(1.08);
+  }
+
+  100% {
+    transform:
+      translateY(-20px)
+      translateX(25px)
+      scale(0.95);
+  }
+}
+
+/* ================================= */
+/* 🔥 PARTICLE EFFECT */
+/* ================================= */
+
+.login-particles span {
+  position: absolute;
+  display: block;
+
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.7);
+
+  box-shadow:
+    0 0 8px rgba(255,255,255,0.8),
+    0 0 15px rgba(255,255,255,0.5);
+
+  animation: particleMove linear infinite;
+}
+
+.login-particles span:nth-child(1) {
+  left: 10%;
+  animation-duration: 12s;
+  animation-delay: 0s;
+}
+
+.login-particles span:nth-child(2) {
+  left: 25%;
+  animation-duration: 18s;
+  animation-delay: 2s;
+}
+
+.login-particles span:nth-child(3) {
+  left: 40%;
+  animation-duration: 15s;
+  animation-delay: 4s;
+}
+
+.login-particles span:nth-child(4) {
+  left: 60%;
+  animation-duration: 22s;
+  animation-delay: 1s;
+}
+
+.login-particles span:nth-child(5) {
+  left: 75%;
+  animation-duration: 17s;
+  animation-delay: 3s;
+}
+
+.login-particles span:nth-child(6) {
+  left: 90%;
+  animation-duration: 20s;
+  animation-delay: 5s;
+}
+
+.login-particles span:nth-child(7) {
+  left: 15%;
+  animation-duration: 14s;
+  animation-delay: 1s;
+}
+
+.login-particles span:nth-child(8) {
+  left: 35%;
+  animation-duration: 16s;
+  animation-delay: 3s;
+}
+
+.login-particles span:nth-child(9) {
+  left: 55%;
+  animation-duration: 13s;
+  animation-delay: 2s;
+}
+
+.login-particles span:nth-child(10) {
+  left: 80%;
+  animation-duration: 19s;
+  animation-delay: 4s;
+}
+
+@keyframes particleMove {
+
+  from {
+    transform:
+      translateY(100vh)
+      scale(0.4);
+
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: .8;
+  }
+
+  to {
+    transform:
+      translateY(-120px)
+      scale(1.2);
+
+    opacity: 0;
+  }
+}
+
+/* ============================= */
+/* LOGIN BOX */
+/* ============================= */
+
+body.login-page .login-box {
+
+  position: relative;
+  width: 380px;
+
+  padding: 34px;
+
+  border-radius: 24px;
+
+  background: rgba(255,255,255,0.10);
+
+  backdrop-filter: blur(24px);
+
+  border: 1px solid rgba(255,255,255,0.12);
+
+  box-shadow:
+    0 18px 55px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.06);
+
+  color: #fff;
+
+  z-index: 2;
+
+  animation: fadeSmooth .8s cubic-bezier(0.22, 1, 0.36, 1);
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    opacity .4s ease;
+}
+
+/* GLOW EFFECT */
+body.login-page .login-box::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,0.10),
+      transparent,
+      rgba(255,255,255,0.04)
+    );
+
+  pointer-events: none;
+}
+
+/* HOVER */
+body.login-page .login-box:hover {
+
+  box-shadow:
+    0 24px 60px rgba(0,0,0,0.55),
+    0 0 30px rgba(37,99,235,0.16);
+
+  border-color: rgba(255,255,255,0.18);
+}
+
+/* MASUK */
+@keyframes fadeSmooth {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(28px)
+      scale(0.96);
+
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+    filter: blur(0);
+  }
+}
+
+/* EXIT */
+.login-box.exit {
+  transform:
+    translateY(-14px)
+    scale(0.95);
+
+  opacity: 0;
+
+  filter: blur(6px);
+}
+
+/* ============================= */
+/* HEADER */
+/* ============================= */
+
+.login-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-bottom: 24px;
+}
+
+.login-header img {
+  width: 50px;
+  height: 50px;
+
+  border-radius: 14px;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.login-header h2 {
+  margin: 0;
+
+  font-size: 22px;
+  font-weight: 600;
+
+  letter-spacing: 0.5px;
+}
+
+/* ============================= */
+/* LABEL */
+/* ============================= */
+
+body.login-page label {
+  font-size: 13px;
+  color: #e5e7eb;
+  font-weight: 500;
+}
+
+/* ============================= */
+/* INPUT */
+/* ============================= */
+
+body.login-page input {
+
+  width: 100%;
+
+  padding: 13px;
+
+  margin-top: 5px;
+  margin-bottom: 16px;
+
+  border-radius: 12px;
+
+  border: 1px solid transparent;
+
+  outline: none;
+
+  background: rgba(255,255,255,0.92);
+
+  color: #111;
+
+  font-size: 14px;
+
+  transition: all .3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* INPUT HOVER */
+body.login-page input:hover {
+  background: #fff;
+}
+
+/* INPUT FOCUS */
+body.login-page input:focus {
+
+  background: #fff;
+
+  transform:
+    translateY(-1px)
+    scale(1.02);
+
+  box-shadow:
+    0 0 0 3px rgba(37,99,235,0.18),
+    0 12px 26px rgba(37,99,235,0.14);
+}
+
+/* ============================= */
+/* PASSWORD */
+/* ============================= */
+
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  padding-right: 45px;
+}
+
+/* ICON */
+
+.toggle-password {
+
+  position: absolute;
+
+  right: 12px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 26px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  color: rgba(0,0,0,0.55);
+
+  transition: .25s ease;
+}
+
+.toggle-password:hover {
+  color: #2563eb;
+
+  transform:
+    translateY(-50%)
+    scale(1.15);
+}
+
+.toggle-password svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================= */
+/* BUTTON LOGIN */
+/* ============================= */
+
+body.login-page button {
+
+  width: 100%;
+
+  padding: 13px;
+
+  border: none;
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #1d4ed8
+    );
+
+  color: white;
+
+  font-weight: 600;
+  font-size: 14px;
+
+  cursor: pointer;
+
+  position: relative;
+  overflow: hidden;
+
+  letter-spacing: .4px;
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+/* HOVER */
+
+body.login-page button:hover {
+
+  transform:
+    translateY(-3px)
+    scale(1.02);
+
+  box-shadow:
+    0 14px 34px rgba(37,99,235,0.45),
+    0 0 18px rgba(37,99,235,0.20);
+}
+
+/* SHINE */
+
+body.login-page button::before {
+
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent,
+      rgba(255,255,255,0.35),
+      transparent
+    );
+
+  opacity: 0;
+}
+
+body.login-page button:hover::before {
+  opacity: 1;
+  animation: shine .8s linear;
+}
+
+@keyframes shine {
+
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* CLICK */
+body.login-page button:active {
+  transform: scale(.97);
+}
+
+/* DISABLED */
+button:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+/* ============================= */
+/* TOAST */
+/* ============================= */
+
+.toast-error {
+
+  position: absolute;
+
+  top: -15px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  background:
+    linear-gradient(
+      135deg,
+      #ef4444,
+      #dc2626
+    );
+
+  color: white;
+
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.3);
+
+  z-index: 10;
+
+  animation: toastIn .4s ease;
+
+  transition: .4s ease;
+}
+
+@keyframes toastIn {
+
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 500px) {
+
+  body.login-page .login-box {
+    width: 92%;
+    padding: 28px 22px;
+  }
+
+  .login-header h2 {
+    font-size: 20px;
+  }
+}
+
+/* =======================================
+   SWEETALERT LOGIN
+======================================= */
+
+.login-swal{
+    border-radius:18px !important;
+}
+
+.login-swal .swal2-title{
+    font-size:26px;
+    font-weight:600;
+}
+
+.login-swal .swal2-html-container{
+    font-size:15px;
+    margin-top:8px;
+    line-height:1.5;
+}
+
+.login-swal .swal2-icon{
+    zoom:.75;
+}
+
+.login-swal .swal2-confirm{
+    border-radius:10px;
+    padding:8px 26px;
+    font-size:14px;
+}
+
+.login-swal .swal2-popup{
+    padding:1.6rem;
+}
+html.swal2-shown,
+body.swal2-shown{
+    padding-right:0 !important;
+    overflow-y:auto !important;
+}
+
+/* ===================================================== */
+/* 🔥 DASHBOARD TRANSITION */
+/* ===================================================== */
+
+.page-enter {
+  animation: pageFade 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pageFade {
+  from {
+    opacity:0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity:1;
+    transform: translateY(0);
+  }
+}
+
+/* CARD STAGGER */
+.page-enter .card {
+  opacity:0;
+  transform: translateY(20px);
+  animation: cardFade .5s forwards;
+}
+
+.page-enter .card:nth-child(1){animation-delay:.1s;}
+.page-enter .card:nth-child(2){animation-delay:.2s;}
+.page-enter .card:nth-child(3){animation-delay:.3s;}
+.page-enter .card:nth-child(4){animation-delay:.4s;}
+.page-enter .card:nth-child(5){animation-delay:.5s;}
+
+@keyframes cardFade {
+  to {
+    opacity:1;
+    transform: translateY(0);
+  }
+}
+
+/* SECTION DELAY */
+.page-enter .section-box {
+  opacity:0;
+  transform: translateY(20px);
+  animation: cardFade .6s forwards;
+}
+
+.page-enter .section-box:nth-of-type(1){animation-delay:.4s;}
+.page-enter .section-box:nth-of-type(2){animation-delay:.5s;}
+.page-enter .section-box:nth-of-type(3){animation-delay:.6s;}
+
+/* ============================================= */
+/* GLOBAL TABLE STYLE – PEMBAYARAN */
+/* TANPA CLASS TAMBAHAN (ANTI ILANG) */
+/* ============================================= */
+
+table thead th {
+  background: #2c3e50;
+  color: #ffffff;
+  padding: 10px;
+  border: 1px solid #34495e;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* BODY */
+table tbody td {
+  padding: 9px;
+  border: 1px solid #ddd;
+  color: #333;
+  text-align: center;
+  background: #ffffff;
+}
+
+/* STATUS */
+.status-belum {
+  background: #fdecea;
+  color: #c0392b;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-menunggu {
+  background: #fff4e5;
+  color: #d68910;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-lunas {
+  background: #e9f9f1;
+  color: #27ae60;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* BUTTON DALAM TABEL */
+table button,
+table .btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+/* SELECT */
+table select {
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+}
+
+/* JAGA AKSI */
+table td:last-child {
+  white-space: nowrap;
+}
+
+/* ============================= */
+/* STATUS BADGE PEMBAYARAN */
+/* ============================= */
+
+.badge-danger {
+  background: #fdecea;
+  color: #c0392b;
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badge-warning {
+  background: #fff4e5;
+  color: #d68910;
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badge-success {
+  background: #e9f9f1;
+  color: #27ae60;
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+/* ================================= */
+/* POLISH FILTER PEMBAYARAN (NO HTML CHANGE) */
+/* ================================= */
+
+/* container filter (div inline-style) */
+.content > div[style*="margin-bottom:15px"] {
+  background: #ffffff;
+  padding: 15px 18px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  align-items: center;
+}
+
+/* form filter */
+.content > div[style*="margin-bottom:15px"] form {
+  align-items: center;
+}
+
+/* select bulan & tahun */
+.content select {
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+}
+
+/* tombol filter */
+.content button[type="submit"] {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.content button[type="submit"]:hover {
+  background: #2980b9;
+}
+
+/* tombol reset */
+.content a[href="/pembayaran"] {
+  background: #95a5a6;
+  color: white;
+  padding: 7px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.content a[href="/pembayaran"]:hover {
+  background: #7f8c8d;
+}
+
+/* tombol export excel */
+.content a[href*="/pembayaran/export"] {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white !important;
+  padding: 8px 16px !important;
+  border-radius: 10px;
+  font-weight: bold;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(39,174,96,0.4);
+  transition: 0.25s;
+}
+
+.content a[href*="/pembayaran/export"]:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+/* ===============================
+   TAMBAHAN BEAUTIFY + RESPONSIVE
+=================================*/
+
+/* Animasi muncul */
+.container {
+  animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Input lebih halus */
+input, select, textarea {
+  transition: all 0.3s ease;
+  background-color: #f9fafb;
+}
+
+input:hover, select:hover, textarea:hover {
+  border-color: #1e3a8a;
+}
+
+/* Section jadi seperti card kecil */
+.section {
+  padding: 20px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+/* Judul section lebih modern */
+.section h3 {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Button lebih modern */
+.btn {
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(30,58,138,.3);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(30,58,138,.4);
+}
+
+/* Responsive super aman untuk HP */
+@media (max-width: 768px) {
+
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .container {
+    padding: 18px;
+  }
+
+  body:not(:has(.sidebar)) {
+    padding: 15px 10px;
+  }
+  /* Fix field alamat supaya tidak melebar */
+  .grid div[style*="grid-column"] {
+    grid-column: span 1 !important;
+  }
+}
+
+/* ======================================================
+   🔥 FIX KHUSUS FORM PENDAFTARAN SISWA (PUBLIC PAGE)
+====================================================== */
+
+/* Hanya berlaku untuk halaman yang ada .container tanpa sidebar */
+body:not(:has(.sidebar)) .container {
+
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+/* ================= MOBILE ONLY ================= */
+@media (max-width: 768px) {
+
+  /* Hilangkan padding body agar full layar */
+  body:not(:has(.sidebar)) {
+    padding: 0 
+  }
+
+  /* Container full layar HP */
+  body:not(:has(.sidebar)) .container {
+    width: 100%;
+    max-width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0 ;
+    min-height: 100vh;
+    padding: 20px 16px 28px !important;
+    box-shadow: none ;
+  }
+
+  /* Judul */
+  body:not(:has(.sidebar)) h1 {
+    font-size: 20px;
+  }
+
+  /* Section */
+  body:not(:has(.sidebar)) .section {
+    padding: 16px 14px ;
+  }
+
+  /* Grid jadi 1 kolom */
+  body:not(:has(.sidebar)) .grid {
+    grid-template-columns: 1fr ;
+    gap: 14px;
+  }
+
+  /* Input BESAR & nyaman disentuh */
+  body:not(:has(.sidebar)) input,
+  body:not(:has(.sidebar)) select,
+  body:not(:has(.sidebar)) textarea {
+    font-size: 16px ;
+    padding: 14px ;
+  }
+
+  /* Tombol besar */
+  body:not(:has(.sidebar)) .btn {
+    font-size: 17px;
+    padding: 16px ;
+    border-radius: 14px;
+  }
+
+  /* Fix field alamat */
+  body:not(:has(.sidebar)) .grid div[style*="grid-column"] {
+    grid-column: span 1 ;
+  }
+}
+
+/* ===================================================== */
+/* 🔥 HALAMAN ATUR HARGA (UPGRADE UI) */
+/* ===================================================== */
+
+.harga-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.harga-card {
+  width: 420px;
+  background: #ffffff;
+  padding: 28px 30px;
+  border-radius: 18px;
+
+  box-shadow: 
+    0 10px 30px rgba(0,0,0,0.08),
+    0 2px 6px rgba(0,0,0,0.05);
+
+  animation: fadeInUp 0.5s ease;
+  transition: 0.3s;
+}
+
+/* hover dikit biar hidup */
+.harga-card:hover {
+  transform: translateY(-2px);
+}
+
+/* TITLE */
+.harga-card h2 {
+  margin-bottom: 8px;
+  font-size: 20px;
+}
+
+/* INFO SISWA */
+.siswa-info {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* ============================= */
+/* INPUT GROUP */
+/* ============================= */
+.input-group {
+  display: flex;
+  align-items: center;
+
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+
+  margin-top: 6px;
+  margin-bottom: 22px;
+
+  transition: 0.25s;
+}
+
+.prefix {
+  background: #f1f5f9;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: #555;
+  border-right: 1px solid #ddd;
+}
+
+.input-group input {
+  border: none !important;
+  outline: none;
+  padding: 11px;
+  flex: 1;
+  font-size: 14px;
+  background: transparent;
+}
+
+/* focus glow */
+.input-group:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+}
+
+/* ============================= */
+/* BUTTON */
+/* ============================= */
+.btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+/* SIMPAN */
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(37,99,235,0.4);
+}
+
+/* KEMBALI */
+.btn-secondary {
+  background: #e5e7eb;
+  color: #333;
+  padding: 11px 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 500;
+
+  transition: 0.25s;
+}
+
+.btn-secondary:hover {
+  background: #d1d5db;
+}
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+@media (max-width: 600px) {
+  .harga-card {
+    width: 100%;
+  }
+}
+
+/* ===================================================== */
+/* 🔥 DETAIL SISWA (UPGRADE UI) */
+/* ===================================================== */
+
+.page-title {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+/* CARD */
+.detail-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 750px;
+
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+
+  animation: fadeUp 0.5s ease;
+}
+
+/* HEADER */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.detail-header h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #2c3e50;
+}
+
+/* STATUS BADGE */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* warna status */
+.status-badge.baru {
+  background: #fff4e5;
+  color: #d68910;
+}
+
+.status-badge.aktif {
+  background: #e9f9f1;
+  color: #27ae60;
+}
+
+.status-badge.nonaktif {
+  background: #fdecea;
+  color: #c0392b;
+}
+
+/* GRID */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 180px 20px 1fr;
+  row-gap: 14px;
+  column-gap: 10px;
+  align-items: center;
+  font-size: 15px;
+}
+
+.label {
+  color: #6c757d;
+  font-weight: 600;
+}
+
+.separator {
+  text-align: center;
+  font-weight: bold;
+  color: #666;
+}
+
+.value {
+  font-weight: 500;
+  color: #333;
+}
+
+/* highlight harga */
+.value.highlight {
+  font-weight: bold;
+  color: #2563eb;
+}
+
+/* ACTION BUTTON */
+.detail-actions {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 300px;
+}
+
+/* BUTTON STYLE */
+.detail-actions a,
+.detail-actions button {
+  padding: 11px;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+/* warna tombol */
+.btn-warning { background:#f39c12; color:#fff; }
+.btn-success { background:#27ae60; color:#fff; }
+.btn-danger { background:#e74c3c; color:#fff; }
+.btn-info { background:#3498db; color:#fff; }
+.btn-secondary { background:#7f8c8d; color:#fff; }
+
+/* hover */
+.detail-actions a:hover,
+.detail-actions button:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+/* Tombol Kembali */
+.back-link {
+  margin-top: 20px;
+}
+
+.back-link a {
+  display: inline-block;
+  background: #ecf0f1;
+  color: #2c3e50;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,.08);
+}
+
+.back-link a:hover {
+  background: #dfe6e9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0,0,0,.12);
+}
+
+/* animasi */
+@keyframes fadeUp {
+  from {
+    opacity:0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity:1;
+    transform: translateY(0);
+  }
+}
+
+/* ===================================================== */
+/* 🔥 KELAS PAGE UPGRADE */
+/* ===================================================== */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+/* BUTTON TAMBAH */
+.btn-add {
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+
+  box-shadow: 0 6px 15px rgba(26,188,156,0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+/* ============================= */
+/* AKSI BUTTON */
+/* ============================= */
+
+.aksi {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* EDIT */
+.btn-edit {
+  background: #3498db;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  text-decoration: none;
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+.btn-edit:hover {
+  background: #2980b9;
+  transform: scale(1.05);
+}
+
+/* DELETE */
+.btn-delete {
+  background: #e74c3c;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  text-decoration: none;
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+.btn-delete:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+
+/* ============================= */
+/* BADGE */
+/* ============================= */
+
+.badge-info {
+  background: #eef5ff;
+  color: #3b6edc;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.badge-capacity {
+  background: #e9f9f1;
+  color: #27ae60;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* ============================= */
+/* TABLE ENHANCE */
+/* ============================= */
+
+.table-wrapper tbody tr {
+  transition: background 0.2s ease;
+}
+
+.table-wrapper tbody tr:hover {
+  background: #f5faff;
+  transform: none;
+}
+/* ===================================================== */
+/* 🔥 TENTOR PAGE UPGRADE */
+/* ===================================================== */
+
+/* MAPEL */
+.badge-mapel {
+  background: #eef5ff;
+  color: #3b6edc;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+/* ============================= */
+/* STATUS JADWAL DASHBOARD */
+/* ============================= */
+.row-berlangsung {
+  background: #d4edda !important;
+  font-weight: bold;
+}
+
+.row-selesai {
+  background: #f8d7da !important;
+  opacity: 0.8;
+}
+
+/* ============================= */
+/* ROW TERLAMBAT PEMBAYARAN */
+/* ============================= */
+.row-terlambat{
+  background:#ffe5e5 !important;
+}
+
+/* =========================
+   INFO RIWAYAT SISWA
+========================= */
+
+.info-riwayat-box{
+  background:#fff;
+  padding:20px 25px;
+  border-radius:12px;
+
+  box-shadow:
+  0 2px 10px rgba(0,0,0,.08);
+
+  margin-bottom:20px;
+}
+
+.info-row{
+  display:grid;
+  grid-template-columns:140px 20px 1fr;
+
+  align-items:center;
+
+  padding:8px 0;
+}
+
+.info-row .label{
+  color:#666;
+  font-weight:500;
+}
+
+.info-row .separator{
+  text-align:center;
+  font-weight:600;
+}
+
+.info-row .value{
+  color:#2c3e50;
+  font-weight:600;
+}
+/* ============================= */
+/* HALAMAN RIWAYAT SISWA */
+/* ============================= */
+
+.judul-riwayat{
+  color:#2c3e50;
+  margin-bottom:20px;
+  font-weight:700;
+}
+
+/* ============================= */
+/* BOX INFORMASI SISWA */
+/* ============================= */
+
+.info-riwayat-box{
+  width:600px;
+  max-width:100%;
+
+  background:#fff;
+  padding:20px 25px;
+
+  border-radius:15px;
+
+  box-shadow:0 3px 12px rgba(0,0,0,.08);
+
+  margin-bottom:20px;
+}
+
+.info-row{
+  display:grid;
+  grid-template-columns:140px 20px 1fr;
+
+  align-items:center;
+
+  margin:12px 0;
+}
+
+.label{
+  font-weight:600;
+  color:#555;
+}
+
+.separator{
+  text-align:center;
+  font-weight:bold;
+}
+
+.value{
+  color:#2c3e50;
+  font-weight:500;
+}
+
+/* ============================= */
+/* BUTTON EXPORT */
+/* ============================= */
+
+.riwayat-action{
+  margin-bottom:20px;
+}
+
+.btn-export-modern{
+  display:inline-block;
+
+  background:#27ae60;
+  color:white;
+
+  text-decoration:none;
+
+  padding:10px 18px;
+
+  border-radius:10px;
+
+  font-weight:600;
+  font-size:14px;
+
+  transition:.25s;
+}
+
+.btn-export-modern:hover{
+  background:#219150;
+  transform:translateY(-2px);
+}
+
+/* =============================
+   KHUSUS RIWAYAT PEMBAYARAN
+============================= */
+
+.riwayat-table-wrapper{
+  width:950px;
+  max-width:100%;
+  overflow-x:auto;
+}
+
+.riwayat-table{
+  width:100%;
+}
+/* ============================= */
+/* TABEL RIWAYAT */
+/* ============================= */
+
+.riwayat-table{
+  width:100%;
+  border-collapse:collapse;
+
+  background:#fff;
+
+  border-radius:12px;
+  overflow:hidden;
+
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+/* HEADER */
+
+.riwayat-table th{
+  background:#2c3e50;
+  color:#fff;
+
+  padding:11px 14px;
+
+  font-size:14px;
+  font-weight:600;
+
+  text-align:center;
+}
+
+/* ISI */
+
+.riwayat-table td{
+  padding:11px 14px;
+
+  text-align:center;
+
+  font-size:14px;
+
+  border-bottom:1px solid #eee;
+}
+
+.riwayat-table tbody tr:hover{
+  background:#f8f9fa;
+}
+
+/* NO */
+.riwayat-table th:nth-child(1),
+.riwayat-table td:nth-child(1){
+  width:45px;
+}
+
+/* BULAN TAGIHAN */
+.riwayat-table th:nth-child(2),
+.riwayat-table td:nth-child(2){
+  width:220px;
+}
+
+/* TANGGAL BAYAR */
+.riwayat-table th:nth-child(3),
+.riwayat-table td:nth-child(3){
+  width:180px;
+}
+
+/* METODE */
+.riwayat-table th:nth-child(4),
+.riwayat-table td:nth-child(4){
+  width:220px;
+}
+
+/* STATUS */
+.riwayat-table th:nth-child(5),
+.riwayat-table td:nth-child(5){
+  width:140px;
+}
+
+/* BARIS TERAKHIR */
+
+.riwayat-table tr:last-child td{
+  border-bottom:none;
+}
+/* ===========================
+   RIWAYAT PEMBAYARAN MODERN
+=========================== */
+
+.riwayat-info-wrapper{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:18px;
+  margin:20px 0 25px;
+}
+
+.info-card-modern{
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+
+  display:flex;
+  align-items:center;
+  gap:15px;
+
+  box-shadow:
+  0 4px 12px rgba(0,0,0,.06);
+
+  transition:.25s;
+}
+
+.info-card-modern:hover{
+  transform:translateY(-2px);
+}
+
+.icon-box{
+  width:55px;
+  height:55px;
+
+  border-radius:50%;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#eef5ff;
+
+  font-size:24px;
+}
+
+.info-card-modern span{
+  display:block;
+  font-size:13px;
+  color:#777;
+  margin-bottom:5px;
+}
+
+.info-card-modern strong{
+  font-size:18px;
+  color:#2c3e50;
+}
+
+.riwayat-action{
+  display:flex;
+  justify-content:flex-start;
+  margin:15px 0 20px;
+}
+
+.btn-export-modern{
+  background:
+  linear-gradient(
+  135deg,
+  #2ecc71,
+  #27ae60
+  );
+
+  color:white;
+  text-decoration:none;
+
+  padding:12px 20px;
+
+  border-radius:12px;
+
+  font-weight:600;
+
+  box-shadow:
+  0 5px 15px rgba(39,174,96,.35);
+
+  transition:.25s;
+}
+
+.btn-export-modern:hover{
+  transform:translateY(-2px);
+  box-shadow:
+  0 8px 18px rgba(39,174,96,.45);
+}
+
+/* ===================================================== */
+/* 🔥 ASSIGN KELAS PAGE */
+/* ===================================================== */
+
+.assign-card{
+  max-width: 900px;
+}
+
+/* GRID DATA */
+.assign-card .detail-grid{
+  display: grid;
+
+  grid-template-columns: 180px 20px 1fr;
+
+  row-gap: 16px;
+  column-gap: 10px;
+
+  align-items: center;
+
+  margin-top: 20px;
+}
+
+/* LABEL */
+.assign-card .label{
+  font-weight: 600;
+  color: #555;
+}
+
+/* TANDA : */
+.assign-card .separator{
+  text-align: center;
+  font-weight: bold;
+  color: #777;
+}
+
+/* VALUE */
+.assign-card .value{
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+/* SELECT KELAS */
+.kelas-select{
+  width: 100%;
+
+  padding: 12px 14px;
+
+  border: 1px solid #dcdfe6;
+  border-radius: 10px;
+
+  background: #fff;
+
+  font-size: 14px;
+
+  transition: all .25s ease;
+}
+
+.kelas-select:focus{
+  outline: none;
+
+  border-color: #3498db;
+
+  box-shadow:
+    0 0 0 3px rgba(52,152,219,.15);
+}
+
+/* ACTION BUTTON */
+.assign-card .detail-actions{
+  margin-top: 25px;
+
+  display: flex;
+  gap: 12px;
+
+  flex-wrap: wrap;
+}
+
+/* RESPONSIVE HP */
+@media (max-width: 768px){
+
+  .assign-card .detail-grid{
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .assign-card .separator{
+    display: none;
+  }
+
+  .assign-card .detail-actions{
+    flex-direction: column;
+  }
+
+  .assign-card .detail-actions a,
+  .assign-card .detail-actions button{
+    width: 100%;
+  }
+
+}
+
+/* ===================================================== */
+/* 🔥 DATA SISWA */
+/* ===================================================== */
+
+/* FILTER */
+.siswa-filter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  background: #fff;
+  padding: 16px 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+.siswa-filter form{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.siswa-filter label{
+  font-weight:600;
+  color:#34495e;
+}
+
+.siswa-filter select{
+  height:38px;
+  padding:0 12px;
+  border:1px solid #dcdfe6;
+  border-radius:8px;
+  outline:none;
+  background:#fff;
+}
+
+.siswa-filter select:focus{
+  border-color:#3498db;
+}
+
+/* tombol filter */
+.btn-filter{
+  background:#3498db;
+  color:#fff;
+  border:none;
+  padding:9px 18px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+  transition:.25s;
+}
+
+.btn-filter:hover{
+  background:#2d89cc;
+}
+
+reset 
+.btn-reset{ 
+background:#6c757d; 
+color:#fff; 
+text-decoration:none; 
+padding:9px 18px; 
+border-radius:8px; 
+font-weight:600; 
+transition:.25s; 
+display:inline-block; 
+line-height:20px; /* tambahkan ini */ 
+}
+
+.btn-reset:hover{
+  background:#5c636a;
+}
+
+/* export */
+.btn-export{
+  background:#28a745;
+  color:#fff;
+  text-decoration:none;
+  padding:9px 18px;
+  border-radius:8px;
+  font-weight:600;
+  transition:.25s;
+}
+
+.btn-export:hover{
+  background:#22963c;
+}
+
+.search-input{
+    height:38px;
+    width:220px;
+    padding:0 12px;
+    border:1px solid #dcdfe6;
+    border-radius:8px;
+    outline:none;
+    transition:.25s;
+}
+
+.search-input:focus{
+    border-color:#3498db;
+    box-shadow:0 0 0 3px rgba(52,152,219,.15);
+}
+
+/* ===================================================== */
+/* TABLE SISWA */
+/* ===================================================== */
+
+.siswa-table{
+  background:#fff;
+  border-radius:14px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+.siswa-table table{
+  min-width:1800px;      /* tidak terlalu lebar */
+  border-collapse:collapse;
+}
+
+.siswa-table thead th{
+  background:#34495e;
+  color:#fff;
+  padding:12px 10px;
+  font-size:13px;
+  font-weight:600;
+  white-space:nowrap;
+  text-align:center;
+}
+
+.siswa-table tbody td{
+  padding:10px 10px;
+  border-bottom:1px solid #ececec;
+  color:#555;
+  font-size:13px;
+  white-space:nowrap;
+  text-align:center;
+}
+
+.siswa-table tbody tr:hover{
+  background:#f8fbff;
+}
+
+/* ===================================================== */
+/* STATUS */
+/* ===================================================== */
+
+.status-baru{
+  background:#fff4e5;
+  color:#d68910;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.status-aktif{
+  background:#e9f9f1;
+  color:#27ae60;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.status-nonaktif{
+  background:#fdecea;
+  color:#c0392b;
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+/* ===================================================== */
+/* BUTTON DETAIL */
+/* ===================================================== */
+
+.btn-detail{
+  display:inline-block;
+  background:#3498db;
+  color:#fff;
+  text-decoration:none;
+  padding:8px 14px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600;
+  transition:.25s;
+}
+
+.btn-detail:hover{
+  background:#2980b9;
+}
+
+/* ===================================================== */
+/* HARGA */
+/* ===================================================== */
+
+.harga-text{
+  color:#2563eb;
+  font-weight:600;
+}
+
+/* ===================================================== */
+/* RESPONSIVE */
+/* ===================================================== */
+
+@media(max-width:992px){
+
+  .siswa-filter{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+}
+/* ==========================
+   INFO JUMLAH DATA
+========================== */
+
+.info-data{
+    margin: 12px 0;
+    color:#555;
+    font-size:15px;
+    font-weight:500;
+}
+
+.info-data strong{
+    color:#3498db;
+    font-weight:700;
+}
+/* ==============================
+   SEARCH DATA KELAS
+============================== */
+
+.search-wrapper{
+    margin-bottom:15px;
+}
+
+.search-form{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.search-input{
+    width:320px;
+    padding:10px 14px;
+    border:1px solid #d0d7de;
+    border-radius:8px;
+    font-size:14px;
+    transition:.3s;
+}
+
+.search-input:focus{
+    outline:none;
+    border-color:#3498db;
+    box-shadow:0 0 0 3px rgba(52,152,219,.15);
+}
+
+.search-form button{
+    background:#3498db;
+    color:#fff;
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.search-form button:hover{
+    background:#2980b9;
+}
+
+/* ==============================
+   RESET BUTTON
+============================== */
+
+.btn-reset{
+    display:inline-block;
+    padding:10px 18px;
+    background:#6c757d;
+    color:#fff;
+    text-decoration:none;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-reset:hover{
+    background:#5a6268;
+}
+
+/* ===========================
+   PAGE HEADER
+=========================== */
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.search-wrapper{
+    margin-bottom:15px;
+}
+
+.search-form{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}

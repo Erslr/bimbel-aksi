@@ -1,0 +1,187 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<style>
+  .content {
+    padding: 30px;
+    background: #f5f7fb;
+    min-height: 100vh;
+  }
+
+  .card-form {
+    max-width: 900px;
+    background: #ffffff;
+    margin: auto;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  }
+
+  .card-form h2 {
+    margin-bottom: 25px;
+    color: #4c1d95;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  label {
+    font-size: 13px;
+    color: #555;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 2px rgba(139,92,246,.15);
+  }
+
+  .actions {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+  }
+
+  .btn-primary {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  width: auto;
+  }
+
+.btn-secondary {
+  background: #e5e7eb;
+  color: #333;
+  padding: 12px 24px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+
+
+  .btn-primary:hover { opacity: .9; }
+  .btn-secondary:hover { background: #d1d5db; }
+</style>
+
+<div class="content">
+  <div class="card-form">
+    <h2><%= kelas ? '✏️ Edit Kelas Bimbel' : '➕ Tambah Kelas Bimbel' %></h2>
+
+    <form action="<%= kelas ? '/kelas/edit/' + kelas.id_kelas : '/kelas/add' %>" method="POST">
+
+      <div class="form-grid">
+        <div>
+          <label>Nama Kelas</label>
+          <input type="text" name="nama_kelas" value="<%= kelas ? kelas.nama_kelas : '' %>" required>
+        </div>
+        <div>
+          <label>Jenjang</label>
+
+          <select name="jenjang" required>
+            <option value="">-- Pilih Jenjang --</option>
+
+            <option value="SMP"
+              <%= kelas && kelas.jenjang === 'SMP' ? 'selected' : '' %>>
+              SMP
+            </option>
+
+            <option value="SMA"
+              <%= kelas && kelas.jenjang === 'SMA' ? 'selected' : '' %>>
+              SMA
+            </option>
+
+            <option value="SMK"
+              <%= kelas && kelas.jenjang === 'SMK' ? 'selected' : '' %>>
+              SMK
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label>Mata Pelajaran</label>
+          <input
+            type="text"
+            name="mapel"
+            value="<%= kelas ? kelas.mapel : '' %>"
+            placeholder="Contoh: Matematika"
+            required
+          >
+        </div>
+        <div>
+          <label>Hari</label>
+          <input type="text" name="hari" value="<%= kelas ? kelas.hari : '' %>" required>
+        </div>
+        <div>
+          <label>Jam Mulai</label>
+          <input type="time" name="jam_mulai" value="<%= kelas ? kelas.jam_mulai : '' %>" required>
+        </div>
+
+        <div>
+          <label>Jam Selesai</label>
+          <input type="time" name="jam_selesai" value="<%= kelas ? kelas.jam_selesai : '' %>" required>
+        </div>
+
+        <div>
+          <label>Tempat Les</label>
+          <select name="tempat_les" required>
+            <option value="">-- Pilih Tempat --</option>
+            <option value="Dr. Angka" <%= kelas && kelas.tempat_les === 'Dr. Angka' ? 'selected' : '' %>>Dr. Angka</option>
+            <option value="Jatiwinangun" <%= kelas && kelas.tempat_les === 'Jatiwinangun' ? 'selected' : '' %>>Jatiwinangun</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Jadwal</label>
+          <select name="jadwal" required>
+            <option value="">-- Pilih Paket --</option>
+            <option value="Senin-Rabu-Jumat" <%= kelas && kelas.jadwal === 'Senin-Rabu-Jumat' ? 'selected' : '' %>>
+              Senin - Rabu - Jumat
+            </option>
+            <option value="Selasa-Kamis-Sabtu" <%= kelas && kelas.jadwal === 'Selasa-Kamis-Sabtu' ? 'selected' : '' %>>
+              Selasa - Kamis - Sabtu
+            </option>
+          </select>
+        </div>
+
+        <div>
+          <label>Kapasitas Siswa</label>
+          <input type="number" name="kapasitas" value="<%= kelas ? kelas.kapasitas : 20 %>" required>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn-primary"><%= kelas ? 'Update Kelas' : 'Simpan Kelas' %></button>
+        <a href="/kelas" class="btn-secondary">Batal</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

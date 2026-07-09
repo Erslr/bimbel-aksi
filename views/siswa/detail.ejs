@@ -1,0 +1,198 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="content">
+
+  <h2 class="page-title">👨‍🎓 Detail Siswa</h2>
+
+  <!-- CARD -->
+  <div class="detail-card">
+
+    <!-- HEADER -->
+    <div class="detail-header">
+      <h3><%= siswa.nama_lengkap %></h3>
+      <span class="status-badge <%= siswa.status_siswa %>">
+        <%= siswa.status_siswa.toUpperCase() %>
+      </span>
+    </div>
+
+    <!-- GRID DATA -->
+    <div class="detail-grid">
+
+      <div class="label">Nama Panggilan</div>
+<div class="separator">:</div>
+<div class="value"><%= siswa.nama_panggilan || '-' %></div>
+
+<div class="label">WA Siswa</div>
+<div class="separator">:</div>
+<div class="value"><%= siswa.wa_siswa %></div>
+
+<div class="label">Kelas Bimbel</div>
+<div class="separator">:</div>
+<div class="value"><%= siswa.nama_kelas || '-' %></div>
+
+<div class="label">Harga Bulanan</div>
+<div class="separator">:</div>
+<div class="value highlight">
+  <%= siswa.harga_bulanan
+    ? 'Rp ' + Number(siswa.harga_bulanan).toLocaleString('id-ID')
+    : 'Belum diatur' %>
+</div>
+
+    </div>
+
+  </div>
+
+  <!-- ACTION -->
+  <div class="detail-actions">
+
+    <a href="/siswa/harga/<%= siswa.id_siswa %>" class="btn-warning">
+      💰 Atur Harga
+    </a>
+
+    <% if(siswa.status_siswa==='baru'){ %>
+      <button onclick="konfirmasiSiswa('<%= siswa.id_siswa %>', this)" class="btn-success">
+        ✅ Konfirmasi
+      </button>
+    <% } else if(siswa.status_siswa==='aktif'){ %>
+      <a href="#"
+        onclick="nonaktifkanSiswa('<%= siswa.id_siswa %>')"
+        class="btn-danger">
+        ⛔ Nonaktifkan
+      </a>
+    <% } %>
+
+    <a href="/siswa/assign-kelas/<%= siswa.id_siswa %>" class="btn-info">
+      🏫 Assign Kelas
+    </a>
+
+    <a href="#"
+      onclick="hapusSiswa('<%= siswa.id_siswa %>')"
+      class="btn-secondary">
+      🗑 Hapus
+    </a>
+
+  </div>
+
+  <p class="back-link">
+    <a href="/siswa">← Kembali ke daftar siswa</a>
+  </p>
+
+</div>
+
+<!-- 🔥 SCRIPT UTAMA -->
+<script>
+async function konfirmasiSiswa(id, btn) {
+
+  const result = await Swal.fire({
+    title: 'Konfirmasi siswa?',
+    text: 'Siswa akan diubah menjadi AKTIF dan pesan WhatsApp akan disiapkan.',
+    icon: 'question',
+    width: '330px',
+    showCancelButton: true,
+    confirmButtonColor: '#28a745',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Ya, Konfirmasi',
+    cancelButtonText: 'Batal'
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+
+    // loading state
+    btn.disabled = true;
+    btn.innerText = '⏳ Memproses...';
+
+    const res = await fetch(`/siswa/konfirmasi/${id}`, {
+      method: 'POST'
+    });
+
+    const data = await res.json();
+
+    if (data.waLink) {
+
+      // buka WhatsApp di tab yang sama
+      window.location.href = data.waLink;
+
+    } else {
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal',
+        text: 'Gagal membuka WhatsApp.',
+        width: '330px'
+      });
+
+      btn.disabled = false;
+      btn.innerText = '✅ Konfirmasi';
+    }
+
+  } catch (err) {
+
+    console.error(err);
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Terjadi Kesalahan',
+      text: 'Silakan coba lagi.',
+      width: '330px'
+    });
+
+    btn.disabled = false;
+    btn.innerText = '✅ Konfirmasi';
+  }
+}
+
+/* ===========================
+   HAPUS SISWA
+=========================== */
+function hapusSiswa(id){
+
+  Swal.fire({
+    title: 'Hapus siswa?',
+    text: 'Data siswa beserta data pembayaran akan dihapus permanen.',
+    icon: 'warning',
+    width: '330px',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Ya, Hapus',
+    cancelButtonText: 'Batal'
+  }).then((result)=>{
+
+    if(result.isConfirmed){
+      window.location.href = '/siswa/delete/' + id;
+    }
+
+  });
+
+}
+
+/* ===========================
+   NONAKTIFKAN SISWA
+=========================== */
+function nonaktifkanSiswa(id){
+
+  Swal.fire({
+    title: 'Nonaktifkan siswa?',
+    text: 'Status siswa akan berubah menjadi NONAKTIF.',
+    icon: 'question',
+    width: '330px',
+    showCancelButton: true,
+    confirmButtonColor: '#f39c12',
+    cancelButtonColor: '#6c757d',
+    confirmButtonText: 'Ya',
+    cancelButtonText: 'Batal'
+  }).then((result)=>{
+
+    if(result.isConfirmed){
+      window.location.href = '/siswa/nonaktifkan/' + id;
+    }
+
+  });
+
+}
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,76 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<h2>Form Pendaftaran Siswa</h2>
+
+<form action="/pendaftaran-siswa" method="POST">
+  <label>Nama Lengkap:</label>
+  <input type="text" name="nama_lengkap" required><br>
+
+  <label>Nama Panggilan:</label>
+  <input type="text" name="nama_panggilan"><br>
+
+  <label>Tempat Lahir:</label>
+  <input type="text" name="tempat_lahir"><br>
+
+  <label>Tanggal Lahir:</label>
+  <input type="date" name="tanggal_lahir"><br>
+
+  <label>Jenis Kelamin:</label>
+  <select name="jenis_kelamin">
+    <option value="Laki-laki">Laki-laki</option>
+    <option value="Perempuan">Perempuan</option>
+  </select><br>
+
+  <label>WA Siswa:</label>
+  <input type="text" name="wa_siswa"><br>
+
+  <label>Asal Sekolah:</label>
+  <input type="text" name="asal_sekolah"><br>
+
+  <label>Kelas Sekolah:</label>
+  <input type="text" name="kelas_sekolah"><br>
+
+  <label>Jenjang:</label>
+  <input type="text" name="jenjang"><br>
+
+  <label>Organisasi:</label>
+  <input type="text" name="organisasi"><br>
+
+  <label>Nama Orang Tua:</label>
+  <input type="text" name="nama_ortu"><br>
+
+  <label>WA Orang Tua:</label>
+  <input type="text" name="wa_ortu"><br>
+
+  <label>Pekerjaan Orang Tua:</label>
+  <input type="text" name="pekerjaan_ortu"><br>
+
+  <label>Hari Les:</label>
+  <input type="text" name="hari_les"><br>
+
+  <label>Tanggal Masuk:</label>
+  <input type="date" name="tanggal_masuk"><br>
+
+  <label>Mata Pelajaran:</label>
+  <input type="text" name="mapel"><br>
+
+  <label>Jurusan Impian:</label>
+  <input type="text" name="jurusan_impian"><br>
+
+  <label>Kampus Impian:</label>
+  <input type="text" name="kampus_impian"><br>
+
+  <label>Sumber Info:</label>
+  <input type="text" name="sumber_info"><br>
+
+  <label>Pilih Kelas:</label>
+  <select name="id_kelas">
+    <option value="">-- Pilih Kelas --</option>
+    <% kelas.forEach(k => { %>
+      <option value="<%= k.id_kelas %>"><%= k.nama_kelas %></option>
+    <% }) %>
+  </select><br><br>
+
+  <button type="submit">Daftar</button>
+</form>
