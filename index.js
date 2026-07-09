@@ -147,8 +147,8 @@ io.on('connection', (socket) => {
 // =====================================
 // START SERVER
 // =====================================
-const PORT = process.env.APP_PORT || 3000;
+const PORT = process.env.PORT || process.env.APP_PORT || 3000;
 
-server.listen(PORT, () => {
-  console.log(`🚀 Server berjalan di http://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server berjalan di port ${PORT}`);
 });
