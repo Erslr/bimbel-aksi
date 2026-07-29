@@ -25,10 +25,15 @@ exports.login = (req, res) => {
   const { username, password } = req.body;
 
   const query = `
-    SELECT id_admin, username, password, nomor_wa
-    FROM admin
-    WHERE username = ?
-  `;
+  SELECT
+    id_admin,
+    username,
+    password,
+    nama_admin,
+    nomor_wa
+  FROM admin
+  WHERE username = ?
+`;
 
   db.query(query, [username], async (err, result) => {
 
@@ -62,6 +67,7 @@ exports.login = (req, res) => {
     req.session.user = {
       id: admin.id_admin,
       username: admin.username,
+      nama_admin: admin.nama_admin,
       nomor_wa: admin.nomor_wa || ''
     };
 
