@@ -12,6 +12,23 @@
     </span>
   </h2>
 
+    <!-- ================= GREETING ================= -->
+<div class="greeting-card">
+
+  <div class="greeting-text">
+
+    <h3 id="greetingText"></h3>
+
+    <p id="greetingMessage"></p>
+
+    <h4 id="todayDate"></h4>
+
+    <div id="liveClock"></div>
+
+  </div>
+
+</div>
+
   <!-- ================= CARD STATISTIK ================= -->
   <div class="dashboard-cards">
 
@@ -424,5 +441,88 @@ async function cekNotif() {
 setInterval(cekNotif, 10000);
 
 cekNotif();
+// ================= GREETING =================
 
+function updateGreeting(){
+
+    const now = new Date();
+
+    const hour = now.getHours();
+
+    let greeting = "";
+    let message = "";
+    let icon = "";
+
+    if(hour >= 0 && hour < 11){
+
+        icon = "🌤️";
+        greeting = "Selamat Pagi";
+        message = "Semoga hari Anda menyenangkan dan penuh semangat 🌸";
+
+    }else if(hour >= 11 && hour < 15){
+
+        icon = "☀️";
+        greeting = "Selamat Siang";
+        message = "Semoga aktivitas hari ini berjalan lancar 😊";
+
+    }else if(hour >= 15 && hour < 18){
+
+        icon = "🌇";
+        greeting = "Selamat Sore";
+        message = "Semoga pekerjaan hari ini segera terselesaikan ✨";
+
+    }else{
+
+        icon = "🌙";
+        greeting = "Selamat Malam";
+        message = "Terima kasih telah bekerja hari ini, semoga istirahat Anda menyenangkan 🌙";
+
+    }
+
+    document.getElementById("greetingText").innerHTML =
+        `${icon} ${greeting}, Admin`;
+
+    document.getElementById("greetingMessage").innerHTML =
+        message;
+
+    const hari = [
+        "Minggu",
+        "Senin",
+        "Selasa",
+        "Rabu",
+        "Kamis",
+        "Jumat",
+        "Sabtu"
+    ];
+
+    const bulan = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember"
+    ];
+
+    document.getElementById("todayDate").innerHTML =
+        `${hari[now.getDay()]}, ${now.getDate()} ${bulan[now.getMonth()]} ${now.getFullYear()}`;
+
+    const jam = String(now.getHours()).padStart(2,"0");
+    const menit = String(now.getMinutes()).padStart(2,"0");
+    const detik = String(now.getSeconds()).padStart(2,"0");
+
+    document.getElementById("liveClock").innerHTML =
+        `${jam}:${menit}:${detik} WIB`;
+
+}
+
+updateGreeting();
+
+setInterval(updateGreeting,1000);
 </script>

@@ -124,6 +124,107 @@ body {
 /* DASHBOARD CARD */
 /* ============================= */
 
+/* ================= GREETING ================= */
+
+.greeting-card{
+
+    margin:20px 0 25px;
+
+    padding:25px 30px;
+
+    border-radius:18px;
+
+    background:linear-gradient(135deg,#667eea,#764ba2);
+
+    color:#fff;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+    transition:.3s ease;
+
+}
+
+.greeting-card:hover{
+    transform: translateY(-3px);
+    transition:.3s;
+}
+
+.greeting-text h3{
+
+    margin:0;
+
+    font-size:30px;
+
+    font-weight:700;
+
+    line-height:1.3;
+}
+
+.greeting-text p{
+
+    margin:10px 0 20px;
+
+    font-size:16px;
+
+    opacity:.95;
+
+}
+
+#todayDate{
+
+    margin:0;
+
+    font-size:18px;
+
+    font-weight:500;
+
+}
+
+#liveClock{
+
+    margin-top:8px;
+
+    font-size:36px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+
+}
+
+@media(max-width:768px){
+
+    .greeting-card{
+
+        padding:20px;
+
+    }
+
+    .greeting-text h3{
+
+        font-size:24px;
+
+    }
+
+    .greeting-text p{
+
+        font-size:15px;
+
+    }
+
+    #todayDate{
+
+        font-size:16px;
+
+    }
+
+    #liveClock{
+
+        font-size:26px;
+
+    }
+
+}
 .dashboard-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
