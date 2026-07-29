@@ -86,14 +86,43 @@ exports.store = async (req, res) => {
       });
     });
 
+      // =========================
+        // SIMPAN KE TABEL NOTIFIKASI
+        // =========================
+        await new Promise((resolve, reject) => {
+
+          db.query(
+            `INSERT INTO notifikasi
+            (judul,pesan,tipe,untuk_role)
+            VALUES (?,?,?,?)`,
+            [
+              'Pendaftaran Baru',
+              `${data.nama_lengkap} telah melakukan pendaftaran.`,
+              'pendaftaran',
+              'admin'
+            ],
+            (err) => {
+
+              if (err) return reject(err);
+
+              resolve();
+
+            }
+          );
+
+        });
     // =========================
     // 🔔 REALTIME NOTIF
     // =========================
     const io = req.app.get('io');
     if (io) {
-      io.emit('pendaftarBaru', {
-        nama: data.nama_lengkap
-      });
+      io.emit('pendaftarBaru',{
+
+    nama:data.nama_lengkap,
+
+    pesan:`${data.nama_lengkap} telah melakukan pendaftaran.`
+
+    });
     }
 
     // =========================

@@ -5,10 +5,10 @@
 <!-- Lucide Icon -->
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
-  lucide.createIcons();
+    lucide.createIcons();
 </script>
 
-<!-- SweetAlert2 -->
+<!-- SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
@@ -19,7 +19,7 @@ function konfirmasiLogout(){
         title:"Logout?",
         text:"Anda akan keluar dari sistem.",
         icon:"warning",
-        width: "330px",
+        width:"330px",
         showCancelButton:true,
         confirmButtonText:"Ya, Logout",
         cancelButtonText:"Batal",
@@ -37,5 +37,163 @@ function konfirmasiLogout(){
 }
 
 </script>
+
+<!-- SOCKET -->
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+const socket = io();
+
+let daftarNotif = [];
+let popupSedangTampil = false;
+
+// ==========================
+// UNLOCK AUDIO
+// ==========================
+document.addEventListener("click", () => {
+
+    const audio = document.getElementById("notifSound");
+
+    audio.play()
+        .then(() => {
+            audio.pause();
+            audio.currentTime = 0;
+        })
+        .catch(() => {});
+
+}, { once:true });
+
+
+// ==========================
+// PLAY SOUND
+// ==========================
+function bunyikanNotif(){
+
+    const audio = document.getElementById("notifSound");
+
+    audio.currentTime = 0;
+
+    audio.play().catch(()=>{
+
+        console.log("Browser memblokir autoplay.");
+
+    });
+
+}
+
+
+// ==========================
+// SOCKET REALTIME
+// ==========================
+socket.on("pendaftarBaru",(data)=>{
+
+    daftarNotif.unshift({
+        pesan:data.pesan
+    });
+
+    bunyikanNotif();
+
+    if(!popupSedangTampil){
+
+        tampilkanNotif();
+
+    }
+
+});
+
+
+// ==========================
+// LOAD DARI DATABASE
+// ==========================
+async function loadNotif(){
+
+    try{
+
+        const res = await fetch('/notifikasi');
+
+        daftarNotif = await res.json();
+
+        if(daftarNotif.length>0){
+
+            bunyikanNotif();
+
+            tampilkanNotif();
+
+        }
+
+    }catch(err){
+
+        console.log(err);
+
+    }
+
+}
+
+loadNotif();
+
+
+// ==========================
+// SWEET ALERT
+// ==========================
+async function tampilkanNotif(){
+
+    if(daftarNotif.length===0) return;
+
+    popupSedangTampil=true;
+
+    let isi='';
+
+    daftarNotif.forEach((n)=>{
+
+        isi+=`
+        <div style="
+            padding:10px 0;
+            border-bottom:1px solid #eee;
+            text-align:left;
+        ">
+            • ${n.pesan}
+        </div>
+        `;
+
+    });
+
+    await Swal.fire({
+
+        icon:"info",
+
+        title:`🔔 ${daftarNotif.length} Notifikasi Baru`,
+
+        html:isi,
+
+        width:480,
+
+        confirmButtonText:"Tutup",
+
+        allowOutsideClick:false,
+
+        allowEscapeKey:false
+
+    });
+
+    await fetch('/notifikasi/read',{
+
+        method:"POST"
+
+    });
+
+    daftarNotif=[];
+
+    popupSedangTampil=false;
+
+}
+
+</script>
+
+<!-- AUDIO -->
+<audio id="notifSound" preload="auto">
+    <source src="/sounds/notif.mp3" type="audio/mpeg">
+</audio>
+
 </body>
 </html>

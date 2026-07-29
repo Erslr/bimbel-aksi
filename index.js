@@ -28,6 +28,7 @@ const kelasRoutes = require('./routes/kelas.routes');
 const tentorRoutes = require('./routes/tentor.routes');
 const pembayaranRoutes = require('./routes/pembayaran.routes');
 const adminPembayaranRoutes = require('./routes/admin.pembayaran.routes');
+const notifikasiRoutes = require('./routes/notifikasi.routes');
 
 // =====================================
 // INIT APP
@@ -117,33 +118,22 @@ app.use('/kelas', kelasRoutes);
 app.use('/tentor', tentorRoutes);
 app.use('/pembayaran', pembayaranRoutes);
 app.use('/admin/pembayaran', adminPembayaranRoutes);
+app.use(notifikasiRoutes); 
 
 // =====================================
 // SOCKET.IO EVENTS
 // =====================================
-let onlineUsers = {};
-
 io.on('connection', (socket) => {
 
-  console.log('User connected:', socket.id);
-
-  socket.on('register', (data) => {
-    if (data?.userId) {
-      onlineUsers[data.userId] = socket.id;
-    }
-  });
+  console.log('🟢 User Connected:', socket.id);
 
   socket.on('disconnect', () => {
-    for (let id in onlineUsers) {
-      if (onlineUsers[id] === socket.id) {
-        delete onlineUsers[id];
-      }
-    }
-    console.log('User disconnected:', socket.id);
+
+    console.log('🔴 User Disconnected:', socket.id);
+
   });
 
 });
-
 // =====================================
 // START SERVER
 // =====================================
