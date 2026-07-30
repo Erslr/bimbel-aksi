@@ -378,21 +378,56 @@ form.addEventListener('submit', async function(e) {
     // =========================
     if (data.success) {
 
-      // 🔥 jika ada link WA
+      // Jika ada link WhatsApp Admin
       if (data.waLink) {
-
-        // buka WA TAB BARU
         window.open(data.waLink, '_blank');
-
       }
 
-      alert('Pendaftaran berhasil!');
+      await Swal.fire({
+
+        icon: 'success',
+
+        title: 'Pendaftaran Berhasil',
+
+        text: 'Data berhasil dikirim. Admin akan segera memproses pendaftaran Anda.',
+
+        width: 420,
+
+        confirmButtonText: 'OK',
+
+        buttonsStyling: false,
+
+        customClass: {
+          popup: 'pendaftaran-swal',
+          confirmButton: 'pendaftaran-btn'
+        }
+
+      });
 
       form.reset();
 
     } else {
 
-      alert(data.message || 'Pendaftaran gagal');
+      Swal.fire({
+
+        icon: 'error',
+
+        title: 'Pendaftaran Gagal',
+
+        text: data.message || 'Terjadi kesalahan.',
+
+        width: 420,
+
+        confirmButtonText: 'Tutup',
+
+        buttonsStyling: false,
+
+        customClass: {
+          popup: 'pendaftaran-swal',
+          confirmButton: 'pendaftaran-btn'
+        }
+
+      });
 
     }
 
@@ -400,14 +435,36 @@ form.addEventListener('submit', async function(e) {
 
     console.error(err);
 
-    alert('Terjadi error server');
+    Swal.fire({
+
+      icon: 'error',
+
+      title: 'Server Error',
+
+      text: 'Terjadi kesalahan pada server.',
+
+      width: 420,
+
+      confirmButtonText: 'Tutup',
+
+      buttonsStyling: false,
+
+      customClass: {
+        popup: 'pendaftaran-swal',
+        confirmButton: 'pendaftaran-btn'
+      }
+
+    });
+
+  } finally {
+
+    btn.disabled = false;
+    btn.innerText = 'Kirim Pendaftaran';
 
   }
 
-  btn.disabled = false;
-  btn.innerText = 'Kirim Pendaftaran';
-
 });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

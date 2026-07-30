@@ -79,6 +79,36 @@ app.use(
 );
 
 // =====================================
+// GLOBAL DATA UNTUK SEMUA VIEW
+// =====================================
+const db = require('./config/database');
+
+app.use((req, res, next) => {
+
+    // Halaman publik tidak perlu query badge
+    if (!req.session.user) {
+        res.locals.siswaBaru = 0;
+        return next();
+    }
+
+    db.query(
+        "SELECT COUNT(*) AS total FROM siswa WHERE status_siswa='baru'",
+        (err, result) => {
+
+            if (err) {
+                console.error(err);
+                res.locals.siswaBaru = 0;
+            } else {
+                res.locals.siswaBaru = result[0].total;
+            }
+
+            next();
+        }
+    );
+
+});
+
+// =====================================
 // ROOT
 // =====================================
 app.get('/', (req, res) => {
