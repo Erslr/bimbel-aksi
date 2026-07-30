@@ -132,6 +132,20 @@ async function loadNotif(){
 
 loadNotif();
 
+// ==========================
+// REFRESH DATA SISWA
+// ==========================
+function refreshHalamanJikaPerlu(){
+
+    const path = window.location.pathname;
+
+    if(path === "/siswa"){
+
+        window.location.reload();
+
+    }
+
+}
 
 // ==========================
 // SWEET ALERT
@@ -181,6 +195,11 @@ async function tampilkanNotif(){
         method:"POST"
 
     });
+
+    // Refresh otomatis jika sedang di halaman Data Siswa
+    if(window.location.pathname === "/siswa"){
+        window.location.reload();
+    }
 
     daftarNotif=[];
 
