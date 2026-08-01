@@ -113,7 +113,6 @@ const jadwalHariIni = await new Promise((resolve) => {
       admin: req.session.user || { username: 'Admin' },
       activePage: 'dashboard',
 
-      siswaBaru,
 
       totalSiswa: result[0],
       siswaAktif: result[1],
@@ -139,8 +138,6 @@ const jadwalHariIni = await new Promise((resolve) => {
     admin: req.session.user || { username: 'Admin' },
     activePage: 'dashboard',
 
-    siswaBaru: 0,
-    
     totalSiswa: 0,
     siswaAktif: 0,
     siswaNonaktif: 0,
@@ -157,23 +154,7 @@ const jadwalHariIni = await new Promise((resolve) => {
 
   }
 };
-// =========================================================
-// 🔹 JUMLAH SISWA BARU (UNTUK BADGE & POPUP)
-// =========================================================
-const siswaBaru = await new Promise((resolve) => {
 
-  db.query(
-    "SELECT COUNT(*) AS total FROM siswa WHERE status_siswa='baru'",
-    (err, result) => {
-
-      if (err) return resolve(0);
-
-      resolve(result[0].total);
-
-    }
-  );
-
-});
 // ====================== NOTIFIKASI SISWA BARU ======================
 exports.notifPendaftarBaru = async (req, res) => {
   try {
