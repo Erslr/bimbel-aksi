@@ -154,35 +154,86 @@ async function tampilkanNotif(){
 
     if(daftarNotif.length===0) return;
 
-    popupSedangTampil=true;
+    popupSedangTampil = true;
 
-    let isi='';
+    const total = daftarNotif.length;
 
-    daftarNotif.forEach((n)=>{
+    // tampilkan maksimal 3 nama terbaru
+    const daftarNama = daftarNotif
+        .slice(0,3)
+        .map(n => {
 
-        isi+=`
+            const nama = n.pesan.split(" telah")[0];
+
+            return `<li>${nama}</li>`;
+
+        })
+        .join("");
+
+    const sisa = total > 3
+        ? `<p style="margin-top:8px;color:#777;">+${total-3} siswa lainnya...</p>`
+        : "";
+
+    const isi = `
+
+        <p style="margin-bottom:15px;font-size:15px;">
+            Terdapat
+            <b>${total} siswa</b>
+            yang telah melakukan pendaftaran
+            dan sedang menunggu konfirmasi admin.
+        </p>
+
         <div style="
-            padding:10px 0;
-            border-bottom:1px solid #eee;
+            background:#f8f9fa;
+            padding:14px;
+            border-radius:10px;
             text-align:left;
         ">
-            • ${n.pesan}
+
+            <b>Daftar terbaru:</b>
+
+            <ul style="
+                margin-top:10px;
+                padding-left:18px;
+                line-height:1.8;
+            ">
+                ${daftarNama}
+            </ul>
+
+            ${sisa}
+
         </div>
-        `;
 
-    });
+        <p style="
+            margin-top:18px;
+            font-size:14px;
+        ">
+            Silakan buka menu
+            <b>Data Siswa</b>
+            untuk melakukan konfirmasi.
+        </p>
 
-    await Swal.fire({
+    `;
+
+    const hasil = await Swal.fire({
 
         icon:"info",
 
-        title:`🔔 ${daftarNotif.length} Notifikasi Baru`,
+        title:`🔔 Pendaftaran Siswa Baru`,
 
         html:isi,
 
-        width:480,
+        width:530,
 
-        confirmButtonText:"Tutup",
+        showCancelButton:true,
+
+        confirmButtonText:"📋 Buka Data Siswa",
+
+        cancelButtonText:"Tutup",
+
+        confirmButtonColor:"#198754",
+
+        cancelButtonColor:"#6c757d",
 
         allowOutsideClick:false,
 
@@ -190,23 +241,21 @@ async function tampilkanNotif(){
 
     });
 
-    await fetch('/notifikasi/read',{
-
+    await fetch("/notifikasi/read",{
         method:"POST"
-
     });
-
-    // Refresh otomatis jika sedang di halaman Data Siswa
-    if(window.location.pathname === "/siswa"){
-        window.location.reload();
-    }
 
     daftarNotif=[];
 
     popupSedangTampil=false;
 
-}
+    if(hasil.isConfirmed){
 
+        window.location.href="/siswa?status=baru";
+
+    }
+
+}
 </script>
 
 <!-- AUDIO -->
