@@ -86,22 +86,22 @@ function bunyikanNotif(){
 // ==========================
 // SOCKET REALTIME
 // ==========================
-socket.on("pendaftarBaru",(data)=>{
+socket.on("pendaftarBaru", (data) => {
+
+    console.log("🔥 SOCKET MASUK");
+    console.log(data);
 
     daftarNotif.unshift({
-        pesan:data.pesan
+        pesan: data.pesan
     });
 
     bunyikanNotif();
 
-    if(!popupSedangTampil){
-
+    if (!popupSedangTampil) {
         tampilkanNotif();
-
     }
 
 });
-
 
 // ==========================
 // LOAD DARI DATABASE

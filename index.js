@@ -86,7 +86,7 @@ const db = require('./config/database');
 app.use((req, res, next) => {
 
     // Halaman publik tidak perlu query badge
-    if (!req.session.admin) {
+    if (!req.session.user) {
         res.locals.siswaBaru = 0;
         return next();
     }

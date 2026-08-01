@@ -90,7 +90,7 @@ db.query(query, params, (err, results) => {
 
       res.render('siswa/index', {
         siswa: results,
-        admin: req.session.admin,
+        admin: req.session.user,
         activePage: 'siswa',
 
         filterStatus,
