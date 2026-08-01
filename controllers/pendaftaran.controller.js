@@ -87,30 +87,39 @@ exports.store = async (req, res) => {
     });
 
       // =========================
-        // SIMPAN KE TABEL NOTIFIKASI
-        // =========================
-        await new Promise((resolve, reject) => {
+// SIMPAN KE TABEL NOTIFIKASI
+// =========================
+console.log("=== MASUK INSERT NOTIF PENDAFTARAN ===");
 
-          db.query(
-            `INSERT INTO notifikasi
-            (judul,pesan,tipe,untuk_role)
-            VALUES (?,?,?,?)`,
-            [
-              'Pendaftaran Baru',
-              `${data.nama_lengkap} telah melakukan pendaftaran.`,
-              'pendaftaran',
-              'admin'
-            ],
-            (err) => {
+await new Promise((resolve, reject) => {
 
-              if (err) return reject(err);
+  db.query(
+    `INSERT INTO notifikasi
+    (judul,pesan,tipe,untuk_role)
+    VALUES (?,?,?,?)`,
+    [
+      'Pendaftaran Baru',
+      `${data.nama_lengkap} telah melakukan pendaftaran.`,
+      'pendaftaran',
+      'admin'
+    ],
+    (err, result) => {
 
-              resolve();
+      if (err) {
+        console.error("❌ INSERT NOTIF GAGAL");
+        console.error(err);
+        return reject(err);
+      }
 
-            }
-          );
+      console.log("✅ INSERT NOTIF BERHASIL");
+      console.log(result);
 
-        });
+      resolve();
+
+    }
+  );
+
+});
     // =========================
     // 🔔 REALTIME NOTIF
     // =========================

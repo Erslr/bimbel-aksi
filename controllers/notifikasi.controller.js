@@ -8,7 +8,7 @@ exports.getNotif = (req, res) => {
     db.query(
         `SELECT *
          FROM notifikasi
-            WHERE dibaca = 0
+            WHERE sudah_dibaca = 0
             AND tipe = 'pendaftaran'
          ORDER BY id_notif DESC`,
         (err, result) => {
@@ -32,8 +32,8 @@ exports.readNotif = (req, res) => {
 
     db.query(
         `UPDATE notifikasi
-         SET dibaca = 1
-         WHERE dibaca = 0`,
+         SET sudah_dibaca = 1
+         WHERE sudah_dibaca = 0`,
         (err) => {
 
             if (err) {
