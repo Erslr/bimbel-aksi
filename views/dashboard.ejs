@@ -78,19 +78,21 @@
 
   <!-- ================= GENERATE TAGIHAN ================= -->
   <div style="margin-top:20px;">
-    <a href="/pembayaran/generate"
-      style="
-      display:inline-block;
-      padding:10px 18px;
-      background:#f39c12;
-      color:white;
-      border-radius:8px;
-      text-decoration:none;
-      font-weight:bold;
-    ">
-      ⚙️ Generate Tagihan 
-    </a>
-  </div>
+    <button
+        id="btnGenerate"
+        style="
+            padding:10px 18px;
+            background:#f39c12;
+            color:white;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+        "
+    >
+        ⚙️ Generate Tagihan
+    </button>
+</div>
 
   <!-- ================= REMINDER ================= -->
   <div class="section-box" style="margin-top:20px;">
@@ -437,4 +439,82 @@ function updateGreeting(){
 updateGreeting();
 
 setInterval(updateGreeting,1000);
+</script>
+
+<script>
+const btnGenerate = document.getElementById("btnGenerate");
+
+if(btnGenerate){
+
+btnGenerate.addEventListener("click", async ()=>{
+
+    const konfirmasi = await Swal.fire({
+        title:"Generate Tagihan?",
+        text:"Sistem akan membuat tagihan pembayaran yang belum tersedia.",
+        icon:"question",
+        width:"330px",
+        showCancelButton:true,
+        confirmButtonText:"Ya, Generate",
+        cancelButtonText:"Batal",
+        confirmButtonColor:"#28a745",
+        cancelButtonColor:"#d33"
+    });
+
+    if(!konfirmasi.isConfirmed) return;
+
+    btnGenerate.disabled = true;
+    btnGenerate.innerHTML = "⏳ Generating...";
+
+    try{
+
+        const res = await fetch("/pembayaran/generate",{
+            method:"POST"
+        });
+
+        const data = await res.json();
+
+        if(data.success){
+
+            await Swal.fire({
+                icon:"success",
+                title:"Berhasil",
+                text:data.message,
+                timer:1500,
+                showConfirmButton:false,
+                width:"330px"
+            });
+
+            window.location.href="/pembayaran";
+
+        }else{
+
+            Swal.fire({
+                icon:"error",
+                title:"Gagal",
+                text:data.message,
+                width:"330px"
+            });
+
+            btnGenerate.disabled = false;
+            btnGenerate.innerHTML="⚙️ Generate Tagihan";
+
+        }
+
+    }catch(err){
+
+        Swal.fire({
+            icon:"error",
+            title:"Terjadi Kesalahan",
+            text:"Generate tagihan gagal.",
+            width:"330px"
+        });
+
+        btnGenerate.disabled=false;
+        btnGenerate.innerHTML="⚙️ Generate Tagihan";
+
+    }
+
+});
+
+}
 </script>

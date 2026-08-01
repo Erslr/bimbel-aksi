@@ -8,7 +8,8 @@ exports.getNotif = (req, res) => {
     db.query(
         `SELECT *
          FROM notifikasi
-         WHERE dibaca = 0
+            WHERE dibaca = 0
+            AND tipe = 'pendaftaran'
          ORDER BY id_notif DESC`,
         (err, result) => {
 

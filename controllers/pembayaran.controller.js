@@ -834,19 +834,25 @@ Mohon konfirmasinya, Terima kasih 🙏`;
 /* ==============================
    GENERATE TAGIHAN
 ================================ */
-exports.generateTagihan = (req, res) => {
+exports.generateTagihan = async (req, res) => {
 
   try {
 
-    generateTagihanBulanan();
+    await generateTagihanBulanan();
 
-    res.redirect('/pembayaran?success=generate');
+    return res.json({
+      success: true,
+      message: 'Tagihan berhasil digenerate.'
+    });
 
   } catch (err) {
 
     console.log(err);
 
-    res.redirect('/pembayaran?error=generate');
+    return res.status(500).json({
+      success: false,
+      message: 'Gagal generate tagihan.'
+    });
 
   }
 

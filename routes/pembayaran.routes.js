@@ -79,7 +79,7 @@ router.post(
 // ==============================
 // GENERATE TAGIHAN
 // ==============================
-router.get(
+router.post(
   '/generate',
   auth,
   pembayaranController.generateTagihan

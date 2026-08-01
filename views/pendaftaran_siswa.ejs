@@ -378,11 +378,6 @@ form.addEventListener('submit', async function(e) {
     // =========================
     if (data.success) {
 
-      // Jika ada link WhatsApp Admin
-      if (data.waLink) {
-        window.open(data.waLink, '_blank');
-      }
-
       await Swal.fire({
 
         icon: 'success',
@@ -405,6 +400,12 @@ form.addEventListener('submit', async function(e) {
       });
 
       form.reset();
+
+      // Jika ada link WhatsApp Admin,
+      // buka setelah tombol OK diklik
+      if (data.waLink) {
+        window.open(data.waLink, '_blank');
+      }
 
     } else {
 
