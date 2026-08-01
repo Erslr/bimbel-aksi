@@ -712,6 +712,17 @@ exports.bayar = (req, res) => {
   const { id } = req.params;
   const { metode_pembayaran } = req.body;
 
+  // =========================
+  // AMBIL FILTER YANG SEDANG AKTIF
+  // =========================
+  const {
+    bulan,
+    tahun,
+    status = 'semua',
+    jenjang = 'semua',
+    keyword = ''
+  } = req.query;
+
   const query = `
     UPDATE pembayaran
     SET
@@ -725,10 +736,15 @@ exports.bayar = (req, res) => {
 
     if (err) {
       console.log(err);
-      return res.redirect('/pembayaran?error=bayar');
+
+      return res.redirect(
+        `/pembayaran?error=bayar&bulan=${bulan}&tahun=${tahun}&status=${status}&jenjang=${jenjang}&keyword=${encodeURIComponent(keyword)}`
+      );
     }
 
-    res.redirect('/pembayaran?success=bayar');
+    res.redirect(
+      `/pembayaran?success=bayar&bulan=${bulan}&tahun=${tahun}&status=${status}&jenjang=${jenjang}&keyword=${encodeURIComponent(keyword)}`
+    );
 
   });
 

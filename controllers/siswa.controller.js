@@ -67,27 +67,46 @@ exports.index = (req, res) => {
 
   query += ` ORDER BY siswa.id_siswa DESC`;
 
-  db.query(query, params, (err, results) => {
+db.query(query, params, (err, results) => {
 
-    if (err) {
-      console.log(err);
-      return res.send('Gagal mengambil data siswa');
+  if (err) {
+    console.log(err);
+    return res.send('Gagal mengambil data siswa');
+  }
+
+  // =========================
+  // HITUNG SISWA STATUS BARU
+  // =========================
+  db.query(
+    `SELECT COUNT(*) AS jumlah
+     FROM siswa
+     WHERE status_siswa = 'baru'`,
+    (err2, notif) => {
+
+      if (err2) {
+        console.log(err2);
+        return res.send('Gagal mengambil data notifikasi');
+      }
+
+      res.render('siswa/index', {
+        siswa: results,
+        admin: req.session.admin,
+        activePage: 'siswa',
+
+        filterStatus,
+        filterJenjang,
+        keyword,
+        totalData: results.length,
+
+        // Badge jumlah siswa baru
+        siswaBaru: notif[0].jumlah
+      });
+
     }
+  );
 
-    res.render('siswa/index', {
-      siswa: results,
-      admin: req.session.admin,
-      activePage: 'siswa',
-
-      filterStatus,
-      filterJenjang,
-      keyword,
-      totalData: results.length
-    });
-
-  });
-
-};
+});
+}
 /* ==============================
    DETAIL SISWA
 ================================ */

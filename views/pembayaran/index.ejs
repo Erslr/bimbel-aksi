@@ -285,7 +285,11 @@
             <td>
               <% if (p.status === 'belum') { %>
 
-                <form action="/pembayaran/bayar/<%= p.id_pembayaran %>" method="POST"onsubmit="return konfirmasiBayar(this)"style="display:flex;gap:5px;"
+                <form
+                    action="/pembayaran/bayar/<%= p.id_pembayaran %>?bulan=<%= bulan %>&tahun=<%= tahun %>&status=<%= filterStatus %>&jenjang=<%= filterJenjang %>&keyword=<%= encodeURIComponent(keyword || '') %>"
+                    method="POST"
+                    onsubmit="return konfirmasiBayar(this)"
+                    style="display:flex;gap:5px;"
 >
                   <select name="metode_pembayaran" required>
                     <option value="">Metode</option>
