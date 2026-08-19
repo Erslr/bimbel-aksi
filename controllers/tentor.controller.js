@@ -45,18 +45,26 @@ exports.add = (req, res) => {
 // SIMPAN TENTOR
 // ================================
 exports.store = (req, res) => {
-  const { nama_tentor, no_wa, alamat, mapel, status } = req.body;
+      const {
+      nama_tentor,
+      perguruan_tinggi,
+      no_wa,
+      alamat,
+      mapel,
+      status
+    } = req.body;
 
-  const query = `
-  INSERT INTO tentor 
-  (nama_tentor, no_wa, alamat, mapel, status)
-  VALUES (?,?,?,?,?)
-`;
+      const query = `
+      INSERT INTO tentor
+      (nama_tentor, perguruan_tinggi, no_wa, alamat, mapel, status)
+      VALUES (?,?,?,?,?,?)
+    `;
 
   db.query(
     query,
     [
       nama_tentor,
+      perguruan_tinggi,
       no_wa,
       alamat,
       mapel,
@@ -107,6 +115,7 @@ exports.update = (req, res) => {
   const { id } = req.params;
   const {
   nama_tentor,
+  perguruan_tinggi,
   no_wa,
   alamat,
   mapel,
@@ -114,25 +123,27 @@ exports.update = (req, res) => {
 } = req.body;
 
   const query = `
-    UPDATE tentor SET
-      nama_tentor = ?,
-      no_wa = ?,
-      alamat = ?,
-      mapel = ?,
-      status = ?
-    WHERE id_tentor = ?
-  `;
+  UPDATE tentor SET
+    nama_tentor = ?,
+    perguruan_tinggi = ?,
+    no_wa = ?,
+    alamat = ?,
+    mapel = ?,
+    status = ?
+  WHERE id_tentor = ?
+`;
 
   db.query(
   query,
   [
-    nama_tentor,
-    no_wa,
-    alamat,
-    mapel,
-    status,
-    id
-  ],
+  nama_tentor,
+  perguruan_tinggi,
+  no_wa,
+  alamat,
+  mapel,
+  status,
+  id
+],
   (err) => {
 
     if (err) {

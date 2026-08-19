@@ -2683,6 +2683,17 @@ body:not(:has(.sidebar)) .container {
   flex-wrap:wrap;
 }
 
+.siswa-filter-actions{
+  width:100%;
+
+  display:flex;
+  align-items:center;
+
+  gap:12px;
+
+  margin-top:4px;
+}
+
 .siswa-filter label{
   font-weight:600;
   color:#34495e;

@@ -8,133 +8,139 @@
 
   <h2>👨‍🎓 Data Siswa</h2>
 
-  <a href="/pendaftaran-siswa" class="btn-add">
-    + Tambah Siswa Baru
-  </a>
-
 </div>
 
-  <!-- FILTER + EXPORT -->
+  <!-- ============================= -->
+  <!-- FILTER DATA SISWA -->
+  <!-- ============================= -->
+
   <div class="siswa-filter">
+
     <form method="GET" action="/siswa">
 
-  <!-- STATUS -->
-  <div>
-    <label>Status:</label>
-    <select name="status">
+      <!-- STATUS -->
+      <div>
+        <label>Status:</label>
 
-      <option value="semua"
-        <%= filterStatus==='semua'?'selected':'' %>>
-        Semua
-      </option>
+        <select name="status">
+          <option value="semua"
+            <%= filterStatus === 'semua' ? 'selected' : '' %>>
+            Semua
+          </option>
 
-      <option value="aktif"
-        <%= filterStatus==='aktif'?'selected':'' %>>
-        Aktif
-      </option>
+          <option value="aktif"
+            <%= filterStatus === 'aktif' ? 'selected' : '' %>>
+            Aktif
+          </option>
 
-      <option value="nonaktif"
-        <%= filterStatus==='nonaktif'?'selected':'' %>>
-        Nonaktif
-      </option>
+          <option value="nonaktif"
+            <%= filterStatus === 'nonaktif' ? 'selected' : '' %>>
+            Nonaktif
+          </option>
 
-      <option value="baru"
-        <%= filterStatus==='baru'?'selected':'' %>>
-        Baru
-      </option>
+          <option value="baru"
+            <%= filterStatus === 'baru' ? 'selected' : '' %>>
+            Baru
+          </option>
+        </select>
+      </div>
 
-    </select>
-  </div>
 
-  <!-- JENJANG -->
-  <div>
-    <label>Jenjang:</label>
+      <!-- JENJANG -->
+      <div>
+        <label>Jenjang:</label>
 
-    <select name="jenjang">
+        <select name="jenjang">
 
-      <option value="semua"
-        <%= filterJenjang==='semua'?'selected':'' %>>
-        Semua
-      </option>
+          <option value="semua"
+            <%= filterJenjang === 'semua' ? 'selected' : '' %>>
+            Semua
+          </option>
 
-      <option value="SMP"
-        <%= filterJenjang==='SMP'?'selected':'' %>>
-        SMP
-      </option>
+          <option value="SMP"
+            <%= filterJenjang === 'SMP' ? 'selected' : '' %>>
+            SMP
+          </option>
 
-      <option value="SMA"
-        <%= filterJenjang==='SMA'?'selected':'' %>>
-        SMA
-      </option>
+          <option value="SMA"
+            <%= filterJenjang === 'SMA' ? 'selected' : '' %>>
+            SMA
+          </option>
 
-      <option value="SMK"
-        <%= filterJenjang==='SMK'?'selected':'' %>>
-        SMK
-      </option>
+          <option value="SMK"
+            <%= filterJenjang === 'SMK' ? 'selected' : '' %>>
+            SMK
+          </option>
 
-    </select>
-  </div>
+        </select>
+      </div>
 
-  <!-- JENIS KELAMIN -->
-  <div>
-    <label>Jenis Kelamin:</label>
 
-    <select name="jenis_kelamin">
+      <!-- JENIS KELAMIN -->
+      <div>
+        <label>Jenis Kelamin:</label>
 
-      <option value="semua"
-        <%= filterJenisKelamin === 'semua' ? 'selected' : '' %>>
-        Semua
-      </option>
+        <select name="jenis_kelamin">
 
-      <option value="L"
-        <%= filterJenisKelamin === 'L' ? 'selected' : '' %>>
-        Laki-laki
-      </option>
+          <option value="semua"
+            <%= filterJenisKelamin === 'semua' ? 'selected' : '' %>>
+            Semua
+          </option>
 
-      <option value="P"
-        <%= filterJenisKelamin === 'P' ? 'selected' : '' %>>
-        Perempuan
-      </option>
+          <option value="L"
+            <%= filterJenisKelamin === 'L' ? 'selected' : '' %>>
+            Laki-laki
+          </option>
 
-    </select>
-  </div>
+          <option value="P"
+            <%= filterJenisKelamin === 'P' ? 'selected' : '' %>>
+            Perempuan
+          </option>
 
-  <div>
-    <label>Search:</label>
+        </select>
+      </div>
 
-    <input
-    type="text"
-    name="keyword"
-    value="<%= keyword %>"
-    placeholder="🔍 Cari nama, WA, sekolah..."
-    class="search-input"
-    autocomplete="off"
->
-  </div>
 
-  <!-- BUTTON -->
-  <button type="submit" class="btn-filter">
-    Filter
-  </button>
+      <!-- SEARCH -->
+      <div>
+        <label>Search:</label>
 
-  <a href="/siswa"
-      style="
-        padding:5px 10px;
-        background:#6c757d;
-        color:white;
-        text-decoration:none;
-        border-radius:4px;
-      ">
-      Reset
-    </a>
+        <input
+          type="text"
+          name="keyword"
+          value="<%= keyword %>"
+          placeholder="🔍 Cari nama, WA, sekolah..."
+          class="search-input"
+          autocomplete="off"
+        >
+      </div>
 
-</form>
-    <a
-  href="/siswa/export/excel?status=<%= filterStatus %>&jenjang=<%= filterJenjang %>&jenis_kelamin=<%= filterJenisKelamin %>"
-  class="btn-export"
->
-  ⬇ Export Excel
-    </a>
+
+      <!-- ========================= -->
+      <!-- ACTION BUTTON -->
+      <!-- ========================= -->
+
+      <div class="siswa-filter-actions">
+
+        <button type="submit" class="btn-filter">
+          🔎 Filter
+        </button>
+
+        <a href="/siswa" class="btn-reset">
+          ↻ Reset
+        </a>
+
+        <a
+          href="/siswa/export/excel?status=<%= filterStatus %>&jenjang=<%= filterJenjang %>&jenis_kelamin=<%= filterJenisKelamin %>"
+          class="btn-export"
+        >
+          ⬇ Export Excel
+        </a>
+
+      </div>
+
+    </form>
+
   </div>
 
   <div class="info-data">

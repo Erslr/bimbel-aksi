@@ -96,6 +96,17 @@
         </div>
 
         <div>
+          <label>Perguruan Tinggi</label>
+          <input
+            type="text"
+            name="perguruan_tinggi"
+            placeholder="Contoh: Universitas Muhammadiyah Malang"
+            value="<%= tentor ? tentor.perguruan_tinggi : '' %>"
+            required
+          >
+        </div>
+
+        <div>
           <label>No WhatsApp</label>
           <input type="text" name="no_wa"
             value="<%= tentor ? tentor.no_wa : '' %>">

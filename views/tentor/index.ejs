@@ -20,6 +20,7 @@
         <tr>
           <th>No</th>
           <th>Nama</th>
+          <th>Perguruan Tinggi</th>
           <th>No WA</th>
           <th>Alamat</th>
           <th>Mapel</th>
@@ -32,7 +33,7 @@
 
         <% if (tentor.length === 0) { %>
           <tr>
-            <td colspan="7" style="text-align:center; padding:20px;">
+            <td colspan="8" style="text-align:center; padding:20px;">
               Data tentor belum ada
             </td>
           </tr>
@@ -46,7 +47,9 @@
             <td>
               <%= t.nama_tentor %>
             </td>
-
+            <td>
+              <%= t.perguruan_tinggi || '-' %>
+            </td>
             <td>
                 <%= t.no_wa || '-' %>
             </td>
