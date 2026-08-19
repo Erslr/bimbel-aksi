@@ -17,11 +17,42 @@ exports.store = async (req, res) => {
     const data = req.body;
 
     // 🔥 VALIDASI DASAR
-    if (!data || !data.nama_lengkap) {
-      return res.json({
-        success: false,
-        message: 'Data tidak lengkap'
-      });
+    if (
+        !data ||
+        !data.nama_lengkap ||
+        !data.nama_panggilan ||
+        !data.tempat_lahir ||
+        !data.tanggal_lahir ||
+        !data.jenis_kelamin ||
+        !data.agama ||
+        !data.wa_siswa ||
+        !data.asal_sekolah ||
+        !data.kelas_sekolah ||
+        !data.jenjang ||
+        !data.organisasi ||
+        !data.alamat ||
+        !data.nama_ortu ||
+        !data.wa_ortu ||
+        !data.pekerjaan_ortu ||
+        !data.hari_les ||
+        !data.tanggal_masuk ||
+        !data.mapel
+      ) {
+        return res.json({
+          success: false,
+          message: 'Mohon lengkapi seluruh data wajib sesuai dengan biodata siswa.'
+        });
+      }
+
+    if (data.wa_siswa) {
+      const waSiswa = String(data.wa_siswa).trim();
+
+      if (!/^[0-9+()\-\s]{10,20}$/.test(waSiswa)) {
+        return res.json({
+          success: false,
+          message: 'Nomor WhatsApp siswa tidak valid.'
+        });
+      }
     }
 
     const sql = `
@@ -32,6 +63,7 @@ exports.store = async (req, res) => {
         tanggal_lahir,
         alamat,
         jenis_kelamin,
+        agama,
         wa_siswa,
         asal_sekolah,
         kelas_sekolah,
@@ -48,7 +80,7 @@ exports.store = async (req, res) => {
         sumber_info,
         id_kelas,
         status_siswa
-      ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     `;
 
     const values = [
@@ -58,6 +90,7 @@ exports.store = async (req, res) => {
       data.tanggal_lahir,
       data.alamat,
       data.jenis_kelamin,
+      data.agama,
       data.wa_siswa,
       data.asal_sekolah,
       data.kelas_sekolah,
@@ -147,6 +180,7 @@ await new Promise((resolve, reject) => {
 
 Nama: ${data.nama_lengkap}
 Panggilan: ${data.nama_panggilan || '-'}
+Agama: ${data.agama || '-'}
 WA: ${data.wa_siswa || '-'}
 Sekolah: ${data.asal_sekolah || '-'}
 Jenjang: ${data.jenjang || '-'}

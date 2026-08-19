@@ -213,61 +213,75 @@
 
         <div>
           <label>Nama Panggilan</label>
-          <input type="text" name="nama_panggilan" />
+          <input type="text" name="nama_panggilan" required />
         </div>
 
         <div>
           <label>Tempat Lahir</label>
-          <input type="text" name="tempat_lahir" />
+          <input type="text" name="tempat_lahir" required />
         </div>
 
         <div>
           <label>Tanggal Lahir</label>
-          <input type="date" name="tanggal_lahir" />
+          <input type="date" name="tanggal_lahir" required />
         </div>
 
         <div>
           <label>Jenis Kelamin</label>
-          <select name="jenis_kelamin">
-            <option value="">-- Pilih --</option>
+          <select name="jenis_kelamin" required>
+            <option value="">-- Pilih Jenis Kelamin --</option>
             <option value="L">Laki-laki</option>
             <option value="P">Perempuan</option>
           </select>
         </div>
 
         <div>
-          <label>No WhatsApp Siswa</label>
-          <input type="text" name="wa_siswa" />
-        </div>
-
-        <div>
-          <label>Asal Sekolah</label>
-          <input type="text" name="asal_sekolah" />
-        </div>
-
-        <div>
-          <label>Kelas Sekolah</label>
-          <input type="text" name="kelas_sekolah" />
-        </div>
-
-        <div>
-          <label>Jenjang</label>
-          <select name="jenjang">
-            <option value="SMP">SMP</option>
-            <option value="SMA">SMA</option>
-            <option value="SMK">SMK</option>
+          <label>Agama</label>
+          <select name="agama" required>
+            <option value="">-- Pilih Agama --</option>
+            <option value="Islam">Islam</option>
+            <option value="Kristen">Kristen</option>
+            <option value="Katolik">Katolik</option>
+            <option value="Hindu">Hindu</option>
+            <option value="Buddha">Buddha</option>
+            <option value="Konghucu">Konghucu</option>
           </select>
         </div>
 
         <div>
+          <label>No WhatsApp Siswa</label>
+          <input type="text" name="wa_siswa" required />
+        </div>
+
+        <div>
+          <label>Asal Sekolah</label>
+          <input type="text" name="asal_sekolah" required />
+        </div>
+
+        <div>
+          <label>Kelas Sekolah</label>
+          <input type="text" name="kelas_sekolah" required />
+        </div>
+
+        <div>
+        <label>Jenjang</label>
+        <select name="jenjang" required>
+          <option value="">-- Pilih Jenjang --</option>
+          <option value="SMP">SMP</option>
+          <option value="SMA">SMA</option>
+          <option value="SMK">SMK</option>
+        </select>
+      </div>
+
+        <div>
           <label>Organisasi</label>
-          <input type="text" name="organisasi" />
+          <input type="text" name="organisasi" required />
         </div>
 
         <div class="alamat-field">
-          <label>Alamat</label>
-          <textarea name="alamat" rows="3"></textarea>
-        </div>
+        <label>Alamat</label>
+        <textarea name="alamat" rows="3" required></textarea>
+      </div>
 
       </div>
     </div>
@@ -279,17 +293,17 @@
 
         <div>
           <label>Nama Orang Tua</label>
-          <input type="text" name="nama_ortu" />
+          <input type="text" name="nama_ortu" required />
         </div>
 
         <div>
           <label>No WhatsApp Orang Tua</label>
-          <input type="text" name="wa_ortu" />
+          <input type="text" name="wa_ortu" required />
         </div>
 
         <div>
           <label>Pekerjaan Orang Tua</label>
-          <input type="text" name="pekerjaan_ortu" />
+          <input type="text" name="pekerjaan_ortu" required />
         </div>
 
       </div>
@@ -302,17 +316,17 @@
 
         <div>
           <label>Hari Les</label>
-          <input type="text" name="hari_les" />
+          <input type="text" name="hari_les" required />
         </div>
 
         <div>
           <label>Tanggal Masuk</label>
-          <input type="date" name="tanggal_masuk" />
+          <input type="date" name="tanggal_masuk" required />
         </div>
 
         <div>
           <label>Mata Pelajaran</label>
-          <input type="text" name="mapel" />
+          <input type="text" name="mapel" required />
         </div>
 
         <div>
@@ -324,7 +338,7 @@
           <label>Kampus Impian</label>
           <input type="text" name="kampus_impian" />
         </div>
-
+        
         <div>
           <label>Sumber Informasi</label>
           <select name="sumber_info">
