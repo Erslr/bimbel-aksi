@@ -128,21 +128,19 @@
 
 
       <!-- HAPUS -->
-      <button
-        onclick="hapusSiswa('<%= siswa.id_siswa %>')"
-        class="action-btn action-hapus"
-      >
-        <span class="action-icon">🗑️</span>
+    <button
+      onclick="hapusSiswa('<%= siswa.id_siswa %>', '<%= siswa.status_siswa %>')"
+      class="action-btn action-hapus"
+    >
+      <span class="action-icon">🗑️</span>
 
-        <span class="action-text">
-          <strong>Hapus</strong>
-          <small>Hapus data siswa</small>
-        </span>
-      </button>
+      <span class="action-text">
+        <strong>Hapus</strong>
+        <small>Hapus data siswa</small>
+      </span>
+    </button>
 
     </div>
-
-  </div>
   </div>
 
   <p class="back-link">
@@ -218,8 +216,28 @@ async function konfirmasiSiswa(id, btn) {
 /* ===========================
    HAPUS SISWA
 =========================== */
-function hapusSiswa(id){
+function hapusSiswa(id, status){
 
+  // =========================
+  // SISWA AKTIF
+  // =========================
+  if(status === 'aktif'){
+
+    Swal.fire({
+      icon: 'warning',
+      title: 'Tidak Dapat Dihapus',
+      text: 'Siswa masih aktif. Nonaktifkan siswa terlebih dahulu sebelum menghapus data.',
+      width: '360px',
+      confirmButtonColor: '#f39c12',
+      confirmButtonText: 'Mengerti'
+    });
+
+    return;
+  }
+
+  // =========================
+  // KONFIRMASI HAPUS
+  // =========================
   Swal.fire({
     title: 'Hapus siswa?',
     text: 'Data siswa beserta data pembayaran akan dihapus permanen.',
@@ -263,6 +281,30 @@ function nonaktifkanSiswa(id){
 
   });
 
+}
+/* ===========================
+   CEK GAGAL HAPUS SISWA AKTIF
+=========================== */
+
+const urlParams = new URLSearchParams(window.location.search);
+
+if (urlParams.get('error') === 'aktif') {
+
+  Swal.fire({
+    icon: 'warning',
+    title: 'Siswa Masih Aktif',
+    text: 'Siswa harus dinonaktifkan terlebih dahulu sebelum dapat dihapus.',
+    width: '360px',
+    confirmButtonColor: '#f39c12',
+    confirmButtonText: 'Mengerti'
+  });
+
+  // Bersihkan ?error=aktif dari URL
+  window.history.replaceState(
+    {},
+    document.title,
+    window.location.pathname
+  );
 }
 </script>
 
