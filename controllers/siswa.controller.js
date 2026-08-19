@@ -516,30 +516,68 @@ for (let i = 3; i <= 25; i++) {
 
 /* ==============================
    HAPUS DATA SISWA
+   SISWA AKTIF WAJIB DINONAKTIFKAN
 ================================ */
 exports.delete = (req, res) => {
 
   const { id } = req.params;
 
+  // Cek status siswa terlebih dahulu
   db.query(
-    'DELETE FROM pembayaran WHERE id_siswa = ?',
+    'SELECT status_siswa FROM siswa WHERE id_siswa = ?',
     [id],
-    (err) => {
+    (err, result) => {
 
       if (err) {
-        return res.send('Gagal menghapus pembayaran');
+        console.error(err);
+        return res.send('Gagal memeriksa status siswa');
       }
 
+      if (result.length === 0) {
+        return res.send('Data siswa tidak ditemukan');
+      }
+
+      const status = result[0].status_siswa;
+
+      // =========================
+      // SISWA AKTIF TIDAK BOLEH DIHAPUS
+      // =========================
+      if (status === 'aktif') {
+        return res.redirect(
+          `/siswa/detail/${id}?error=aktif`
+        );
+      }
+
+      // =========================
+      // HAPUS DATA PEMBAYARAN
+      // =========================
       db.query(
-        'DELETE FROM siswa WHERE id_siswa = ?',
+        'DELETE FROM pembayaran WHERE id_siswa = ?',
         [id],
         (err) => {
 
           if (err) {
-            return res.send('Gagal menghapus data siswa');
+            console.error(err);
+            return res.send('Gagal menghapus pembayaran');
           }
 
-          res.redirect('/siswa');
+          // =========================
+          // HAPUS DATA SISWA
+          // =========================
+          db.query(
+            'DELETE FROM siswa WHERE id_siswa = ?',
+            [id],
+            (err) => {
+
+              if (err) {
+                console.error(err);
+                return res.send('Gagal menghapus data siswa');
+              }
+
+              res.redirect('/siswa');
+            }
+          );
+
         }
       );
 
