@@ -1722,20 +1722,50 @@ body:not(:has(.sidebar)) .container {
 /* ACTION BUTTON */
 .detail-actions {
   margin-top: 25px;
-  display: flex;
-  flex-direction: column;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+
   gap: 12px;
-  max-width: 300px;
+
+  max-width: 750px;
+}
+
+@media (max-width: 768px) {
+
+  .detail-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 500px) {
+
+  .detail-actions {
+    grid-template-columns: 1fr;
+  }
+
 }
 
 /* BUTTON STYLE */
 .detail-actions a,
 .detail-actions button {
-  padding: 11px;
+  min-height: 48px;
+
+  padding: 10px 14px;
+
   border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   text-align: center;
   text-decoration: none;
+
   font-weight: 600;
+  font-size: 13px;
+
   border: none;
   cursor: pointer;
 
@@ -1789,6 +1819,294 @@ body:not(:has(.sidebar)) .container {
     opacity:1;
     transform: translateY(0);
   }
+}
+/* ===================================================== */
+/* 🔥 EDIT DATA SISWA */
+/* ===================================================== */
+
+.edit-siswa-form {
+  width: 100%;
+}
+
+
+/* ============================= */
+/* SECTION FORM */
+/* ============================= */
+
+.edit-siswa-form .section {
+  margin-bottom: 20px;
+
+  padding: 22px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 14px;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+}
+
+
+/* JUDUL SECTION */
+
+.edit-siswa-form .section h3 {
+  margin: 0 0 20px;
+
+  font-size: 17px;
+
+  color: #2c3e50;
+
+  font-weight: 600;
+
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+
+/* ============================= */
+/* GRID FORM */
+/* ============================= */
+
+.edit-siswa-form .grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 16px 20px;
+}
+
+
+/* ============================= */
+/* FIELD */
+/* ============================= */
+
+.edit-siswa-form .grid > div {
+  min-width: 0;
+}
+
+
+/* ============================= */
+/* LABEL */
+/* ============================= */
+
+.edit-siswa-form label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #374151;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+
+/* ============================= */
+/* INPUT */
+/* ============================= */
+
+.edit-siswa-form input,
+.edit-siswa-form select,
+.edit-siswa-form textarea {
+
+  width: 100%;
+
+  padding: 11px 13px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #333;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition: all .25s ease;
+}
+
+
+/* HOVER */
+
+.edit-siswa-form input:hover,
+.edit-siswa-form select:hover,
+.edit-siswa-form textarea:hover {
+
+  border-color: #9ca3af;
+}
+
+
+/* FOCUS */
+
+.edit-siswa-form input:focus,
+.edit-siswa-form select:focus,
+.edit-siswa-form textarea:focus {
+
+  border-color: #3498db;
+
+  box-shadow:
+    0 0 0 3px rgba(52,152,219,.12);
+
+  background: #fff;
+}
+
+
+/* TEXTAREA */
+
+.edit-siswa-form textarea {
+
+  resize: vertical;
+
+  min-height: 90px;
+
+  line-height: 1.5;
+}
+
+
+/* ============================= */
+/* ALAMAT FULL WIDTH */
+/* ============================= */
+
+.edit-siswa-form .grid > div[style*="grid-column"] {
+
+  grid-column: span 2;
+}
+
+
+/* ============================= */
+/* ACTION */
+/* ============================= */
+
+.edit-siswa-form .detail-actions {
+
+  display: flex;
+
+  flex-direction: row;
+
+  justify-content: flex-start;
+
+  align-items: center;
+
+  gap: 12px;
+
+  max-width: none;
+
+  margin-top: 25px;
+}
+
+
+/* BUTTON SIMPAN */
+
+.edit-siswa-form .detail-actions .btn-success {
+
+  min-width: 190px;
+
+  min-height: 46px;
+
+  padding: 10px 18px;
+
+  border-radius: 10px;
+
+  background: #27ae60;
+
+  color: #fff;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  border: none;
+
+  cursor: pointer;
+
+  transition: all .25s ease;
+}
+
+
+/* BUTTON BATAL */
+
+.edit-siswa-form .detail-actions .btn-secondary {
+
+  min-width: 110px;
+
+  min-height: 46px;
+
+  padding: 10px 18px;
+
+  border-radius: 10px;
+
+  background: #7f8c8d;
+
+  color: #fff;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-decoration: none;
+
+  transition: all .25s ease;
+}
+
+
+/* HOVER BUTTON */
+
+.edit-siswa-form .detail-actions .btn-success:hover,
+.edit-siswa-form .detail-actions .btn-secondary:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 5px 12px rgba(0,0,0,.12);
+
+  opacity: .95;
+}
+
+
+/* ============================= */
+/* RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+  .edit-siswa-form .grid {
+
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+  }
+
+  .edit-siswa-form .grid > div[style*="grid-column"] {
+
+    grid-column: span 1;
+  }
+
+  .edit-siswa-form .detail-actions {
+
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .edit-siswa-form .detail-actions a,
+  .edit-siswa-form .detail-actions button {
+
+    width: 100%;
+  }
+
 }
 
 /* ===================================================== */

@@ -43,39 +43,106 @@
 
   </div>
 
-  <!-- ACTION -->
-  <div class="detail-actions">
+  <!-- =========================
+      ACTION SISWA
+  ========================= -->
+  <div class="detail-action-card">
 
-    <a href="/siswa/edit/<%= siswa.id_siswa %>" class="btn-info">
-      ✏️ Edit Data Siswa
-    </a>
+    <h3>⚙️ Aksi Siswa</h3>
 
-    <a href="/siswa/harga/<%= siswa.id_siswa %>" class="btn-warning">
-      💰 Atur Harga
-    </a>
+    <div class="detail-actions-grid">
 
-    <a href="/siswa/assign-kelas/<%= siswa.id_siswa %>" class="btn-info">
-      🏫 Assign Kelas
-    </a>
+      <!-- EDIT DATA -->
+      <a
+        href="/siswa/edit/<%= siswa.id_siswa %>"
+        class="action-btn action-edit"
+      >
+        <span class="action-icon">✏️</span>
 
-    <% if(siswa.status_siswa==='baru'){ %>
-      <button onclick="konfirmasiSiswa('<%= siswa.id_siswa %>', this)" class="btn-success">
-        ✅ Konfirmasi
-      </button>
-    <% } else if(siswa.status_siswa==='aktif'){ %>
-      <a href="#"
-        onclick="nonaktifkanSiswa('<%= siswa.id_siswa %>')"
-        class="btn-danger">
-        ⛔ Nonaktifkan
+        <span class="action-text">
+          <strong>Edit Data Siswa</strong>
+          <small>Ubah informasi siswa</small>
+        </span>
       </a>
-    <% } %>
 
-    <a href="#"
-      onclick="hapusSiswa('<%= siswa.id_siswa %>')"
-      class="btn-secondary">
-      🗑 Hapus
-    </a>
 
+      <!-- ATUR HARGA -->
+      <a
+        href="/siswa/harga/<%= siswa.id_siswa %>"
+        class="action-btn action-harga"
+      >
+        <span class="action-icon">💰</span>
+
+        <span class="action-text">
+          <strong>Atur Harga</strong>
+          <small>Atur harga bulanan</small>
+        </span>
+      </a>
+
+
+      <!-- ASSIGN KELAS -->
+      <a
+        href="/siswa/assign-kelas/<%= siswa.id_siswa %>"
+        class="action-btn action-kelas"
+      >
+        <span class="action-icon">🏫</span>
+
+        <span class="action-text">
+          <strong>Assign Kelas</strong>
+          <small>Atur kelas bimbel</small>
+        </span>
+      </a>
+
+
+      <!-- KONFIRMASI -->
+      <% if(siswa.status_siswa === 'baru'){ %>
+
+        <button
+          onclick="konfirmasiSiswa('<%= siswa.id_siswa %>', this)"
+          class="action-btn action-konfirmasi"
+        >
+          <span class="action-icon">✅</span>
+
+          <span class="action-text">
+            <strong>Konfirmasi</strong>
+            <small>Aktifkan siswa</small>
+          </span>
+        </button>
+
+      <% } else if(siswa.status_siswa === 'aktif'){ %>
+
+        <!-- NONAKTIFKAN -->
+        <button
+          onclick="nonaktifkanSiswa('<%= siswa.id_siswa %>')"
+          class="action-btn action-nonaktif"
+        >
+          <span class="action-icon">⛔</span>
+
+          <span class="action-text">
+            <strong>Nonaktifkan</strong>
+            <small>Nonaktifkan siswa</small>
+          </span>
+        </button>
+
+      <% } %>
+
+
+      <!-- HAPUS -->
+      <button
+        onclick="hapusSiswa('<%= siswa.id_siswa %>')"
+        class="action-btn action-hapus"
+      >
+        <span class="action-icon">🗑️</span>
+
+        <span class="action-text">
+          <strong>Hapus</strong>
+          <small>Hapus data siswa</small>
+        </span>
+      </button>
+
+    </div>
+
+  </div>
   </div>
 
   <p class="back-link">

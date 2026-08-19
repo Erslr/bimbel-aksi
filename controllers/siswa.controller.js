@@ -270,6 +270,9 @@ exports.editStore = (req, res) => {
       return res.send('Gagal memperbarui data siswa');
     }
 
+    // Setelah edit, kembali ke halaman Data Siswa
+    // dengan pencarian berdasarkan nama siswa
+    const namaSiswa = encodeURIComponent(data.nama_lengkap);
     res.redirect('/siswa/detail/' + id);
 
   });
