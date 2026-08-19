@@ -46,8 +46,16 @@
   <!-- ACTION -->
   <div class="detail-actions">
 
+    <a href="/siswa/edit/<%= siswa.id_siswa %>" class="btn-info">
+      ✏️ Edit Data Siswa
+    </a>
+
     <a href="/siswa/harga/<%= siswa.id_siswa %>" class="btn-warning">
       💰 Atur Harga
+    </a>
+
+    <a href="/siswa/assign-kelas/<%= siswa.id_siswa %>" class="btn-info">
+      🏫 Assign Kelas
     </a>
 
     <% if(siswa.status_siswa==='baru'){ %>
@@ -61,10 +69,6 @@
         ⛔ Nonaktifkan
       </a>
     <% } %>
-
-    <a href="/siswa/assign-kelas/<%= siswa.id_siswa %>" class="btn-info">
-      🏫 Assign Kelas
-    </a>
 
     <a href="#"
       onclick="hapusSiswa('<%= siswa.id_siswa %>')"

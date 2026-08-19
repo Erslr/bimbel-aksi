@@ -1,0 +1,388 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+
+<div class="content">
+
+  <h2 class="page-title">✏️ Edit Data Siswa</h2>
+
+  <div class="detail-card">
+
+    <div class="detail-header">
+      <h3><%= siswa.nama_lengkap %></h3>
+
+      <span class="status-badge <%= siswa.status_siswa %>">
+        <%= siswa.status_siswa.toUpperCase() %>
+      </span>
+    </div>
+
+    <form
+      action="/siswa/edit/<%= siswa.id_siswa %>"
+      method="POST"
+      class="edit-siswa-form"
+    >
+
+      <!-- =========================
+           DATA SISWA
+      ========================== -->
+
+      <div class="section">
+        <h3>👩‍🎓 Data Siswa</h3>
+
+        <div class="grid">
+
+          <div>
+            <label>Nama Lengkap</label>
+            <input
+              type="text"
+              name="nama_lengkap"
+              value="<%= siswa.nama_lengkap || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Nama Panggilan</label>
+            <input
+              type="text"
+              name="nama_panggilan"
+              value="<%= siswa.nama_panggilan || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Tempat Lahir</label>
+            <input
+              type="text"
+              name="tempat_lahir"
+              value="<%= siswa.tempat_lahir || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Tanggal Lahir</label>
+            <input
+              type="date"
+              name="tanggal_lahir"
+              value="<%= siswa.tanggal_lahir ? new Date(siswa.tanggal_lahir).toISOString().split('T')[0] : '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Jenis Kelamin</label>
+
+            <select name="jenis_kelamin" required>
+
+              <option value="">-- Pilih --</option>
+
+              <option value="L"
+                <%= siswa.jenis_kelamin === 'L' ? 'selected' : '' %>>
+                Laki-laki
+              </option>
+
+              <option value="P"
+                <%= siswa.jenis_kelamin === 'P' ? 'selected' : '' %>>
+                Perempuan
+              </option>
+
+            </select>
+          </div>
+
+          <div>
+            <label>Agama</label>
+
+            <select name="agama" required>
+
+              <option value="">-- Pilih Agama --</option>
+
+              <option value="Islam"
+                <%= siswa.agama === 'Islam' ? 'selected' : '' %>>
+                Islam
+              </option>
+
+              <option value="Kristen"
+                <%= siswa.agama === 'Kristen' ? 'selected' : '' %>>
+                Kristen
+              </option>
+
+              <option value="Katolik"
+                <%= siswa.agama === 'Katolik' ? 'selected' : '' %>>
+                Katolik
+              </option>
+
+              <option value="Hindu"
+                <%= siswa.agama === 'Hindu' ? 'selected' : '' %>>
+                Hindu
+              </option>
+
+              <option value="Buddha"
+                <%= siswa.agama === 'Buddha' ? 'selected' : '' %>>
+                Buddha
+              </option>
+
+              <option value="Konghucu"
+                <%= siswa.agama === 'Konghucu' ? 'selected' : '' %>>
+                Konghucu
+              </option>
+
+            </select>
+          </div>
+
+          <div>
+            <label>No WhatsApp Siswa</label>
+
+            <input
+              type="text"
+              name="wa_siswa"
+              value="<%= siswa.wa_siswa || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Asal Sekolah</label>
+
+            <input
+              type="text"
+              name="asal_sekolah"
+              value="<%= siswa.asal_sekolah || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Kelas Sekolah</label>
+
+            <input
+              type="text"
+              name="kelas_sekolah"
+              value="<%= siswa.kelas_sekolah || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Jenjang</label>
+
+            <select name="jenjang" required>
+
+              <option value="">-- Pilih Jenjang --</option>
+
+              <option value="SMP"
+                <%= siswa.jenjang === 'SMP' ? 'selected' : '' %>>
+                SMP
+              </option>
+
+              <option value="SMA"
+                <%= siswa.jenjang === 'SMA' ? 'selected' : '' %>>
+                SMA
+              </option>
+
+              <option value="SMK"
+                <%= siswa.jenjang === 'SMK' ? 'selected' : '' %>>
+                SMK
+              </option>
+
+            </select>
+          </div>
+
+          <div>
+            <label>Organisasi</label>
+
+            <input
+              type="text"
+              name="organisasi"
+              value="<%= siswa.organisasi || '' %>"
+              required
+            >
+          </div>
+
+          <div style="grid-column: span 2;">
+            <label>Alamat</label>
+
+            <textarea
+              name="alamat"
+              rows="3"
+              required
+            ><%= siswa.alamat || '' %></textarea>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- =========================
+           DATA ORANG TUA
+      ========================== -->
+
+      <div class="section">
+
+        <h3>👨‍👩‍👧 Data Orang Tua</h3>
+
+        <div class="grid">
+
+          <div>
+            <label>Nama Orang Tua</label>
+
+            <input
+              type="text"
+              name="nama_ortu"
+              value="<%= siswa.nama_ortu || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>No WhatsApp Orang Tua</label>
+
+            <input
+              type="text"
+              name="wa_ortu"
+              value="<%= siswa.wa_ortu || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Pekerjaan Orang Tua</label>
+
+            <input
+              type="text"
+              name="pekerjaan_ortu"
+              value="<%= siswa.pekerjaan_ortu || '' %>"
+              required
+            >
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           DATA BIMBEL
+      ========================== -->
+
+      <div class="section">
+
+        <h3>📚 Data Bimbel</h3>
+
+        <div class="grid">
+
+          <div>
+            <label>Hari Les</label>
+
+            <input
+              type="text"
+              name="hari_les"
+              value="<%= siswa.hari_les || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Tanggal Masuk</label>
+
+            <input
+              type="date"
+              name="tanggal_masuk"
+              value="<%= siswa.tanggal_masuk ? new Date(siswa.tanggal_masuk).toISOString().split('T')[0] : '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Mata Pelajaran</label>
+
+            <input
+              type="text"
+              name="mapel"
+              value="<%= siswa.mapel || '' %>"
+              required
+            >
+          </div>
+
+          <div>
+            <label>Jurusan Impian</label>
+
+            <input
+              type="text"
+              name="jurusan_impian"
+              value="<%= siswa.jurusan_impian || '' %>"
+            >
+          </div>
+
+          <div>
+            <label>Kampus Impian</label>
+
+            <input
+              type="text"
+              name="kampus_impian"
+              value="<%= siswa.kampus_impian || '' %>"
+            >
+          </div>
+
+          <div>
+            <label>Sumber Informasi</label>
+
+            <select name="sumber_info">
+
+              <option value="Teman"
+                <%= siswa.sumber_info === 'Teman' ? 'selected' : '' %>>
+                Teman
+              </option>
+
+              <option value="Instagram"
+                <%= siswa.sumber_info === 'Instagram' ? 'selected' : '' %>>
+                Instagram
+              </option>
+
+              <option value="Sekolah"
+                <%= siswa.sumber_info === 'Sekolah' ? 'selected' : '' %>>
+                Sekolah
+              </option>
+
+              <option value="Lainnya"
+                <%= siswa.sumber_info === 'Lainnya' ? 'selected' : '' %>>
+                Lainnya
+              </option>
+
+            </select>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+           BUTTON
+      ========================== -->
+
+      <div class="detail-actions">
+
+        <button
+          type="submit"
+          class="btn-success"
+        >
+          💾 Simpan Perubahan
+        </button>
+
+        <a
+          href="/siswa/detail/<%= siswa.id_siswa %>"
+          class="btn-secondary"
+        >
+          ❌ Batal
+        </a>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>

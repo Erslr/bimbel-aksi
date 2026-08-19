@@ -75,6 +75,30 @@
     </select>
   </div>
 
+  <!-- JENIS KELAMIN -->
+  <div>
+    <label>Jenis Kelamin:</label>
+
+    <select name="jenis_kelamin">
+
+      <option value="semua"
+        <%= filterJenisKelamin === 'semua' ? 'selected' : '' %>>
+        Semua
+      </option>
+
+      <option value="L"
+        <%= filterJenisKelamin === 'L' ? 'selected' : '' %>>
+        Laki-laki
+      </option>
+
+      <option value="P"
+        <%= filterJenisKelamin === 'P' ? 'selected' : '' %>>
+        Perempuan
+      </option>
+
+    </select>
+  </div>
+
   <div>
     <label>Search:</label>
 
@@ -105,8 +129,11 @@
     </a>
 
 </form>
-    <a href="/siswa/export/excel?status=<%= filterStatus %>&jenjang=<%= filterJenjang %>" class="btn-export">
-        ⬇ Export Excel
+    <a
+  href="/siswa/export/excel?status=<%= filterStatus %>&jenjang=<%= filterJenjang %>&jenis_kelamin=<%= filterJenisKelamin %>"
+  class="btn-export"
+>
+  ⬇ Export Excel
     </a>
   </div>
 
@@ -146,6 +173,7 @@
           <th>Tanggal Lahir</th>
           <th>Alamat</th>
           <th>Jenis Kelamin</th>
+          <th>Agama</th>
           <th>WA Siswa</th>
           <th>Asal Sekolah</th>
           <th>Kelas Sekolah</th>
@@ -169,7 +197,7 @@
       <tbody>
         <% if (!siswa || siswa.length === 0) { %>
           <tr>
-            <td colspan="25" align="center">Belum ada data siswa</td>
+            <td colspan="26" align="center">Belum ada data siswa</td>
           </tr>
         <% } else { %>
           <% siswa.forEach((item,index)=>{ 
@@ -184,6 +212,7 @@
             <td><%= tglLahir %></td>
             <td><%= item.alamat %></td>
             <td><%= item.jenis_kelamin %></td>
+            <td><%= item.agama || '-' %></td>
             <td><%= item.wa_siswa %></td>
             <td><%= item.asal_sekolah %></td>
             <td><%= item.kelas_sekolah %></td>

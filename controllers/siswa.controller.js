@@ -9,6 +9,7 @@ exports.index = (req, res) => {
 
   const filterStatus = req.query.status || 'semua';
   const filterJenjang = req.query.jenjang || 'semua';
+  const filterJenisKelamin = req.query.jenis_kelamin || 'semua';
   const keyword = req.query.keyword || '';
 
   let query = `
@@ -34,6 +35,14 @@ exports.index = (req, res) => {
   if (filterJenjang !== 'semua') {
     query += ` AND siswa.jenjang = ? `;
     params.push(filterJenjang);
+  }
+
+  // =========================
+  // FILTER JENIS KELAMIN
+  // =========================
+  if (filterJenisKelamin !== 'semua') {
+    query += ` AND siswa.jenis_kelamin = ? `;
+    params.push(filterJenisKelamin);
   }
 
   // =========================
@@ -89,17 +98,17 @@ db.query(query, params, (err, results) => {
       }
 
       res.render('siswa/index', {
-        siswa: results,
-        admin: req.session.user,
-        activePage: 'siswa',
+      siswa: results,
+      admin: req.session.user,
+      activePage: 'siswa',
 
-        filterStatus,
-        filterJenjang,
-        keyword,
-        totalData: results.length,
+      filterStatus,
+      filterJenjang,
+      filterJenisKelamin,
+      keyword,
+      totalData: results.length,
 
-        // Badge jumlah siswa baru
-        siswaBaru: notif[0].jumlah
+      siswaBaru: notif[0].jumlah
       });
 
     }
@@ -134,12 +143,147 @@ exports.detail = (req, res) => {
 };
 
 /* ==============================
+   EDIT DATA SISWA
+================================ */
+exports.editForm = (req, res) => {
+  const { id } = req.params;
+
+  db.query(
+    'SELECT * FROM siswa WHERE id_siswa = ?',
+    [id],
+    (err, result) => {
+
+      if (err) {
+        console.error(err);
+        return res.send('Gagal mengambil data siswa');
+      }
+
+      if (result.length === 0) {
+        return res.send('Data siswa tidak ditemukan');
+      }
+
+      res.render('siswa/edit', {
+        siswa: result[0],
+        admin: req.session.admin,
+        activePage: 'siswa'
+      });
+
+    }
+  );
+};
+
+
+/* ==============================
+   SIMPAN PERUBAHAN DATA SISWA
+================================ */
+exports.editStore = (req, res) => {
+
+  const { id } = req.params;
+  const data = req.body;
+
+  // =========================
+  // VALIDASI DATA WAJIB
+  // =========================
+  if (
+    !data.nama_lengkap ||
+    !data.nama_panggilan ||
+    !data.tempat_lahir ||
+    !data.tanggal_lahir ||
+    !data.jenis_kelamin ||
+    !data.agama ||
+    !data.alamat ||
+    !data.wa_siswa ||
+    !data.asal_sekolah ||
+    !data.kelas_sekolah ||
+    !data.jenjang ||
+    !data.organisasi ||
+    !data.nama_ortu ||
+    !data.wa_ortu ||
+    !data.pekerjaan_ortu ||
+    !data.hari_les ||
+    !data.tanggal_masuk ||
+    !data.mapel
+  ) {
+    return res.send('Mohon lengkapi seluruh data siswa.');
+  }
+
+  // =========================
+  // UPDATE DATA SISWA
+  // =========================
+  const sql = `
+    UPDATE siswa SET
+
+      nama_lengkap = ?,
+      nama_panggilan = ?,
+      tempat_lahir = ?,
+      tanggal_lahir = ?,
+      alamat = ?,
+      jenis_kelamin = ?,
+      agama = ?,
+      wa_siswa = ?,
+      asal_sekolah = ?,
+      kelas_sekolah = ?,
+      jenjang = ?,
+      organisasi = ?,
+      nama_ortu = ?,
+      wa_ortu = ?,
+      pekerjaan_ortu = ?,
+      hari_les = ?,
+      tanggal_masuk = ?,
+      mapel = ?,
+      jurusan_impian = ?,
+      kampus_impian = ?,
+      sumber_info = ?
+
+    WHERE id_siswa = ?
+  `;
+
+  const values = [
+    data.nama_lengkap,
+    data.nama_panggilan,
+    data.tempat_lahir,
+    data.tanggal_lahir,
+    data.alamat,
+    data.jenis_kelamin,
+    data.agama,
+    data.wa_siswa,
+    data.asal_sekolah,
+    data.kelas_sekolah,
+    data.jenjang,
+    data.organisasi,
+    data.nama_ortu,
+    data.wa_ortu,
+    data.pekerjaan_ortu,
+    data.hari_les,
+    data.tanggal_masuk,
+    data.mapel,
+    data.jurusan_impian || null,
+    data.kampus_impian || null,
+    data.sumber_info || null,
+    id
+  ];
+
+  db.query(sql, values, (err) => {
+
+    if (err) {
+      console.error(err);
+      return res.send('Gagal memperbarui data siswa');
+    }
+
+    res.redirect('/siswa/detail/' + id);
+
+  });
+
+};
+
+/* ==============================
    EXPORT EXCEL DATA SISWA
 ================================ */
 exports.exportExcel = (req, res) => {
 
   const status = req.query.status || 'semua';
   const jenjang = req.query.jenjang || 'semua';
+  const jenisKelamin = req.query.jenis_kelamin || 'semua';
 
   let query = `
     SELECT s.*, k.nama_kelas
@@ -166,6 +310,14 @@ exports.exportExcel = (req, res) => {
     params.push(jenjang);
   }
 
+  // =========================
+  // FILTER JENIS KELAMIN
+  // =========================
+  if (jenisKelamin !== 'semua') {
+    query += ` AND s.jenis_kelamin = ? `;
+    params.push(jenisKelamin);
+  }
+
   query += ` ORDER BY s.id_siswa ASC`;
 
   db.query(query, params, async (err, results) => {
@@ -178,7 +330,7 @@ exports.exportExcel = (req, res) => {
     // =========================
     // JUDUL
     // =========================
-    worksheet.mergeCells('A1:X1');
+    worksheet.mergeCells('A1:Y1');
     worksheet.getCell('A1').value = 'LAPORAN DATA SISWA';
     worksheet.getCell('A1').font = {
       bold: true,
@@ -197,9 +349,9 @@ exports.exportExcel = (req, res) => {
     // =========================
     // FILTER INFO
     // =========================
-    worksheet.mergeCells('A2:X2');
+    worksheet.mergeCells('A2:Y2');
     worksheet.getCell('A2').value =
-      `Status: ${status.toUpperCase()} | Jenjang: ${jenjang.toUpperCase()}`;
+    `Status: ${status.toUpperCase()} | Jenjang: ${jenjang.toUpperCase()} | Jenis Kelamin: ${jenisKelamin === 'L' ? 'LAKI-LAKI' : jenisKelamin === 'P' ? 'PEREMPUAN' : 'SEMUA'}`;
     worksheet.getCell('A2').alignment = {
       horizontal: 'center'
     };
@@ -228,6 +380,7 @@ exports.exportExcel = (req, res) => {
         { name: 'Tanggal Lahir' },
         { name: 'Alamat' },
         { name: 'Jenis Kelamin' },
+        { name: 'Agama' },
         { name: 'WA Siswa' },
         { name: 'Asal Sekolah' },
         { name: 'Kelas Sekolah' },
@@ -257,6 +410,7 @@ exports.exportExcel = (req, res) => {
           : '-',
         siswa.alamat,
         siswa.jenis_kelamin,
+        siswa.agama,
         siswa.wa_siswa,
         siswa.asal_sekolah,
         siswa.kelas_sekolah,
@@ -287,10 +441,10 @@ exports.exportExcel = (req, res) => {
     worksheet.getColumn('B').width = 30;
     worksheet.getColumn('F').width = 35;
     worksheet.getColumn('M').width = 25;
-    worksheet.getColumn('W').width = 18;
+    worksheet.getColumn('X').width = 18;
 
     // SISANYA
-for (let i = 3; i <= 24; i++) {
+for (let i = 3; i <= 25; i++) {
 
   const col = worksheet.getColumn(i);
 
@@ -298,7 +452,7 @@ for (let i = 3; i <= 24; i++) {
   if (
     col.number !== 6 &&
     col.number !== 13 &&
-    col.number !== 23
+    col.number !== 24
   ) {
     col.width = 18;
   }
@@ -306,16 +460,15 @@ for (let i = 3; i <= 24; i++) {
 }
     // =========================
     // FORMAT RUPIAH
-    // KOLOM W = Harga Bulanan
+    // KOLOM X = Harga Bulanan
     // =========================
     const startDataRow = tableStartRow + 1;
     const endDataRow = tableStartRow + results.length;
 
     for (let row = startDataRow; row <= endDataRow; row++) {
 
-      worksheet.getCell(`W${row}`).numFmt =
+      worksheet.getCell(`X${row}`).numFmt =
         '"Rp " #,##0';
-
     }
 
     // =========================
@@ -323,20 +476,20 @@ for (let i = 3; i <= 24; i++) {
     // =========================
     for (let row = tableStartRow; row <= endDataRow; row++) {
 
-      for (let col = 1; col <= 24; col++) {
+        for (let col = 1; col <= 25; col++) {
 
-        const cell = worksheet.getRow(row).getCell(col);
+          const cell = worksheet.getRow(row).getCell(col);
 
-        cell.border = {
-          top: { style: 'thin' },
-          left: { style: 'thin' },
-          bottom: { style: 'thin' },
-          right: { style: 'thin' }
-        };
+          cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+          };
+
+        }
 
       }
-
-    }
 
     // =========================
     // DOWNLOAD

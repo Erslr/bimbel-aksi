@@ -12,6 +12,10 @@ router.get('/export/excel', auth, siswaController.exportExcel);
 // Detail siswa (tombol "Detail")
 router.get('/detail/:id', auth, siswaController.detail);
 
+// EDIT DATA SISWA
+router.get('/edit/:id', auth, siswaController.editForm);
+router.post('/edit/:id', auth, siswaController.editStore);
+
 // Hapus siswa
 router.get('/delete/:id', auth, siswaController.delete);
 
