@@ -1048,7 +1048,7 @@ async function verifikasiPembayaran(id) {
     if (data.nomorWA) {
 
       const waUrl =
-        `https://wa.me/${data.nomorWA}`;
+        `https://web.whatsapp.com/send?phone=${data.nomorWA}`
 
 
       window.open(
