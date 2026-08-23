@@ -505,6 +505,7 @@ exports.exportPDF = (req, res) => {
       // ==================================================
 
       const namaBulan = [
+
         'Januari',
         'Februari',
         'Maret',
@@ -517,6 +518,7 @@ exports.exportPDF = (req, res) => {
         'Oktober',
         'November',
         'Desember'
+
       ];
 
 
@@ -527,7 +529,7 @@ exports.exportPDF = (req, res) => {
 
 
       // ==================================================
-      // HITUNG TOTAL
+      // HITUNG TOTAL PEMBAYARAN LUNAS
       // ==================================================
 
       let totalLunas = 0;
@@ -552,6 +554,14 @@ exports.exportPDF = (req, res) => {
 
 
       // ==================================================
+      // NAMA FILE PDF
+      // ==================================================
+
+      const namaFile =
+        `Laporan-Pembayaran-${namaBulanCetak}-${tahun}.pdf`;
+
+
+      // ==================================================
       // BUAT PDF
       // ==================================================
 
@@ -571,10 +581,9 @@ exports.exportPDF = (req, res) => {
         'application/pdf'
       );
 
-
       res.setHeader(
         'Content-Disposition',
-        `inline; filename="Pembayaran-BIMBEL-AKSI-${namaBulanCetak}-${tahun}.pdf"`
+        `inline; filename="${namaFile}"`
       );
 
 
@@ -1003,7 +1012,7 @@ exports.exportPDF = (req, res) => {
 
 
       // ==================================================
-      // RINGKASAN
+      // TOTAL PEMBAYARAN
       // ==================================================
 
       if (
@@ -1028,14 +1037,7 @@ exports.exportPDF = (req, res) => {
 
 
       doc
-        .fontSize(9)
-        .font('Helvetica-Bold')
-        .text(
-          `Total Data: ${results.length}`
-        );
-
-
-      doc
+        .fontSize(10)
         .font('Helvetica-Bold')
         .text(
           `Total Pembayaran Lunas: Rp ${totalLunas.toLocaleString('id-ID')}`
@@ -1053,7 +1055,7 @@ exports.exportPDF = (req, res) => {
         .fontSize(8)
         .font('Helvetica')
         .text(
-          'Laporan ini dibuat oleh Sistem Informasi Manajemen Bimbel AKSI.',
+          'Laporan ini dibuat oleh Admin Bimbel AKSI.',
           {
             align: 'center'
           }
@@ -1727,13 +1729,56 @@ exports.exportRiwayatPDF = (req, res) => {
 
 
       // ==================================================
+      // HITUNG TOTAL PEMBAYARAN LUNAS
+      // ==================================================
+
+      let totalLunas = 0;
+
+
+      results.forEach(
+        (row) => {
+
+          if (
+            row.status === 'lunas'
+          ) {
+
+            totalLunas +=
+              Number(
+                row.harga_bulanan || 0
+              );
+
+          }
+
+        }
+      );
+
+
+      // ==================================================
+      // BUAT NAMA FILE
+      // ==================================================
+
+      const namaSiswaFile =
+        String(
+          siswa.nama_lengkap || 'Siswa'
+        )
+          .trim()
+          .replace(/\s+/g, '-')
+          .replace(/[^a-zA-Z0-9-]/g, '');
+
+
+      const namaFile =
+        `Riwayat-Pembayaran-${namaSiswaFile}.pdf`;
+
+
+      // ==================================================
       // BUAT PDF
       // ==================================================
 
-      const doc = new PDFDocument({
-        size: 'A4',
-        margin: 40
-      });
+      const doc =
+        new PDFDocument({
+          size: 'A4',
+          margin: 40
+        });
 
 
       // ==================================================
@@ -1745,12 +1790,9 @@ exports.exportRiwayatPDF = (req, res) => {
         'application/pdf'
       );
 
-
       res.setHeader(
         'Content-Disposition',
-        `inline; filename=riwayat-pembayaran-${encodeURIComponent(
-          siswa.nama_lengkap
-        )}.pdf`
+        `inline; filename="${namaFile}"`
       );
 
 
@@ -1762,7 +1804,7 @@ exports.exportRiwayatPDF = (req, res) => {
       // ==================================================
 
       doc
-        .fontSize(16)
+        .fontSize(18)
         .font('Helvetica-Bold')
         .text(
           'RIWAYAT PEMBAYARAN SISWA',
@@ -1776,47 +1818,78 @@ exports.exportRiwayatPDF = (req, res) => {
 
 
       // ==================================================
-      // INFORMASI SISWA
+      // IDENTITAS SISWA
       // ==================================================
 
+      const labelX = 70;
+      const valueX = 190;
+
+      let yIdentitas = doc.y;
+
+
+      // NAMA
       doc
         .fontSize(10)
         .font('Helvetica-Bold')
-        .text('Nama Siswa');
-
+        .text(
+          'Nama Siswa',
+          labelX,
+          yIdentitas
+        );
 
       doc
         .font('Helvetica')
         .text(
-          `: ${siswa.nama_lengkap || '-'}`
+          `: ${siswa.nama_lengkap || '-'}`,
+          valueX,
+          yIdentitas
         );
 
 
+      yIdentitas += 22;
+
+
+      // JENJANG
       doc
         .font('Helvetica-Bold')
-        .text('Jenjang');
-
+        .text(
+          'Jenjang',
+          labelX,
+          yIdentitas
+        );
 
       doc
         .font('Helvetica')
         .text(
-          `: ${siswa.jenjang || '-'}`
+          `: ${siswa.jenjang || '-'}`,
+          valueX,
+          yIdentitas
         );
 
 
+      yIdentitas += 22;
+
+
+      // KELAS
       doc
         .font('Helvetica-Bold')
-        .text('Kelas');
-
+        .text(
+          'Kelas',
+          labelX,
+          yIdentitas
+        );
 
       doc
         .font('Helvetica')
         .text(
-          `: ${siswa.kelas_sekolah || '-'}`
+          `: ${siswa.kelas_sekolah || '-'}`,
+          valueX,
+          yIdentitas
         );
 
 
-      doc.moveDown();
+      doc.y =
+        yIdentitas + 25;
 
 
       // ==================================================
@@ -1829,7 +1902,7 @@ exports.exportRiwayatPDF = (req, res) => {
         .stroke();
 
 
-      doc.moveDown();
+      doc.moveDown(1);
 
 
       // ==================================================
@@ -1855,7 +1928,8 @@ exports.exportRiwayatPDF = (req, res) => {
 
       function drawTableHeader() {
 
-        const headerY = doc.y;
+        const headerY =
+          doc.y;
 
 
         doc
@@ -1905,7 +1979,16 @@ exports.exportRiwayatPDF = (req, res) => {
         );
 
 
-        doc.moveDown();
+        doc.moveDown(1);
+
+
+        doc
+          .moveTo(40, doc.y)
+          .lineTo(555, doc.y)
+          .stroke();
+
+
+        doc.moveDown(0.5);
 
 
         doc.font('Helvetica');
@@ -1927,7 +2010,9 @@ exports.exportRiwayatPDF = (req, res) => {
           // CEK HALAMAN
           // ==============================================
 
-          if (doc.y > 750) {
+          if (
+            doc.y > 735
+          ) {
 
             doc.addPage();
 
@@ -1936,7 +2021,8 @@ exports.exportRiwayatPDF = (req, res) => {
           }
 
 
-          const y = doc.y;
+          const y =
+            doc.y;
 
 
           // ==============================================
@@ -2049,10 +2135,19 @@ exports.exportRiwayatPDF = (req, res) => {
 
 
       // ==================================================
-      // FOOTER
+      // TOTAL PEMBAYARAN
       // ==================================================
 
-      doc.moveDown();
+      if (
+        doc.y > 700
+      ) {
+
+        doc.addPage();
+
+      }
+
+
+      doc.moveDown(1);
 
 
       doc
@@ -2061,6 +2156,21 @@ exports.exportRiwayatPDF = (req, res) => {
         .stroke();
 
 
+      doc.moveDown(0.8);
+
+
+      doc
+        .fontSize(10)
+        .font('Helvetica-Bold')
+        .text(
+          `Total Pembayaran Lunas: Rp ${totalLunas.toLocaleString('id-ID')}`
+        );
+
+
+      // ==================================================
+      // FOOTER
+      // ==================================================
+
       doc.moveDown(1);
 
 
@@ -2068,7 +2178,7 @@ exports.exportRiwayatPDF = (req, res) => {
         .fontSize(8)
         .font('Helvetica')
         .text(
-          'Laporan ini dibuat oleh Sistem Informasi Manajemen Bimbel AKSI.',
+          'Laporan ini dibuat oleh Admin Bimbel AKSI.',
           {
             align: 'center'
           }
@@ -2523,10 +2633,6 @@ exports.generateTagihan = async (
 // VERIFIKASI PEMBAYARAN
 // ======================================================
 
-// ======================================================
-// VERIFIKASI PEMBAYARAN
-// ======================================================
-
 exports.verifikasiPembayaran = async (
   req,
   res
@@ -2727,7 +2833,10 @@ exports.verifikasiPembayaran = async (
 
         success: true,
 
-        waLink: linkWA
+        waLink: linkWA,
+
+        kwitansiUrl:
+          `/pembayaran/kwitansi/${id}`
 
       });
 
