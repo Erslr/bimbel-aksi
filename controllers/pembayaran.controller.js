@@ -1200,6 +1200,7 @@ exports.kwitansiPembayaran = (req, res) => {
           .send(
             'Gagal mengambil data kwitansi'
           );
+
       }
 
 
@@ -1210,6 +1211,7 @@ exports.kwitansiPembayaran = (req, res) => {
           .send(
             'Data pembayaran tidak ditemukan'
           );
+
       }
 
 
@@ -1234,11 +1236,13 @@ exports.kwitansiPembayaran = (req, res) => {
 
         const tanggal =
           data.tanggal_bayar
+
             ? new Date(
                 data.tanggal_bayar
               ).toLocaleDateString('id-ID')
 
             : data.tanggal_tagihan
+
               ? new Date(
                   data.tanggal_tagihan
                 ).toLocaleDateString('id-ID')
@@ -1262,14 +1266,16 @@ exports.kwitansiPembayaran = (req, res) => {
 
         const status =
           data.status === 'lunas'
+
             ? 'LUNAS'
+
             : String(
                 data.status || '-'
               ).toUpperCase();
 
 
         // ==================================================
-        // NAMA FILE PDF
+        // NAMA FILE
         // ==================================================
 
         const namaSiswaFile =
@@ -1278,7 +1284,7 @@ exports.kwitansiPembayaran = (req, res) => {
           )
             .trim()
             .replace(/\s+/g, '-')
-            .replace(/[^a-zA-Z0-9\-]/g, '');
+            .replace(/[^a-zA-Z0-9-]/g, '');
 
 
         const namaFile =
@@ -1288,32 +1294,71 @@ exports.kwitansiPembayaran = (req, res) => {
 
 
         // ==================================================
-        // PDF
+        // FOLDER KWITANSI
         // ==================================================
 
-        const doc = new PDFDocument({
-          size: 'A4',
-          margin: 50
-        });
+        const folderKwitansi =
+          path.join(
+            __dirname,
+            '../uploads/kwitansi'
+          );
 
 
         // ==================================================
-        // HEADER RESPONSE
+        // PASTIKAN FOLDER ADA
         // ==================================================
 
-        res.setHeader(
-          'Content-Type',
-          'application/pdf'
+        if (
+          !fs.existsSync(
+            folderKwitansi
+          )
+        ) {
+
+          fs.mkdirSync(
+            folderKwitansi,
+            {
+              recursive: true
+            }
+          );
+
+        }
+
+
+        // ==================================================
+        // LOKASI FILE PDF
+        // ==================================================
+
+        const filePath =
+          path.join(
+            folderKwitansi,
+            namaFile
+          );
+
+
+        // ==================================================
+        // BUAT PDF
+        // ==================================================
+
+        const doc =
+          new PDFDocument({
+            size: 'A4',
+            margin: 50
+          });
+
+
+        // ==================================================
+        // SIMPAN PDF KE SERVER
+        // ==================================================
+
+        const writeStream =
+          fs.createWriteStream(
+            filePath
+          );
+
+
+        doc.pipe(
+          writeStream
         );
-
-
-        res.setHeader(
-          'Content-Disposition',
-          `inline; filename="${namaFile}"`
-        );
-
-
-        doc.pipe(res);
 
 
         // ==================================================
@@ -1621,10 +1666,71 @@ exports.kwitansiPembayaran = (req, res) => {
 
 
         // ==================================================
-        // SELESAI
+        // SELESAI MEMBUAT PDF
         // ==================================================
 
         doc.end();
+
+
+        // ==================================================
+        // SETELAH FILE SELESAI DISIMPAN
+        // ==================================================
+
+        writeStream.on(
+          'finish',
+          () => {
+
+            console.log(
+              `Kwitansi berhasil disimpan: ${filePath}`
+            );
+
+
+            // ==============================================
+            // KIRIM PDF KE BROWSER
+            // ==============================================
+
+            res.setHeader(
+              'Content-Type',
+              'application/pdf'
+            );
+
+
+            res.setHeader(
+              'Content-Disposition',
+              `inline; filename="${namaFile}"`
+            );
+
+
+            fs.createReadStream(
+              filePath
+            ).pipe(res);
+
+          }
+        );
+
+
+        writeStream.on(
+          'error',
+          (error) => {
+
+            console.error(
+              'Gagal menyimpan kwitansi:',
+              error
+            );
+
+
+            if (!res.headersSent) {
+
+              res
+                .status(500)
+                .send(
+                  'Gagal menyimpan kwitansi PDF'
+                );
+
+            }
+
+          }
+        );
 
 
       } catch (error) {
@@ -1634,11 +1740,13 @@ exports.kwitansiPembayaran = (req, res) => {
           error
         );
 
+
         return res
           .status(500)
           .send(
             'Gagal membuat kwitansi PDF'
           );
+
       }
 
     }
