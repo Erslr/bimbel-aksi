@@ -29,6 +29,16 @@ function formatNomorWA(no) {
 
 
 // ======================================================
+// PATH LOGO BIMBEL AKSI
+// ======================================================
+
+const logoPath =
+  path.join(
+    __dirname,
+    '../public/images/logo.png'
+  );
+
+// ======================================================
 // HALAMAN INDEX PEMBAYARAN
 // ======================================================
 
@@ -592,33 +602,71 @@ exports.exportPDF = (req, res) => {
 
 
       // ==================================================
-      // JUDUL
+      // LOGO + JUDUL
       // ==================================================
 
-      doc
-        .font('Helvetica-Bold')
-        .fontSize(18)
-        .text(
-          'BIMBEL AKSI',
-          {
-            align: 'center'
-          }
+      const logoPath =
+        path.join(
+          __dirname,
+          '../public/images/logo.png'
         );
 
 
-      doc
-        .font('Helvetica-Bold')
-        .fontSize(14)
-        .text(
-          'LAPORAN PEMBAYARAN',
-          {
-            align: 'center'
-          }
-        );
+    // ==================================================
+    // LOGO BIMBEL AKSI
+    // ==================================================
+
+    if (fs.existsSync(logoPath)) {
+
+      doc.image(
+        logoPath,
+        255,
+        40,
+        {
+          width: 80
+        }
+      );
+
+    }
 
 
-      doc.moveDown(0.5);
+    // ==================================================
+    // NAMA BIMBEL
+    // ==================================================
 
+    doc
+      .font('Helvetica-Bold')
+      .fontSize(18)
+      .text(
+        'BIMBEL AKSI',
+        40,
+        125,
+        {
+          width: 515,
+          align: 'center'
+        }
+      );
+
+
+// ==================================================
+// JUDUL LAPORAN
+// ==================================================
+
+doc
+  .font('Helvetica-Bold')
+  .fontSize(14)
+  .text(
+    'LAPORAN PEMBAYARAN',
+    40,
+    150,
+    {
+      width: 515,
+      align: 'center'
+    }
+  );
+
+
+doc.moveDown(0.5);
 
       // ==================================================
       // PERIODE
@@ -1376,73 +1424,110 @@ exports.kwitansiPembayaran = (req, res) => {
           .stroke();
 
 
-        // ==================================================
-        // HEADER KWITANSI
-        // ==================================================
-
-        doc
-          .font('Helvetica-Bold')
-          .fontSize(24)
-          .text(
-            'BIMBEL AKSI',
-            50,
-            75,
-            {
-              align: 'center',
-              width: 495
-            }
-          );
+// ==================================================
+// HEADER KWITANSI
+// ==================================================
 
 
-        doc
-          .font('Helvetica')
-          .fontSize(14)
-          .text(
-            'KWITANSI PEMBAYARAN',
-            50,
-            110,
-            {
-              align: 'center',
-              width: 495
-            }
-          );
+// ==================================================
+// PATH LOGO
+// ==================================================
+
+const logoPath =
+  path.join(
+    __dirname,
+    '../public/images/logo.png'
+  );
 
 
-        // ==================================================
-        // NOMOR KWITANSI
-        // ==================================================
+// ==================================================
+// LOGO BIMBEL AKSI
+// ==================================================
 
-        doc
-          .font('Helvetica-Bold')
-          .fontSize(11)
-          .text(
-            `No. Kwitansi: ${nomorKwitansi}`,
-            390,
-            75,
-            {
-              width: 145,
-              align: 'right'
-            }
-          );
+if (fs.existsSync(logoPath)) {
 
+  doc.image(
+    logoPath,
+    257,
+    55,
+    {
+      width: 80
+    }
+  );
 
-        // ==================================================
-        // GARIS
-        // ==================================================
-
-        doc
-          .moveTo(70, 145)
-          .lineTo(525, 145)
-          .lineWidth(1)
-          .stroke();
+}
 
 
-        // ==================================================
-        // DATA SISWA
-        // ==================================================
+// ==================================================
+// NAMA BIMBEL
+// ==================================================
 
-        let y = 180;
+doc
+  .font('Helvetica-Bold')
+  .fontSize(24)
+  .text(
+    'BIMBEL AKSI',
+    50,
+    145,
+    {
+      align: 'center',
+      width: 495
+    }
+  );
 
+
+// ==================================================
+// JUDUL KWITANSI
+// ==================================================
+
+doc
+  .font('Helvetica')
+  .fontSize(14)
+  .text(
+    'KWITANSI PEMBAYARAN',
+    50,
+    180,
+    {
+      align: 'center',
+      width: 495
+    }
+  );
+
+
+// ==================================================
+// NOMOR KWITANSI
+// ==================================================
+
+doc
+  .font('Helvetica-Bold')
+  .fontSize(11)
+  .text(
+    `No. Kwitansi: ${nomorKwitansi}`,
+    50,
+    205,
+    {
+      align: 'center',
+      width: 495
+    }
+  );
+
+
+// ==================================================
+// GARIS
+// ==================================================
+
+doc
+  .moveTo(70, 235)
+  .lineTo(525, 235)
+  .lineWidth(1)
+  .stroke();
+
+
+// ==================================================
+// DATA SISWA
+// ==================================================
+
+let y = 270;
 
         doc
           .font('Helvetica-Bold')
@@ -1908,23 +1993,72 @@ exports.exportRiwayatPDF = (req, res) => {
       doc.pipe(res);
 
 
-      // ==================================================
-      // JUDUL
-      // ==================================================
+// ==================================================
+// LOGO + JUDUL RIWAYAT PEMBAYARAN
+// ==================================================
 
-      doc
-        .fontSize(18)
-        .font('Helvetica-Bold')
-        .text(
-          'RIWAYAT PEMBAYARAN SISWA',
-          {
-            align: 'center'
-          }
-        );
+const logoPath =
+  path.join(
+    __dirname,
+    '../public/images/logo.png'
+  );
 
 
-      doc.moveDown(1);
+// ==================================================
+// LOGO BIMBEL AKSI
+// ==================================================
 
+if (fs.existsSync(logoPath)) {
+
+  doc.image(
+    logoPath,
+    257,
+    40,
+    {
+      width: 80
+    }
+  );
+
+}
+
+
+// ==================================================
+// NAMA BIMBEL
+// ==================================================
+
+doc
+  .fontSize(18)
+  .font('Helvetica-Bold')
+  .text(
+    'BIMBEL AKSI',
+    40,
+    125,
+    {
+      width: 515,
+      align: 'center'
+    }
+  );
+
+
+// ==================================================
+// JUDUL RIWAYAT
+// ==================================================
+
+doc
+  .fontSize(14)
+  .font('Helvetica-Bold')
+  .text(
+    'RIWAYAT PEMBAYARAN SISWA',
+    40,
+    150,
+    {
+      width: 515,
+      align: 'center'
+    }
+  );
+
+
+doc.moveDown(1);
 
       // ==================================================
       // IDENTITAS SISWA
@@ -2964,133 +3098,167 @@ exports.verifikasiPembayaran = async (req, res) => {
           .stroke();
 
 
-        // ==============================================
-        // HEADER
-        // ==============================================
+// ==============================================
+// HEADER KWITANSI
+// ==============================================
 
-        doc
-          .font('Helvetica-Bold')
-          .fontSize(24)
-          .text(
-            'BIMBEL AKSI',
-            50,
-            75,
-            {
-              align: 'center',
-              width: 495
-            }
-          );
+const logoPath =
+  path.join(
+    __dirname,
+    '../public/images/logo.png'
+  );
 
 
-        doc
-          .font('Helvetica')
-          .fontSize(14)
-          .text(
-            'KWITANSI PEMBAYARAN',
-            50,
-            110,
-            {
-              align: 'center',
-              width: 495
-            }
-          );
+// ==============================================
+// LOGO BIMBEL AKSI
+// ==============================================
+
+if (fs.existsSync(logoPath)) {
+
+  doc.image(
+    logoPath,
+    257,
+    40,
+    {
+      width: 80
+    }
+  );
+
+}
 
 
-        // ==============================================
-        // NOMOR KWITANSI
-        // ==============================================
+// ==============================================
+// NAMA BIMBEL
+// ==============================================
 
-        doc
-          .font('Helvetica-Bold')
-          .fontSize(11)
-          .text(
-            `No. Kwitansi: ${nomorKwitansi}`,
-            390,
-            75,
-            {
-              width: 145,
-              align: 'right'
-            }
-          );
-
-
-        // ==============================================
-        // GARIS
-        // ==============================================
-
-        doc
-          .moveTo(70, 145)
-          .lineTo(525, 145)
-          .lineWidth(1)
-          .stroke();
+doc
+  .font('Helvetica-Bold')
+  .fontSize(24)
+  .text(
+    'BIMBEL AKSI',
+    50,
+    125,
+    {
+      align: 'center',
+      width: 495
+    }
+  );
 
 
-        // ==============================================
-        // IDENTITAS SISWA
-        // ==============================================
+// ==============================================
+// JUDUL KWITANSI
+// ==============================================
 
-        let y = 180;
-
-
-        doc
-          .font('Helvetica-Bold')
-          .fontSize(12)
-          .text(
-            'Nama Siswa',
-            80,
-            y
-          );
-
-
-        doc
-          .font('Helvetica')
-          .text(
-            `: ${data.nama_lengkap || '-'}`,
-            210,
-            y
-          );
+doc
+  .font('Helvetica')
+  .fontSize(14)
+  .text(
+    'KWITANSI PEMBAYARAN',
+    50,
+    160,
+    {
+      align: 'center',
+      width: 495
+    }
+  );
 
 
-        y += 38;
+// ==============================================
+// NOMOR KWITANSI
+// ==============================================
+
+doc
+  .font('Helvetica-Bold')
+  .fontSize(11)
+  .text(
+    `No. Kwitansi: ${nomorKwitansi}`,
+    50,
+    185,
+    {
+      align: 'center',
+      width: 495
+    }
+  );
 
 
-        doc
-          .font('Helvetica-Bold')
-          .text(
-            'Jenjang',
-            80,
-            y
-          );
+// ==============================================
+// GARIS
+// ==============================================
+
+doc
+  .moveTo(70, 215)
+  .lineTo(525, 215)
+  .lineWidth(1)
+  .stroke();
 
 
-        doc
-          .font('Helvetica')
-          .text(
-            `: ${data.jenjang || '-'}`,
-            210,
-            y
-          );
+// ==============================================
+// IDENTITAS SISWA
+// ==============================================
+
+let y = 250;
 
 
-        y += 38;
+doc
+  .font('Helvetica-Bold')
+  .fontSize(12)
+  .text(
+    'Nama Siswa',
+    80,
+    y
+  );
 
 
-        doc
-          .font('Helvetica-Bold')
-          .text(
-            'Kelas',
-            80,
-            y
-          );
+doc
+  .font('Helvetica')
+  .fontSize(12)
+  .text(
+    `: ${data.nama_lengkap || '-'}`,
+    210,
+    y
+  );
 
 
-        doc
-          .font('Helvetica')
-          .text(
-            `: ${data.kelas_sekolah || '-'}`,
-            210,
-            y
-          );
+y += 38;
+
+
+doc
+  .font('Helvetica-Bold')
+  .text(
+    'Jenjang',
+    80,
+    y
+  );
+
+
+doc
+  .font('Helvetica')
+  .text(
+    `: ${data.jenjang || '-'}`,
+    210,
+    y
+  );
+
+
+y += 38;
+
+
+doc
+  .font('Helvetica-Bold')
+  .text(
+    'Kelas',
+    80,
+    y
+  );
+
+
+doc
+  .font('Helvetica')
+  .text(
+    `: ${data.kelas_sekolah || '-'}`,
+    210,
+    y
+  );
 
 
         y += 38;
