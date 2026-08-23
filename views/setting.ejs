@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Setting | Bimbel AKSI</title>
+
+  <!-- Favicon -->
+  <link
+    rel="icon"
+    href="/favicon.ico?v=2"
+  >
+
+  <!-- CSS -->
+  <link
+    rel="stylesheet"
+    href="/css/style.css"
+  >
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+
+<body>
+
+  <div class="layout">
+
+
+    <!-- ==================================================
+         SIDEBAR
+    ================================================== -->
+
+    <%- include('partials/sidebar') %>
+
+
+    <!-- ==================================================
+         MAIN CONTENT
+    ================================================== -->
+
+    <main class="main-content">
+
+
+      <!-- ==================================================
+           HEADER
+      ================================================== -->
+
+      <div class="page-header">
+
+        <div>
+
+          <h1>
+            ⚙️ Setting
+          </h1>
+
+          <p>
+            Kelola akun admin dan pengaturan sistem Bimbel AKSI.
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- ==================================================
+           AKUN SAYA
+      ================================================== -->
+
+      <section class="setting-card">
+
+        <div class="setting-card-header">
+
+          <div class="setting-icon">
+            👤
+          </div>
+
+          <div>
+
+            <h2>
+              Akun Saya
+            </h2>
+
+            <p>
+              Kelola informasi akun admin yang sedang digunakan.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <form
+          id="formProfil"
+          class="setting-form"
+        >
+
+
+          <!-- NAMA ADMIN -->
+
+          <div class="form-group">
+
+            <label for="nama_admin">
+              Nama Admin
+            </label>
+
+            <input
+              type="text"
+              id="nama_admin"
+              name="nama_admin"
+              value="<%= admin.nama_admin || '' %>"
+              placeholder="Masukkan nama admin"
+              required
+            >
+
+          </div>
+
+
+          <!-- USERNAME -->
+
+          <div class="form-group">
+
+            <label for="username">
+              Username
+            </label>
+
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value="<%= admin.username || '' %>"
+              placeholder="Masukkan username"
+              required
+            >
+
+          </div>
+
+
+          <!-- NOMOR WHATSAPP -->
+
+          <div class="form-group">
+
+            <label for="nomor_wa">
+              Nomor WhatsApp
+            </label>
+
+            <input
+              type="text"
+              id="nomor_wa"
+              name="nomor_wa"
+              value="<%= admin.nomor_wa || '' %>"
+              placeholder="Contoh: 628123456789"
+            >
+
+            <small>
+              Nomor WhatsApp yang digunakan oleh sistem Bimbel AKSI.
+            </small>
+
+          </div>
+
+
+          <!-- TOMBOL -->
+
+          <div class="setting-form-actions">
+
+            <button
+              type="submit"
+              class="btn-save"
+            >
+              💾 Simpan Perubahan
+            </button>
+
+          </div>
+
+        </form>
+
+      </section>
+
+
+
+      <!-- ==================================================
+           UBAH PASSWORD
+      ================================================== -->
+
+      <section class="setting-card">
+
+        <div class="setting-card-header">
+
+          <div class="setting-icon">
+            🔒
+          </div>
+
+          <div>
+
+            <h2>
+              Keamanan Akun
+            </h2>
+
+            <p>
+              Ubah password akun admin secara berkala untuk menjaga keamanan sistem.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <form
+          id="formPassword"
+          class="setting-form"
+        >
+
+
+          <!-- PASSWORD LAMA -->
+
+          <div class="form-group">
+
+            <label for="password_lama">
+              Password Lama
+            </label>
+
+            <input
+              type="password"
+              id="password_lama"
+              name="password_lama"
+              placeholder="Masukkan password lama"
+              required
+            >
+
+          </div>
+
+
+          <!-- PASSWORD BARU -->
+
+          <div class="form-group">
+
+            <label for="password_baru">
+              Password Baru
+            </label>
+
+            <input
+              type="password"
+              id="password_baru"
+              name="password_baru"
+              placeholder="Masukkan password baru"
+              required
+            >
+
+          </div>
+
+
+          <!-- KONFIRMASI -->
+
+          <div class="form-group">
+
+            <label for="konfirmasi_password">
+              Konfirmasi Password Baru
+            </label>
+
+            <input
+              type="password"
+              id="konfirmasi_password"
+              name="konfirmasi_password"
+              placeholder="Ulangi password baru"
+              required
+            >
+
+          </div>
+
+
+          <div class="setting-form-actions">
+
+            <button
+              type="submit"
+              class="btn-save"
+            >
+              🔐 Ubah Password
+            </button>
+
+          </div>
+
+        </form>
+
+      </section>
+
+
+
+      <!-- ==================================================
+           MANAJEMEN ADMIN
+      ================================================== -->
+
+      <section class="setting-card">
+
+        <div class="setting-card-header">
+
+          <div class="setting-icon">
+            👥
+          </div>
+
+          <div>
+
+            <h2>
+              Manajemen Admin
+            </h2>
+
+            <p>
+              Kelola akun admin yang memiliki akses ke sistem Bimbel AKSI.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="setting-placeholder">
+
+          <div class="placeholder-icon">
+            👥
+          </div>
+
+          <h3>
+            Manajemen Admin
+          </h3>
+
+          <p>
+            Fitur untuk menambah, mengubah, dan menghapus akun admin
+            akan tersedia di bagian ini.
+          </p>
+
+          <button
+            type="button"
+            class="btn-placeholder"
+            disabled
+          >
+            + Tambah Admin
+          </button>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- ==================================================
+           PENGATURAN SISTEM
+      ================================================== -->
+
+      <section class="setting-card">
+
+        <div class="setting-card-header">
+
+          <div class="setting-icon">
+            ⚙️
+          </div>
+
+          <div>
+
+            <h2>
+              Pengaturan Sistem
+            </h2>
+
+            <p>
+              Kelola identitas dan tampilan sistem Bimbel AKSI.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="setting-placeholder">
+
+          <div class="placeholder-icon">
+            🖼️
+          </div>
+
+          <h3>
+            Logo Bimbel AKSI
+          </h3>
+
+          <p>
+            Logo yang digunakan pada halaman login, kwitansi,
+            laporan pembayaran, dan dokumen PDF lainnya.
+          </p>
+
+          <button
+            type="button"
+            class="btn-placeholder"
+            disabled
+          >
+            🖼️ Ubah Logo
+          </button>
+
+        </div>
+
+      </section>
+
+
+    </main>
+
+  </div>
+
+
+
+  <!-- ==================================================
+       JAVASCRIPT
+  ================================================== -->
+
+  <script>
+
+
+    // ==================================================
+    // UPDATE PROFIL
+    // ==================================================
+
+    document
+      .getElementById('formProfil')
+      .addEventListener('submit', async function(e) {
+
+        e.preventDefault();
+
+
+        const formData =
+          new FormData(this);
+
+
+        const data =
+          Object.fromEntries(
+            formData.entries()
+          );
+
+
+        try {
+
+          const response =
+            await fetch(
+              '/setting/profil',
+              {
+                method: 'POST',
+
+                headers: {
+                  'Content-Type':
+                    'application/json'
+                },
+
+                body:
+                  JSON.stringify(data)
+              }
+            );
+
+
+          const result =
+            await response.json();
+
+
+          if (!result.success) {
+
+            return Swal.fire({
+
+              icon: 'error',
+
+              title: 'Gagal',
+
+              text:
+                result.message,
+
+              confirmButtonColor:
+                '#2563eb'
+
+            });
+
+          }
+
+
+          await Swal.fire({
+
+            icon: 'success',
+
+            title: 'Berhasil',
+
+            text:
+              result.message,
+
+            timer: 1500,
+
+            showConfirmButton:
+              false
+
+          });
+
+
+          location.reload();
+
+
+        } catch (error) {
+
+          console.error(error);
+
+
+          Swal.fire({
+
+            icon: 'error',
+
+            title: 'Terjadi Kesalahan',
+
+            text:
+              'Tidak dapat menyimpan perubahan.',
+
+            confirmButtonColor:
+              '#2563eb'
+
+          });
+
+        }
+
+      });
+
+
+
+    // ==================================================
+    // UBAH PASSWORD
+    // ==================================================
+
+    document
+      .getElementById('formPassword')
+      .addEventListener('submit', async function(e) {
+
+        e.preventDefault();
+
+
+        const formData =
+          new FormData(this);
+
+
+        const data =
+          Object.fromEntries(
+            formData.entries()
+          );
+
+
+        try {
+
+          const response =
+            await fetch(
+              '/setting/password',
+              {
+                method: 'POST',
+
+                headers: {
+                  'Content-Type':
+                    'application/json'
+                },
+
+                body:
+                  JSON.stringify(data)
+              }
+            );
+
+
+          const result =
+            await response.json();
+
+
+          if (!result.success) {
+
+            return Swal.fire({
+
+              icon: 'error',
+
+              title: 'Gagal',
+
+              text:
+                result.message,
+
+              confirmButtonColor:
+                '#2563eb'
+
+            });
+
+          }
+
+
+          await Swal.fire({
+
+            icon: 'success',
+
+            title: 'Password Berhasil Diubah',
+
+            text:
+              'Password akun admin berhasil diperbarui.',
+
+            timer: 1800,
+
+            showConfirmButton:
+              false
+
+          });
+
+
+          this.reset();
+
+
+        } catch (error) {
+
+          console.error(error);
+
+
+          Swal.fire({
+
+            icon: 'error',
+
+            title: 'Terjadi Kesalahan',
+
+            text:
+              'Tidak dapat mengubah password.',
+
+            confirmButtonColor:
+              '#2563eb'
+
+          });
+
+        }
+
+      });
+
+
+  </script>
+
+</body>
+
+</html>

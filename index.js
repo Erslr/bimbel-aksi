@@ -29,6 +29,7 @@ const tentorRoutes = require('./routes/tentor.routes');
 const pembayaranRoutes = require('./routes/pembayaran.routes');
 const adminPembayaranRoutes = require('./routes/admin.pembayaran.routes');
 const notifikasiRoutes = require('./routes/notifikasi.routes');
+const settingRoutes = require('./routes/setting.routes');
 
 // =====================================
 // INIT APP
@@ -149,6 +150,7 @@ app.use('/tentor', tentorRoutes);
 app.use('/pembayaran', pembayaranRoutes);
 app.use('/admin/pembayaran', adminPembayaranRoutes);
 app.use(notifikasiRoutes); 
+app.use(settingRoutes);
 
 // =====================================
 // SOCKET.IO EVENTS

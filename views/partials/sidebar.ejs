@@ -41,9 +41,31 @@
 
 <hr>
 
-<a href="#" onclick="konfirmasiLogout()">
+<!-- SETTING -->
+
+<a
+  href="/setting"
+  class="<%= activePage === 'setting' ? 'active' : '' %>"
+>
+
+  <i data-lucide="settings"></i>
+
+  <span>Setting</span>
+
+</a>
+
+
+<!-- LOGOUT -->
+
+<a
+  href="#"
+  onclick="konfirmasiLogout()"
+>
+
   <i data-lucide="log-out"></i>
+
   <span>Logout</span>
+
 </a>
 
 </div>
