@@ -1061,55 +1061,85 @@ doc.moveDown(0.5);
 
 
       // ==================================================
-      // TOTAL PEMBAYARAN
-      // ==================================================
+// TOTAL PEMBAYARAN
+// ==================================================
 
-      if (
-        doc.y > 700
-      ) {
+if (
+  doc.y > 680
+) {
 
-        doc.addPage();
+  doc.addPage();
 
-      }
-
-
-      doc.moveDown(1);
+}
 
 
-      doc
-        .moveTo(40, doc.y)
-        .lineTo(555, doc.y)
-        .stroke();
+// ==================================================
+// GARIS PEMISAH
+// ==================================================
+
+doc.moveDown(1);
 
 
-      doc.moveDown(0.8);
+doc
+  .moveTo(40, doc.y)
+  .lineTo(555, doc.y)
+  .lineWidth(1)
+  .stroke();
 
 
-      doc
-        .fontSize(10)
-        .font('Helvetica-Bold')
-        .text(
-          `Total Pembayaran Lunas: Rp ${totalLunas.toLocaleString('id-ID')}`
-        );
+doc.moveDown(0.8);
 
 
-      // ==================================================
-      // FOOTER
-      // ==================================================
+// ==================================================
+// TOTAL PEMBAYARAN LUNAS
+// ==================================================
 
-      doc.moveDown(1);
+doc
+  .fontSize(11)
+  .font('Helvetica-Bold')
+  .text(
+    'TOTAL PEMBAYARAN LUNAS',
+    40,
+    doc.y,
+    {
+      width: 250
+    }
+  );
 
 
-      doc
-        .fontSize(8)
-        .font('Helvetica')
-        .text(
-          'Laporan ini dibuat oleh Admin Bimbel AKSI.',
-          {
-            align: 'center'
-          }
-        );
+doc
+  .fontSize(11)
+  .font('Helvetica-Bold')
+  .text(
+    `Rp ${totalLunas.toLocaleString('id-ID')}`,
+    300,
+    doc.y,
+    {
+      width: 255,
+      align: 'right'
+    }
+  );
 
+
+// ==================================================
+// FOOTER
+// ==================================================
+
+doc.moveDown(2);
+
+
+doc
+  .fontSize(8)
+  .font('Helvetica')
+  .text(
+    'Laporan ini dibuat oleh Admin Bimbel AKSI.',
+    40,
+    doc.y,
+    {
+      width: 515,
+      align: 'center'
+    }
+  );
 
       // ==================================================
       // SELESAI
@@ -1676,79 +1706,81 @@ let y = 270;
           );
 
 
-        // ==================================================
-        // STATUS
-        // ==================================================
+        // ==============================================
+// STATUS
+// ==============================================
 
-        y += 125;
+y += 125;
 
-
-        doc
-          .font('Helvetica-Bold')
-          .fontSize(18)
-          .text(
-            `STATUS: ${status}`,
-            70,
-            y,
-            {
-              align: 'center',
-              width: 455
-            }
-          );
-
-
-        // ==================================================
-        // KETERANGAN
-        // ==================================================
-
-        y += 60;
+doc
+  .font('Helvetica-Bold')
+  .fontSize(18)
+  .fillColor('#000')
+  .text(
+    'STATUS: LUNAS',
+    70,
+    y,
+    {
+      align: 'center',
+      width: 455
+    }
+  );
 
 
-        doc
-          .font('Helvetica')
-          .fontSize(10)
-          .fillColor('#555')
-          .text(
-            'Kwitansi ini merupakan bukti pembayaran resmi',
-            70,
-            y,
-            {
-              align: 'center',
-              width: 455
-            }
-          );
+// ==============================================
+// KETERANGAN
+// ==============================================
+
+y += 55;
+
+doc
+  .font('Helvetica')
+  .fontSize(10)
+  .fillColor('#555')
+  .text(
+    'Kwitansi ini merupakan bukti pembayaran resmi',
+    70,
+    y,
+    {
+      align: 'center',
+      width: 455
+    }
+  );
 
 
-        doc
-          .text(
-            'Bimbel AKSI.',
-            70,
-            y + 16,
-            {
-              align: 'center',
-              width: 455
-            }
-          );
+// Baris kedua keterangan dibuat sedikit lebih jauh
+doc
+  .font('Helvetica')
+  .fontSize(10)
+  .fillColor('#555')
+  .text(
+    'Bimbel AKSI.',
+    70,
+    y + 18,
+    {
+      align: 'center',
+      width: 455
+    }
+  );
 
 
-        // ==================================================
-        // FOOTER
-        // ==================================================
+// ==============================================
+// FOOTER
+// ==============================================
 
-        doc
-          .fillColor('#000')
-          .font('Helvetica')
-          .fontSize(10)
-          .text(
-            'Terima kasih telah belajar bersama Bimbel AKSI 😊',
-            70,
-            650,
-            {
-              align: 'center',
-              width: 455
-            }
-          );
-
+doc
+  .fillColor('#000')
+  .font('Helvetica')
+  .fontSize(10)
+  .text(
+    'Terima kasih telah belajar bersama Bimbel AKSI',
+    70,
+    680,
+    {
+      align: 'center',
+      width: 455
+    }
+  );
 
         // ==================================================
         // SELESAI MEMBUAT PDF
@@ -3351,78 +3383,80 @@ doc
 
 
         // ==============================================
-        // STATUS
-        // ==============================================
+// STATUS
+// ==============================================
 
-        y += 125;
+y += 125;
 
-
-        doc
-          .font('Helvetica-Bold')
-          .fontSize(18)
-          .text(
-            'STATUS: LUNAS',
-            70,
-            y,
-            {
-              align: 'center',
-              width: 455
-            }
-          );
-
-
-        // ==============================================
-        // KETERANGAN
-        // ==============================================
-
-        y += 60;
+doc
+  .font('Helvetica-Bold')
+  .fontSize(18)
+  .fillColor('#000')
+  .text(
+    'STATUS: LUNAS',
+    70,
+    y,
+    {
+      align: 'center',
+      width: 455
+    }
+  );
 
 
-        doc
-          .font('Helvetica')
-          .fontSize(10)
-          .fillColor('#555')
-          .text(
-            'Kwitansi ini merupakan bukti pembayaran resmi',
-            70,
-            y,
-            {
-              align: 'center',
-              width: 455
-            }
-          );
+// ==============================================
+// KETERANGAN
+// ==============================================
+
+y += 55;
+
+doc
+  .font('Helvetica')
+  .fontSize(10)
+  .fillColor('#555')
+  .text(
+    'Kwitansi ini merupakan bukti pembayaran resmi',
+    70,
+    y,
+    {
+      align: 'center',
+      width: 455
+    }
+  );
 
 
-        doc.text(
-          'Bimbel AKSI.',
-          70,
-          y + 16,
-          {
-            align: 'center',
-            width: 455
-          }
-        );
+// Baris kedua keterangan dibuat sedikit lebih jauh
+doc
+  .font('Helvetica')
+  .fontSize(10)
+  .fillColor('#555')
+  .text(
+    'Bimbel AKSI.',
+    70,
+    y + 18,
+    {
+      align: 'center',
+      width: 455
+    }
+  );
 
 
-        // ==============================================
-        // FOOTER
-        // ==============================================
+// ==============================================
+// FOOTER
+// ==============================================
 
-        doc
-          .fillColor('#000')
-          .font('Helvetica')
-          .fontSize(10)
-          .text(
-            'Terima kasih telah belajar bersama Bimbel AKSI',
-            70,
-            650,
-            {
-              align: 'center',
-              width: 455
-            }
-          );
-
-
+doc
+  .fillColor('#000')
+  .font('Helvetica')
+  .fontSize(10)
+  .text(
+    'Terima kasih telah belajar bersama Bimbel AKSI',
+    70,
+    680,
+    {
+      align: 'center',
+      width: 455
+    }
+  );
         // ==============================================
         // SELESAI
         // ==============================================
