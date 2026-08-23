@@ -1,17 +1,41 @@
+// ======================================================
 // routes/pembayaran.routes.js
+// ======================================================
+
 const express = require('express');
 const router = express.Router();
 
-// ==============================
-// IMPORT CONTROLLER & MIDDLEWARE
-// ==============================
-const pembayaranController = require('../controllers/pembayaran.controller');
-const auth = require('../middleware/auth.middleware');
 
-// ==============================
-// ROUTES PEMBAYARAN (ADMIN)
-// ==============================
-router.get('/', auth, pembayaranController.index);
+// ======================================================
+// IMPORT CONTROLLER
+// ======================================================
+
+const pembayaranController =
+  require('../controllers/pembayaran.controller');
+
+
+// ======================================================
+// IMPORT MIDDLEWARE
+// ======================================================
+
+const auth =
+  require('../middleware/auth.middleware');
+
+
+// ======================================================
+// HALAMAN PEMBAYARAN
+// ======================================================
+
+router.get(
+  '/',
+  auth,
+  pembayaranController.index
+);
+
+
+// ======================================================
+// BAYAR PEMBAYARAN
+// ======================================================
 
 router.post(
   '/bayar/:id',
@@ -19,35 +43,65 @@ router.post(
   pembayaranController.bayar
 );
 
+
+// ======================================================
+// EXPORT PDF
+// ======================================================
+
 router.get(
-  '/export/excel',
+  '/export/pdf',
   auth,
-  pembayaranController.exportExcel
+  pembayaranController.exportPDF
 );
 
-// ==============================
+
+// ======================================================
+// KWITANSI PEMBAYARAN
+// ======================================================
+
+router.get(
+  '/kwitansi/:id',
+  auth,
+  pembayaranController.kwitansiPembayaran
+);
+
+
+// ======================================================
 // RIWAYAT PEMBAYARAN SISWA
-// ==============================
+// ======================================================
+
 router.get(
   '/riwayat/:id',
   auth,
   pembayaranController.riwayatSiswa
 );
 
+
+// ======================================================
+// EXPORT PDF RIWAYAT PEMBAYARAN SISWA
+// ======================================================
+
 router.get(
   '/riwayat/:id/export',
   auth,
-  pembayaranController.exportRiwayatSiswa
+  pembayaranController.exportRiwayatPDF
 );
 
-// ==============================
-// WHATSAPP
-// ==============================
+
+// ======================================================
+// WHATSAPP - PREVIEW
+// ======================================================
+
 router.get(
   '/whatsapp/preview',
   auth,
   pembayaranController.previewWhatsapp
 );
+
+
+// ======================================================
+// WHATSAPP - UPDATE PESAN
+// ======================================================
 
 router.post(
   '/whatsapp/update-pesan/:id',
@@ -55,11 +109,21 @@ router.post(
   pembayaranController.updateCustomPesan
 );
 
+
+// ======================================================
+// WHATSAPP - TANDAI TERKIRIM
+// ======================================================
+
 router.post(
   '/whatsapp/tandai/:id',
   auth,
   pembayaranController.tandaiWhatsapp
 );
+
+
+// ======================================================
+// WHATSAPP - KIRIM
+// ======================================================
 
 router.post(
   '/whatsapp/kirim/:id',
@@ -67,25 +131,31 @@ router.post(
   pembayaranController.kirimWhatsapp
 );
 
-// ==============================
+
+// ======================================================
 // VERIFIKASI PEMBAYARAN
-// ==============================
+// ======================================================
+
 router.post(
   '/verifikasi/:id',
   auth,
   pembayaranController.verifikasiPembayaran
 );
 
-// ==============================
+
+// ======================================================
 // GENERATE TAGIHAN
-// ==============================
+// ======================================================
+
 router.post(
   '/generate',
   auth,
   pembayaranController.generateTagihan
 );
 
-// ==============================
+
+// ======================================================
 // EXPORT ROUTER
-// ==============================
+// ======================================================
+
 module.exports = router;

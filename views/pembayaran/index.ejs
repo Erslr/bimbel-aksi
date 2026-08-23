@@ -1,530 +1,1076 @@
 <%- include('../partials/header') %>
 <%- include('../partials/sidebar') %>
 
+
 <div class="content">
+
+  <!-- ==================================================
+       JUDUL
+  ================================================== -->
+
   <h2>💳 Pembayaran Siswa</h2>
 
-  <!-- FILTER + EXPORT -->
-<div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; align-items:center;">
 
-  <form method="GET" action="/pembayaran"
-    style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+  <!-- ==================================================
+       FILTER + EXPORT
+  ================================================== -->
 
-    <!-- BULAN -->
-    <select name="bulan" required>
-
-      <option value="">Bulan</option>
-
-      <% for(let i=1;i<=12;i++){ %>
-
-        <option value="<%= i %>"
-          <%= bulan == i ? 'selected' : '' %>>
-          <%= i %>
-        </option>
-
-      <% } %>
-
-    </select>
-
-    <!-- TAHUN -->
-    <select name="tahun" required>
-
-      <option value="">Tahun</option>
-
-      <% for(let y=new Date().getFullYear()-1;y<=new Date().getFullYear()+1;y++){ %>
-
-        <option value="<%= y %>"
-          <%= tahun == y ? 'selected' : '' %>>
-          <%= y %>
-        </option>
-
-      <% } %>
-
-    </select>
-
-    <!-- STATUS -->
-    <select name="status">
-
-      <option value="semua"
-        <%= filterStatus==='semua'?'selected':'' %>>
-        Semua Status
-      </option>
-
-      <option value="belum"
-        <%= filterStatus==='belum'?'selected':'' %>>
-        Belum Bayar
-      </option>
-
-      <option value="menunggu"
-        <%= filterStatus==='menunggu'?'selected':'' %>>
-        Menunggu
-      </option>
-
-      <option value="lunas"
-        <%= filterStatus==='lunas'?'selected':'' %>>
-        Lunas
-      </option>
-
-    </select>
-
-    <!-- JENJANG -->
-    <select name="jenjang">
-
-      <option value="semua"
-        <%= filterJenjang==='semua'?'selected':'' %>>
-        Semua Jenjang
-      </option>
-
-      <option value="SMP"
-        <%= filterJenjang==='SMP'?'selected':'' %>>
-        SMP
-      </option>
-
-      <option value="SMA"
-        <%= filterJenjang==='SMA'?'selected':'' %>>
-        SMA
-      </option>
-
-      <option value="SMK"
-        <%= filterJenjang==='SMK'?'selected':'' %>>
-        SMK
-      </option>
-
-    </select>
-
-    <!-- SEARCH -->
-<div>
-  <label>Search:</label>
-
-  <input
-    type="text"
-    name="keyword"
-    value="<%= keyword %>"
-    placeholder="🔍 Cari nama, kelas, status..."
-    class="search-input"
-    autocomplete="off"
+  <div
+    style="
+      display:flex;
+      gap:10px;
+      margin-bottom:15px;
+      flex-wrap:wrap;
+      align-items:center;
+    "
   >
-</div>
 
-    <!-- BUTTON -->
-    <button type="submit">
-      Filter
-    </button>
-    
-    <a href="/pembayaran"
+    <form
+      method="GET"
+      action="/pembayaran"
       style="
-        padding:5px 10px;
-        background:#6c757d;
-        color:white;
-        text-decoration:none;
-        border-radius:4px;
-      ">
-      Reset
-    </a>
-
-  </form>
-
-  <!-- EXPORT -->
-  <% if (bulan && tahun) { %>
-
-    <a
-      href="/pembayaran/export/excel?bulan=<%= bulan %>&tahun=<%= tahun %>&status=<%= filterStatus %>&jenjang=<%= filterJenjang %>&keyword=<%= keyword %>"
-      style="
-        padding:5px 10px;
-        background:#27ae60;
-        color:white;
-        text-decoration:none;
-        border-radius:4px;
+        display:flex;
+        gap:10px;
+        flex-wrap:wrap;
+        align-items:center;
       "
     >
-      ⬇ Export Excel
-    </a>
 
-  <% } %>
+      <!-- ==============================================
+           BULAN
+      =============================================== -->
 
-</div>
+      <select name="bulan" required>
 
-<div class="info-data">
+        <option value="">
+          Bulan
+        </option>
 
-<% if(totalData === 0){ %>
+        <% for(let i = 1; i <= 12; i++) { %>
 
-    <span class="info-kosong">
+          <option
+            value="<%= i %>"
+            <%= bulan == i ? 'selected' : '' %>
+          >
+            <%= i %>
+          </option>
+
+        <% } %>
+
+      </select>
+
+
+      <!-- ==============================================
+           TAHUN
+      =============================================== -->
+
+      <select name="tahun" required>
+
+        <option value="">
+          Tahun
+        </option>
+
+        <% for(
+          let y = new Date().getFullYear() - 1;
+          y <= new Date().getFullYear() + 1;
+          y++
+        ) { %>
+
+          <option
+            value="<%= y %>"
+            <%= tahun == y ? 'selected' : '' %>
+          >
+            <%= y %>
+          </option>
+
+        <% } %>
+
+      </select>
+
+
+      <!-- ==============================================
+           STATUS
+      =============================================== -->
+
+      <select name="status">
+
+        <option
+          value="semua"
+          <%= filterStatus === 'semua'
+            ? 'selected'
+            : '' %>
+        >
+          Semua Status
+        </option>
+
+        <option
+          value="belum"
+          <%= filterStatus === 'belum'
+            ? 'selected'
+            : '' %>
+        >
+          Belum Bayar
+        </option>
+
+        <option
+          value="menunggu"
+          <%= filterStatus === 'menunggu'
+            ? 'selected'
+            : '' %>
+        >
+          Menunggu
+        </option>
+
+        <option
+          value="lunas"
+          <%= filterStatus === 'lunas'
+            ? 'selected'
+            : '' %>
+        >
+          Lunas
+        </option>
+
+      </select>
+
+
+      <!-- ==============================================
+           JENJANG
+      =============================================== -->
+
+      <select name="jenjang">
+
+        <option
+          value="semua"
+          <%= filterJenjang === 'semua'
+            ? 'selected'
+            : '' %>
+        >
+          Semua Jenjang
+        </option>
+
+        <option
+          value="SMP"
+          <%= filterJenjang === 'SMP'
+            ? 'selected'
+            : '' %>
+        >
+          SMP
+        </option>
+
+        <option
+          value="SMA"
+          <%= filterJenjang === 'SMA'
+            ? 'selected'
+            : '' %>
+        >
+          SMA
+        </option>
+
+        <option
+          value="SMK"
+          <%= filterJenjang === 'SMK'
+            ? 'selected'
+            : '' %>
+        >
+          SMK
+        </option>
+
+      </select>
+
+
+      <!-- ==============================================
+           JENIS KELAMIN
+      =============================================== -->
+
+      <select name="jenis_kelamin">
+
+        <option
+          value="semua"
+          <%= filterJenisKelamin === 'semua'
+            ? 'selected'
+            : '' %>
+        >
+          Semua Jenis Kelamin
+        </option>
+
+        <option
+          value="L"
+          <%= filterJenisKelamin === 'L'
+            ? 'selected'
+            : '' %>
+        >
+          Laki-laki
+        </option>
+
+        <option
+          value="P"
+          <%= filterJenisKelamin === 'P'
+            ? 'selected'
+            : '' %>
+        >
+          Perempuan
+        </option>
+
+      </select>
+
+
+      <!-- ==============================================
+           SEARCH
+      =============================================== -->
+
+      <div>
+
+        <label>
+          Search:
+        </label>
+
+        <input
+          type="text"
+          name="keyword"
+          value="<%= keyword || '' %>"
+          placeholder="🔍 Cari nama, kelas, status..."
+          class="search-input"
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <!-- ==============================================
+           BUTTON FILTER
+      =============================================== -->
+
+      <button type="submit">
+        Filter
+      </button>
+
+
+      <!-- ==============================================
+           RESET
+      =============================================== -->
+
+      <a
+        href="/pembayaran"
+        style="
+          padding:5px 10px;
+          background:#6c757d;
+          color:white;
+          text-decoration:none;
+          border-radius:4px;
+        "
+      >
+        Reset
+      </a>
+
+    </form>
+
+
+    <!-- ==============================================
+         EXPORT PDF
+    =============================================== -->
+
+    <% if (bulan && tahun) { %>
+
+      <a
+        href="/pembayaran/export/pdf?bulan=<%= encodeURIComponent(bulan) %>&tahun=<%= encodeURIComponent(tahun) %>&status=<%= encodeURIComponent(filterStatus) %>&jenjang=<%= encodeURIComponent(filterJenjang) %>&jenis_kelamin=<%= encodeURIComponent(filterJenisKelamin) %>&keyword=<%= encodeURIComponent(keyword || '') %>"
+        target="_blank"
+        style="
+          padding:5px 10px;
+          background:#c0392b;
+          color:white;
+          text-decoration:none;
+          border-radius:4px;
+        "
+      >
+        📄 Export PDF
+      </a>
+
+    <% } %>
+
+  </div>
+
+
+  <!-- ==================================================
+       INFO DATA
+  ================================================== -->
+
+  <div class="info-data">
+
+    <% if (totalData === 0) { %>
+
+      <span class="info-kosong">
         💳 Tidak ada data yang sesuai
-    </span>
+      </span>
 
-<% } else if(totalData === 1){ %>
+    <% } else if (totalData === 1) { %>
 
-    <span class="info-satu">
-        💳 Ditemukan <strong>1</strong> pembayaran
-    </span>
+      <span class="info-satu">
+        💳 Ditemukan
+        <strong>1</strong>
+        pembayaran
+      </span>
 
-<% } else { %>
+    <% } else { %>
 
-    <span class="info-banyak">
-        💳 Ditemukan <strong><%= totalData %></strong> pembayaran
-    </span>
+      <span class="info-banyak">
+        💳 Ditemukan
+        <strong><%= totalData %></strong>
+        pembayaran
+      </span>
 
-<% } %>
+    <% } %>
 
-</div>
+  </div>
+
+
+  <!-- ==================================================
+       TABLE
+  ================================================== -->
 
   <div class="table-wrapper">
-    <table border="1" cellpadding="6" cellspacing="0" width="100%">
+
+    <table
+      border="1"
+      cellpadding="6"
+      cellspacing="0"
+      width="100%"
+    >
+
       <thead>
+
         <tr>
+
           <th>No</th>
+
           <th>Nama</th>
+
           <th>Jenjang</th>
+
           <th>Kelas</th>
+
           <th>Tanggal Tagihan</th>
+
           <th>Jumlah</th>
+
           <th>Status Bayar</th>
+
           <th>Status WA</th>
+
           <th>Aksi</th>
+
         </tr>
+
       </thead>
 
+
       <tbody>
-        <% if (!pembayaran || pembayaran.length === 0) { %>
+
+        <% if (
+          !pembayaran ||
+          pembayaran.length === 0
+        ) { %>
+
           <tr>
-            <td colspan="9" align="center">
-                Tidak ada data pembayaran yang sesuai
+
+            <td
+              colspan="9"
+              align="center"
+            >
+              Tidak ada data pembayaran yang sesuai
             </td>
+
           </tr>
+
         <% } else { %>
 
+
           <% pembayaran.forEach((p, i) => {
+
             const today = new Date();
-            const tagihan = new Date(p.tanggal_tagihan);
-            const terlambat = p.status === 'belum' && tagihan < today;
+
+            const tagihan =
+              new Date(p.tanggal_tagihan);
+
+            const terlambat =
+              p.status === 'belum' &&
+              tagihan < today;
+
           %>
 
-          <tr class="<%= terlambat ? 'row-terlambat' : '' %>">
-            <td><%= i + 1 %></td>
-            <td>
-              <%= p.nama_lengkap %>
-            </td>
-            <td><%= p.jenjang || '-' %></td>
-            <td><%= p.kelas_sekolah || '-' %></td>
 
-            <td><%= tagihan.toLocaleDateString('id-ID') %></td>
+            <tr
+              class="<%= terlambat
+                ? 'row-terlambat'
+                : '' %>"
+            >
 
-            <td align="right">
-              Rp <%= Number(p.jumlah || 0).toLocaleString('id-ID') %>
-            </td>
+              <!-- NO -->
 
-            <!-- STATUS BAYAR -->
-            <td align="center">
+              <td>
+                <%= i + 1 %>
+              </td>
 
-              <% if (p.status === 'belum' && terlambat) { %>
 
-                <span style="
-                  background:#fee2e2;
-                  color:#b91c1c;
-                  padding:5px 12px;
-                  border-radius:20px;
-                  font-size:12px;
-                  font-weight:bold;
-                ">
-                  Terlambat
-                </span>
+              <!-- NAMA -->
 
-              <% } else if (p.status === 'belum') { %>
+              <td>
+                <%= p.nama_lengkap %>
+              </td>
 
-                <span style="
-                  background:#fef9c3;
-                  color:#854d0e;
-                  padding:5px 12px;
-                  border-radius:20px;
-                  font-size:12px;
-                  font-weight:bold;
-                ">
-                  Belum Bayar
-                </span>
 
-              <% } else if (p.status === 'menunggu') { %>
+              <!-- JENJANG -->
 
-                <span style="
-                  background:#fed7aa;
-                  color:#9a3412;
-                  padding:5px 12px;
-                  border-radius:20px;
-                  font-size:12px;
-                  font-weight:bold;
-                ">
-                  Menunggu
-                </span>
+              <td>
+                <%= p.jenjang || '-' %>
+              </td>
 
-              <% } else { %>
 
-                <span style="
-                  background:#dcfce7;
-                  color:#166534;
-                  padding:5px 12px;
-                  border-radius:20px;
-                  font-size:12px;
-                  font-weight:bold;
-                ">
-                  Lunas
-                </span>
+              <!-- KELAS -->
 
-              <% } %>
+              <td>
+                <%= p.kelas_sekolah || '-' %>
+              </td>
 
-            </td>
-            
-            <!-- STATUS WHATSAPP -->
-            <td align="center">
-              <% if (p.wa_terkirim) { %>
-                <span style="color:green;font-weight:bold;">📩 WA Terkirim</span>
-              <% } else { %>
-                <span style="color:#999;">-</span>
-              <% } %>
-            </td>
 
-            <!-- AKSI -->
-            <td>
-              <% if (p.status === 'belum') { %>
+              <!-- TANGGAL TAGIHAN -->
 
-                <form
-                    action="/pembayaran/bayar/<%= p.id_pembayaran %>?bulan=<%= bulan %>&tahun=<%= tahun %>&status=<%= filterStatus %>&jenjang=<%= filterJenjang %>&keyword=<%= encodeURIComponent(keyword || '') %>"
+              <td>
+                <%= tagihan.toLocaleDateString('id-ID') %>
+              </td>
+
+
+              <!-- JUMLAH -->
+
+              <td align="right">
+
+                Rp
+                <%= Number(
+                  p.jumlah || 0
+                ).toLocaleString('id-ID') %>
+
+              </td>
+
+
+              <!-- ======================================
+                   STATUS BAYAR
+              ======================================= -->
+
+              <td align="center">
+
+
+                <% if (
+                  p.status === 'belum' &&
+                  terlambat
+                ) { %>
+
+                  <span
+                    style="
+                      background:#fee2e2;
+                      color:#b91c1c;
+                      padding:5px 12px;
+                      border-radius:20px;
+                      font-size:12px;
+                      font-weight:bold;
+                    "
+                  >
+                    Terlambat
+                  </span>
+
+
+                <% } else if (
+                  p.status === 'belum'
+                ) { %>
+
+                  <span
+                    style="
+                      background:#fef9c3;
+                      color:#854d0e;
+                      padding:5px 12px;
+                      border-radius:20px;
+                      font-size:12px;
+                      font-weight:bold;
+                    "
+                  >
+                    Belum Bayar
+                  </span>
+
+
+                <% } else if (
+                  p.status === 'menunggu'
+                ) { %>
+
+                  <span
+                    style="
+                      background:#fed7aa;
+                      color:#9a3412;
+                      padding:5px 12px;
+                      border-radius:20px;
+                      font-size:12px;
+                      font-weight:bold;
+                    "
+                  >
+                    Menunggu
+                  </span>
+
+
+                <% } else { %>
+
+                  <span
+                    style="
+                      background:#dcfce7;
+                      color:#166534;
+                      padding:5px 12px;
+                      border-radius:20px;
+                      font-size:12px;
+                      font-weight:bold;
+                    "
+                  >
+                    Lunas
+                  </span>
+
+                <% } %>
+
+              </td>
+
+
+              <!-- ======================================
+                   STATUS WHATSAPP
+              ======================================= -->
+
+              <td align="center">
+
+                <% if (p.wa_terkirim) { %>
+
+                  <span
+                    style="
+                      color:green;
+                      font-weight:bold;
+                    "
+                  >
+                    📩 WA Terkirim
+                  </span>
+
+                <% } else { %>
+
+                  <span
+                    style="color:#999;"
+                  >
+                    -
+                  </span>
+
+                <% } %>
+
+              </td>
+
+
+              <!-- ======================================
+                   AKSI
+              ======================================= -->
+
+              <td>
+
+
+                <!-- ================================
+                     BELUM BAYAR
+                ================================= -->
+
+                <% if (
+                  p.status === 'belum'
+                ) { %>
+
+
+                  <form
+                    action="/pembayaran/bayar/<%= p.id_pembayaran %>?bulan=<%= encodeURIComponent(bulan) %>&tahun=<%= encodeURIComponent(tahun) %>&status=<%= encodeURIComponent(filterStatus) %>&jenjang=<%= encodeURIComponent(filterJenjang) %>&jenis_kelamin=<%= encodeURIComponent(filterJenisKelamin) %>&keyword=<%= encodeURIComponent(keyword || '') %>"
                     method="POST"
                     onsubmit="return konfirmasiBayar(this)"
-                    style="display:flex;gap:5px;"
->
-                  <select name="metode_pembayaran" required>
-                    <option value="">Metode</option>
-                    <option value="Cash">Cash</option>
-                    <option value="Transfer">Transfer</option>
-                  </select>
-                  <button type="submit">Bayar</button>
-                </form>
+                    style="
+                      display:flex;
+                      gap:5px;
+                    "
+                  >
 
-              <% } else if (p.status === 'menunggu') { %>
+                    <select
+                      name="metode_pembayaran"
+                      required
+                    >
 
-                <button
-                  onclick="verifikasiPembayaran('<%= p.id_pembayaran %>')"
-                >
-                  ✓ Verifikasi
-                </button>
+                      <option value="">
+                        Metode
+                      </option>
 
-                <a
-                  href="/pembayaran/riwayat/<%= p.id_siswa %>"
-                  style="
-                    background:#3498db;
-                    color:white;
-                    padding:5px 10px;
-                    text-decoration:none;
-                    border-radius:4px;
-                  "
-                >
-                  Riwayat
-                </a>
+                      <option value="Cash">
+                        Cash
+                      </option>
 
-              <% } else { %>
+                      <option value="Transfer">
+                        Transfer
+                      </option>
 
-                <a
-                  href="/pembayaran/riwayat/<%= p.id_siswa %>"
-                  style="
-                    background:#3498db;
-                    color:white;
-                    padding:5px 10px;
-                    text-decoration:none;
-                    border-radius:4px;
-                  "
-                >
-                  Riwayat
-                </a>
+                    </select>
 
-              <% } %>
-            </td>
-          </tr>
+
+                    <button type="submit">
+                      Bayar
+                    </button>
+
+                  </form>
+
+
+                <!-- ================================
+                     MENUNGGU VERIFIKASI
+                ================================= -->
+
+                <% } else if (
+                  p.status === 'menunggu'
+                ) { %>
+
+
+                  <button
+                    type="button"
+                    onclick="verifikasiPembayaran('<%= p.id_pembayaran %>')"
+                  >
+                    ✓ Verifikasi
+                  </button>
+
+
+                  <a
+                    href="/pembayaran/riwayat/<%= p.id_siswa %>"
+                    style="
+                      background:#3498db;
+                      color:white;
+                      padding:5px 10px;
+                      text-decoration:none;
+                      border-radius:4px;
+                    "
+                  >
+                    Riwayat
+                  </a>
+
+
+                <!-- ================================
+                     LUNAS
+                ================================= -->
+
+                <% } else { %>
+
+
+                  <a
+                    href="/pembayaran/riwayat/<%= p.id_siswa %>"
+                    style="
+                      background:#3498db;
+                      color:white;
+                      padding:5px 10px;
+                      text-decoration:none;
+                      border-radius:4px;
+                    "
+                  >
+                    Riwayat
+                  </a>
+
+
+                <% } %>
+
+
+              </td>
+
+            </tr>
+
 
           <% }) %>
+
         <% } %>
+
       </tbody>
+
     </table>
+
   </div>
+
 </div>
+
+
+<!-- ==================================================
+     SWEETALERT
+================================================== -->
+
 <script>
-const success = "<%= success %>";
-const error = "<%= error %>";
 
-if (success === "bayar") {
+  // ==================================================
+  // DATA DARI CONTROLLER
+  // ==================================================
 
-    Swal.fire({
-        icon: "success",
-        title: "Berhasil",
-        text: "Pembayaran berhasil diproses.",
-        timer: 1800,
-        showConfirmButton: false,
-         width: "330px"
-    });
+  const success =
+    "<%= success || '' %>";
 
-}
+  const error =
+    "<%= error || '' %>";
 
-if (success === "generate") {
 
-    Swal.fire({
-        icon: "success",
-        title: "Berhasil",
-        text: "Tagihan pembayaran berhasil dibuat.",
-        timer: 1800,
-        showConfirmButton: false,
-         width: "330px"
-    });
+  // ==================================================
+  // SUCCESS BAYAR
+  // ==================================================
 
-}
-
-if (error === "bayar") {
+  if (success === "bayar") {
 
     Swal.fire({
-        icon: "error",
-        title: "Gagal",
-        text: "Pembayaran gagal diproses.",
-         width: "330px"
+
+      icon: "success",
+
+      title: "Berhasil",
+
+      text:
+        "Pembayaran berhasil diproses.",
+
+      timer: 1800,
+
+      showConfirmButton: false,
+
+      width: "330px"
+
     });
 
-}
+  }
 
-if (error === "generate") {
+
+  // ==================================================
+  // SUCCESS GENERATE
+  // ==================================================
+
+  if (success === "generate") {
 
     Swal.fire({
-        icon: "error",
-        title: "Gagal",
-        text: "Tagihan pembayaran gagal dibuat.",
-         width: "330px"
+
+      icon: "success",
+
+      title: "Berhasil",
+
+      text:
+        "Tagihan pembayaran berhasil dibuat.",
+
+      timer: 1800,
+
+      showConfirmButton: false,
+
+      width: "330px"
+
     });
 
-}
+  }
 
-if (error === "load") {
+
+  // ==================================================
+  // ERROR BAYAR
+  // ==================================================
+
+  if (error === "bayar") {
 
     Swal.fire({
-        icon: "error",
-        title: "Terjadi Kesalahan",
-        text: "Data pembayaran gagal dimuat.",
-         width: "330px"
+
+      icon: "error",
+
+      title: "Gagal",
+
+      text:
+        "Pembayaran gagal diproses.",
+
+      width: "330px"
+
     });
 
-}
+  }
 
-// ================================
-// KONFIRMASI BAYAR ADMIN
-// ================================
-function konfirmasiBayar(form){
+
+  // ==================================================
+  // ERROR GENERATE
+  // ==================================================
+
+  if (error === "generate") {
 
     Swal.fire({
-        title:"Konfirmasi Pembayaran?",
-        text:"Pembayaran akan dipindahkan ke status menunggu.",
-        icon:"question",
-         width: "330px",
-        showCancelButton:true,
-        confirmButtonText:"Ya, Bayar",
-        cancelButtonText:"Batal",
-        confirmButtonColor:"#28a745",
-        cancelButtonColor:"#d33"
-    }).then((result)=>{
 
-        if(result.isConfirmed){
-            form.submit();
-        }
+      icon: "error",
+
+      title: "Gagal",
+
+      text:
+        "Tagihan pembayaran gagal dibuat.",
+
+      width: "330px"
 
     });
+
+  }
+
+
+  // ==================================================
+  // ERROR LOAD
+  // ==================================================
+
+  if (error === "load") {
+
+    Swal.fire({
+
+      icon: "error",
+
+      title: "Terjadi Kesalahan",
+
+      text:
+        "Data pembayaran gagal dimuat.",
+
+      width: "330px"
+
+    });
+
+  }
+
+
+  // ==================================================
+  // KONFIRMASI BAYAR
+  // ==================================================
+
+  function konfirmasiBayar(form) {
+
+    Swal.fire({
+
+      title:
+        "Konfirmasi Pembayaran?",
+
+      text:
+        "Pembayaran akan dipindahkan ke status menunggu.",
+
+      icon:
+        "question",
+
+      width:
+        "330px",
+
+      showCancelButton:
+        true,
+
+      confirmButtonText:
+        "Ya, Bayar",
+
+      cancelButtonText:
+        "Batal",
+
+      confirmButtonColor:
+        "#28a745",
+
+      cancelButtonColor:
+        "#d33"
+
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        form.submit();
+
+      }
+
+    });
+
 
     return false;
-}
+  }
 
-async function verifikasiPembayaran(id) {
 
-    const konfirmasi = await Swal.fire({
-        title: "Verifikasi Pembayaran?",
-        text: "Status pembayaran akan diubah menjadi Lunas.",
-        icon: "question",
-         width: "330px",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Verifikasi",
-        cancelButtonText: "Batal",
-        confirmButtonColor: "#28a745",
-        cancelButtonColor: "#d33"
-    });
+  // ==================================================
+  // VERIFIKASI PEMBAYARAN
+  // ==================================================
 
-    if (!konfirmasi.isConfirmed) return;
+  async function verifikasiPembayaran(id) {
 
-    try {
+    const konfirmasi =
+      await Swal.fire({
 
-        const res = await fetch(`/pembayaran/verifikasi/${id}`, {
-            method: "POST"
-        });
+        title:
+          "Verifikasi Pembayaran?",
 
-        const data = await res.json();
+        text:
+          "Status pembayaran akan diubah menjadi Lunas.",
 
-        if (data.success) {
+        icon:
+          "question",
 
-            await Swal.fire({
-                icon: "success",
-                title: "Berhasil",
-                text: "Pembayaran berhasil diverifikasi.",
-                timer: 1500,
-                showConfirmButton: false
-            });
+        width:
+          "330px",
 
-            /// buka WhatsApp jika tersedia
-              if (data.waLink) {
+        showCancelButton:
+          true,
 
-                  window.open(data.waLink, "_blank");
+        confirmButtonText:
+          "Ya, Verifikasi",
 
-              }
+        cancelButtonText:
+          "Batal",
 
-              // reload halaman setelah proses selesai
-              setTimeout(() => {
-                  location.reload();
-              }, 1000);
-           
-        } else {
+        confirmButtonColor:
+          "#28a745",
 
-            Swal.fire({
-                icon: "error",
-                title: "Gagal",
-                text: "Verifikasi pembayaran gagal."
-            });
+        cancelButtonColor:
+          "#d33"
 
-        }
+      });
 
-    } catch (err) {
 
-        console.error(err);
+    if (!konfirmasi.isConfirmed) {
 
-        Swal.fire({
-            icon: "error",
-            title: "Terjadi Kesalahan",
-            text: "Tidak dapat memverifikasi pembayaran."
-        });
+      return;
 
     }
 
-}
 
-// ================================
-// AUTO SEARCH
-// ================================
-const searchInput = document.querySelector('input[name="keyword"]');
+    try {
 
-if (searchInput) {
+      const response =
+        await fetch(
+          `/pembayaran/verifikasi/${id}`,
+          {
+            method: "POST"
+          }
+        );
 
-    let timer;
 
-    searchInput.addEventListener('input', function () {
+      const data =
+        await response.json();
 
-        clearTimeout(timer);
 
-        timer = setTimeout(() => {
+      // ================================================
+      // BERHASIL
+      // ================================================
 
-            this.form.submit();
+      if (data.success) {
+
+        await Swal.fire({
+
+          icon:
+            "success",
+
+          title:
+            "Berhasil",
+
+          text:
+            "Pembayaran berhasil diverifikasi.",
+
+          timer:
+            1500,
+
+          showConfirmButton:
+            false,
+
+          width:
+            "330px"
+
+        });
+
+
+        // ==============================================
+        // BUKA WHATSAPP
+        // ==============================================
+
+        if (data.waLink) {
+
+          window.open(
+            data.waLink,
+            "_blank"
+          );
+
+        }
+
+
+        // ==============================================
+        // RELOAD
+        // ==============================================
+
+        setTimeout(() => {
+
+          location.reload();
 
         }, 500);
 
-    });
 
-}
+      } else {
+
+        Swal.fire({
+
+          icon:
+            "error",
+
+          title:
+            "Gagal",
+
+          text:
+            data.message ||
+            "Verifikasi pembayaran gagal.",
+
+          width:
+            "330px"
+
+        });
+
+      }
+
+
+    } catch (err) {
+
+      console.error(err);
+
+
+      Swal.fire({
+
+        icon:
+          "error",
+
+        title:
+          "Terjadi Kesalahan",
+
+        text:
+          "Tidak dapat memverifikasi pembayaran.",
+
+        width:
+          "330px"
+
+      });
+
+    }
+
+  }
+
+
+  // ==================================================
+  // AUTO SEARCH
+  // ==================================================
+
+  const searchInput =
+    document.querySelector(
+      'input[name="keyword"]'
+    );
+
+
+  if (searchInput) {
+
+    let timer;
+
+
+    searchInput.addEventListener(
+      'input',
+      function () {
+
+        clearTimeout(timer);
+
+
+        timer = setTimeout(() => {
+
+          this.form.submit();
+
+        }, 500);
+
+      }
+    );
+
+  }
+
 </script>
+
+
 <%- include('../partials/footer') %>
