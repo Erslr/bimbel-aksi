@@ -2740,239 +2740,608 @@ exports.generateTagihan = async (
 
 // ======================================================
 // VERIFIKASI PEMBAYARAN
+// SEKALIGUS MEMBUAT FILE KWITANSI PDF
 // ======================================================
 
-exports.verifikasiPembayaran = async (
-  req,
-  res
-) => {
+exports.verifikasiPembayaran = async (req, res) => {
 
-  const id =
-    req.params.id;
-
+  const id = req.params.id;
 
   try {
 
     // ==================================================
-    // AMBIL DATA PEMBAYARAN
+    // AMBIL DATA PEMBAYARAN + DATA SISWA
     // ==================================================
 
-    const pembayaran =
-      await new Promise(
-        (resolve, reject) => {
+    const rows = await new Promise((resolve, reject) => {
 
-          db.query(
+      db.query(
+        `
+          SELECT
+            p.id_pembayaran,
+            p.tanggal_tagihan,
+            p.tanggal_bayar,
+            p.status,
+            p.metode_pembayaran,
 
-            'SELECT * FROM pembayaran WHERE id_pembayaran = ?',
+            s.id_siswa,
+            s.nama_lengkap,
+            s.wa_siswa,
+            s.jenjang,
+            s.kelas_sekolah,
+            s.harga_bulanan
 
-            [id],
+          FROM pembayaran p
 
-            (err, result) => {
+          JOIN siswa s
+            ON p.id_siswa = s.id_siswa
 
-              if (err) {
+          WHERE p.id_pembayaran = ?
+        `,
+        [id],
 
-                reject(err);
+        (err, result) => {
 
-              } else {
-
-                resolve(result[0]);
-
-              }
-
-            }
-
-          );
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
 
         }
       );
 
-
-    // ==================================================
-    // CEK DATA PEMBAYARAN
-    // ==================================================
-
-    if (!pembayaran) {
-
-      return res.send(
-        'Data pembayaran tidak ditemukan'
-      );
-
-    }
+    });
 
 
     // ==================================================
-    // AMBIL DATA SISWA
+    // CEK DATA
     // ==================================================
 
-    const rows =
-      await new Promise(
-        (resolve, reject) => {
-
-          db.query(
-
-            `
-              SELECT
-                s.nama_lengkap,
-                s.wa_siswa
-
-              FROM pembayaran p
-
-              JOIN siswa s
-                ON p.id_siswa = s.id_siswa
-
-              WHERE p.id_pembayaran = ?
-            `,
-
-            [id],
-
-            (err, result) => {
-
-              if (err) {
-
-                reject(err);
-
-              } else {
-
-                resolve(result);
-
-              }
-
-            }
-
-          );
-
-        }
-      );
-
-
-    // ==================================================
-    // PROSES VERIFIKASI
-    // ==================================================
-
-    if (
-      rows.length > 0
-    ) {
-
-      const siswa =
-        rows[0];
-
-
-      // ==================================================
-      // UBAH STATUS MENJADI LUNAS
-      // ==================================================
-
-      await new Promise(
-        (resolve, reject) => {
-
-          db.query(
-
-            `
-              UPDATE pembayaran
-
-              SET
-                status = 'lunas',
-                tanggal_bayar = NOW()
-
-              WHERE id_pembayaran = ?
-            `,
-
-            [id],
-
-            (err) => {
-
-              if (err) {
-
-                reject(err);
-
-              } else {
-
-                resolve();
-
-              }
-
-            }
-
-          );
-
-        }
-      );
-
-
-      // ==================================================
-      // WHATSAPP SETELAH VERIFIKASI
-      // ==================================================
-      //
-      // SENGAJA TANPA PESAN.
-      //
-      // Karena admin akan:
-      // 1. Klik Verifikasi
-      // 2. WhatsApp terbuka
-      // 3. Kwitansi PDF terbuka
-      // 4. Admin mengirim kwitansi secara manual
-      //
-
-      let linkWA = null;
-
-
-      if (
-        siswa.wa_siswa
-      ) {
-
-        const nomorSiswa =
-          formatNomorWA(
-            siswa.wa_siswa
-          );
-
-
-        linkWA =
-          createWALink(
-            nomorSiswa,
-            '',
-            req.headers['user-agent']
-          );
-
-      }
-
-
-      // ==================================================
-      // RESPONSE
-      // ==================================================
+    if (!rows || rows.length === 0) {
 
       return res.json({
-
-        success: true,
-
-        waLink: linkWA,
-
-        kwitansiUrl:
-          `/pembayaran/kwitansi/${id}`
-
+        success: false,
+        message: 'Data pembayaran tidak ditemukan.'
       });
 
     }
 
 
+    const data = rows[0];
+
+
     // ==================================================
-    // DATA SISWA TIDAK DITEMUKAN
+    // UBAH STATUS MENJADI LUNAS
+    // ==================================================
+
+    await new Promise((resolve, reject) => {
+
+      db.query(
+        `
+          UPDATE pembayaran
+
+          SET
+            status = 'lunas',
+            tanggal_bayar = NOW()
+
+          WHERE id_pembayaran = ?
+        `,
+        [id],
+
+        (err) => {
+
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+
+        }
+      );
+
+    });
+
+
+    // ==================================================
+    // TANGGAL PEMBAYARAN
+    // ==================================================
+
+    const tanggalPembayaran = new Date();
+
+
+    // ==================================================
+    // JUMLAH PEMBAYARAN
+    // ==================================================
+
+    const jumlah =
+      Number(data.harga_bulanan || 0);
+
+
+    // ==================================================
+    // NOMOR KWITANSI
+    // ==================================================
+
+    const nomorKwitansi =
+      `KW-BIMBEL-AKSI-${String(
+        data.id_pembayaran
+      ).padStart(6, '0')}`;
+
+
+    // ==================================================
+    // NAMA FILE
+    // ==================================================
+
+    const namaSiswaFile =
+      String(
+        data.nama_lengkap || 'Siswa'
+      )
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-zA-Z0-9-]/g, '');
+
+
+    const namaFile =
+      `Kwitansi-BIMBEL-AKSI-${String(
+        data.id_pembayaran
+      ).padStart(6, '0')}-${namaSiswaFile}.pdf`;
+
+
+    // ==================================================
+    // FOLDER KWITANSI
+    // ==================================================
+
+    const folderKwitansi =
+      path.join(
+        __dirname,
+        '../uploads/kwitansi'
+      );
+
+
+    // ==================================================
+    // PASTIKAN FOLDER ADA
+    // ==================================================
+
+    if (!fs.existsSync(folderKwitansi)) {
+
+      fs.mkdirSync(
+        folderKwitansi,
+        {
+          recursive: true
+        }
+      );
+
+    }
+
+
+    // ==================================================
+    // PATH FILE PDF
+    // ==================================================
+
+    const filePath =
+      path.join(
+        folderKwitansi,
+        namaFile
+      );
+
+
+    // ==================================================
+    // BUAT PDF
+    // ==================================================
+
+    await new Promise((resolve, reject) => {
+
+      try {
+
+        const doc =
+          new PDFDocument({
+            size: 'A4',
+            margin: 50
+          });
+
+
+        const stream =
+          fs.createWriteStream(
+            filePath
+          );
+
+
+        doc.pipe(stream);
+
+
+        // ==============================================
+        // BORDER
+        // ==============================================
+
+        doc
+          .lineWidth(2)
+          .rect(
+            40,
+            40,
+            515,
+            700
+          )
+          .stroke();
+
+
+        // ==============================================
+        // HEADER
+        // ==============================================
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(24)
+          .text(
+            'BIMBEL AKSI',
+            50,
+            75,
+            {
+              align: 'center',
+              width: 495
+            }
+          );
+
+
+        doc
+          .font('Helvetica')
+          .fontSize(14)
+          .text(
+            'KWITANSI PEMBAYARAN',
+            50,
+            110,
+            {
+              align: 'center',
+              width: 495
+            }
+          );
+
+
+        // ==============================================
+        // NOMOR KWITANSI
+        // ==============================================
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(11)
+          .text(
+            `No. Kwitansi: ${nomorKwitansi}`,
+            390,
+            75,
+            {
+              width: 145,
+              align: 'right'
+            }
+          );
+
+
+        // ==============================================
+        // GARIS
+        // ==============================================
+
+        doc
+          .moveTo(70, 145)
+          .lineTo(525, 145)
+          .lineWidth(1)
+          .stroke();
+
+
+        // ==============================================
+        // IDENTITAS SISWA
+        // ==============================================
+
+        let y = 180;
+
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(12)
+          .text(
+            'Nama Siswa',
+            80,
+            y
+          );
+
+
+        doc
+          .font('Helvetica')
+          .text(
+            `: ${data.nama_lengkap || '-'}`,
+            210,
+            y
+          );
+
+
+        y += 38;
+
+
+        doc
+          .font('Helvetica-Bold')
+          .text(
+            'Jenjang',
+            80,
+            y
+          );
+
+
+        doc
+          .font('Helvetica')
+          .text(
+            `: ${data.jenjang || '-'}`,
+            210,
+            y
+          );
+
+
+        y += 38;
+
+
+        doc
+          .font('Helvetica-Bold')
+          .text(
+            'Kelas',
+            80,
+            y
+          );
+
+
+        doc
+          .font('Helvetica')
+          .text(
+            `: ${data.kelas_sekolah || '-'}`,
+            210,
+            y
+          );
+
+
+        y += 38;
+
+
+        doc
+          .font('Helvetica-Bold')
+          .text(
+            'Tanggal Pembayaran',
+            80,
+            y
+          );
+
+
+        doc
+          .font('Helvetica')
+          .text(
+            `: ${tanggalPembayaran.toLocaleDateString(
+              'id-ID'
+            )}`,
+            210,
+            y
+          );
+
+
+        y += 38;
+
+
+        doc
+          .font('Helvetica-Bold')
+          .text(
+            'Metode Pembayaran',
+            80,
+            y
+          );
+
+
+        doc
+          .font('Helvetica')
+          .text(
+            `: ${data.metode_pembayaran || '-'}`,
+            210,
+            y
+          );
+
+
+        // ==============================================
+        // TOTAL PEMBAYARAN
+        // ==============================================
+
+        y += 55;
+
+
+        doc
+          .roundedRect(
+            70,
+            y,
+            455,
+            85,
+            8
+          )
+          .lineWidth(1)
+          .stroke();
+
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(13)
+          .text(
+            'TOTAL PEMBAYARAN',
+            90,
+            y + 25
+          );
+
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(18)
+          .text(
+            `Rp ${jumlah.toLocaleString(
+              'id-ID'
+            )}`,
+            300,
+            y + 23,
+            {
+              width: 200,
+              align: 'right'
+            }
+          );
+
+
+        // ==============================================
+        // STATUS
+        // ==============================================
+
+        y += 125;
+
+
+        doc
+          .font('Helvetica-Bold')
+          .fontSize(18)
+          .text(
+            'STATUS: LUNAS',
+            70,
+            y,
+            {
+              align: 'center',
+              width: 455
+            }
+          );
+
+
+        // ==============================================
+        // KETERANGAN
+        // ==============================================
+
+        y += 60;
+
+
+        doc
+          .font('Helvetica')
+          .fontSize(10)
+          .fillColor('#555')
+          .text(
+            'Kwitansi ini merupakan bukti pembayaran resmi',
+            70,
+            y,
+            {
+              align: 'center',
+              width: 455
+            }
+          );
+
+
+        doc.text(
+          'Bimbel AKSI.',
+          70,
+          y + 16,
+          {
+            align: 'center',
+            width: 455
+          }
+        );
+
+
+        // ==============================================
+        // FOOTER
+        // ==============================================
+
+        doc
+          .fillColor('#000')
+          .font('Helvetica')
+          .fontSize(10)
+          .text(
+            'Terima kasih telah belajar bersama Bimbel AKSI',
+            70,
+            650,
+            {
+              align: 'center',
+              width: 455
+            }
+          );
+
+
+        // ==============================================
+        // SELESAI
+        // ==============================================
+
+        doc.end();
+
+
+        stream.on(
+          'finish',
+          resolve
+        );
+
+
+        stream.on(
+          'error',
+          reject
+        );
+
+
+      } catch (error) {
+
+        reject(error);
+
+      }
+
+    });
+
+
+    // ==================================================
+    // WHATSAPP
+    // ==================================================
+
+    let linkWA = null;
+
+
+    if (data.wa_siswa) {
+
+      const nomorSiswa =
+        formatNomorWA(
+          data.wa_siswa
+        );
+
+
+      linkWA =
+        createWALink(
+          nomorSiswa,
+          '',
+          req.headers['user-agent']
+        );
+
+    }
+
+
+    // ==================================================
+    // RESPONSE
     // ==================================================
 
     return res.json({
 
-      success: false,
+      success: true,
+
+      waLink: linkWA,
+
+      kwitansiFile: namaFile,
 
       message:
-        'Data siswa tidak ditemukan.'
+        'Pembayaran berhasil diverifikasi dan kwitansi berhasil dibuat.'
 
     });
 
 
   } catch (error) {
 
-    console.error(error);
-
-    return res.redirect(
-      '/pembayaran'
+    console.error(
+      'Error verifikasi pembayaran:',
+      error
     );
+
+
+    return res.status(500).json({
+
+      success: false,
+
+      message:
+        'Gagal memverifikasi pembayaran dan membuat kwitansi.'
+
+    });
 
   }
 
