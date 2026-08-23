@@ -294,6 +294,782 @@ exports.index = (req, res) => {
 
 };
 
+// ======================================================
+// EXPORT PDF PEMBAYARAN
+// ======================================================
+
+exports.exportPDF = (req, res) => {
+
+  // ==================================================
+  // AMBIL FILTER
+  // ==================================================
+
+  const bulan =
+    req.query.bulan ||
+    new Date().getMonth() + 1;
+
+  const tahun =
+    req.query.tahun ||
+    new Date().getFullYear();
+
+  const filterStatus =
+    req.query.status || 'semua';
+
+  const filterJenjang =
+    req.query.jenjang || 'semua';
+
+  const filterJenisKelamin =
+    req.query.jenis_kelamin || 'semua';
+
+  const keyword =
+    req.query.keyword || '';
+
+
+  // ==================================================
+  // QUERY DATA PEMBAYARAN
+  // ==================================================
+
+  let query = `
+    SELECT
+      p.id_pembayaran,
+      p.tanggal_tagihan,
+      p.tanggal_bayar,
+      p.status,
+      p.metode_pembayaran,
+
+      s.nama_lengkap,
+      s.jenjang,
+      s.jenis_kelamin,
+      s.kelas_sekolah,
+      s.harga_bulanan
+
+    FROM pembayaran p
+
+    JOIN siswa s
+      ON p.id_siswa = s.id_siswa
+
+    WHERE MONTH(p.tanggal_tagihan) = ?
+      AND YEAR(p.tanggal_tagihan) = ?
+  `;
+
+
+  const params = [
+    bulan,
+    tahun
+  ];
+
+
+  // ==================================================
+  // FILTER STATUS
+  // ==================================================
+
+  if (
+    filterStatus !== 'semua'
+  ) {
+
+    query += `
+      AND p.status = ?
+    `;
+
+    params.push(
+      filterStatus
+    );
+
+  }
+
+
+  // ==================================================
+  // FILTER JENJANG
+  // ==================================================
+
+  if (
+    filterJenjang !== 'semua'
+  ) {
+
+    query += `
+      AND s.jenjang = ?
+    `;
+
+    params.push(
+      filterJenjang
+    );
+
+  }
+
+
+  // ==================================================
+  // FILTER JENIS KELAMIN
+  // ==================================================
+
+  if (
+    filterJenisKelamin !== 'semua'
+  ) {
+
+    query += `
+      AND s.jenis_kelamin = ?
+    `;
+
+    params.push(
+      filterJenisKelamin
+    );
+
+  }
+
+
+  // ==================================================
+  // SEARCH
+  // ==================================================
+
+  if (
+    keyword.trim() !== ''
+  ) {
+
+    query += `
+      AND (
+        s.nama_lengkap LIKE ?
+        OR s.kelas_sekolah LIKE ?
+        OR p.status LIKE ?
+        OR p.metode_pembayaran LIKE ?
+      )
+    `;
+
+    const cari =
+      `%${keyword.trim()}%`;
+
+
+    params.push(
+      cari,
+      cari,
+      cari,
+      cari
+    );
+
+  }
+
+
+  // ==================================================
+  // URUTKAN DATA
+  // ==================================================
+
+  query += `
+    ORDER BY
+      p.tanggal_tagihan ASC
+  `;
+
+
+  // ==================================================
+  // JALANKAN QUERY
+  // ==================================================
+
+  db.query(
+    query,
+    params,
+    (err, results) => {
+
+      if (err) {
+
+        console.error(
+          'Error export PDF pembayaran:',
+          err
+        );
+
+        return res
+          .status(500)
+          .send(
+            'Gagal mengambil data pembayaran'
+          );
+
+      }
+
+
+      // ==================================================
+      // DATA KOSONG
+      // ==================================================
+
+      if (
+        !results ||
+        results.length === 0
+      ) {
+
+        return res
+          .status(404)
+          .send(
+            'Data pembayaran tidak ditemukan'
+          );
+
+      }
+
+
+      // ==================================================
+      // NAMA BULAN
+      // ==================================================
+
+      const namaBulan = [
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+      ];
+
+
+      const namaBulanCetak =
+        namaBulan[
+          Number(bulan) - 1
+        ] || '-';
+
+
+      // ==================================================
+      // HITUNG TOTAL
+      // ==================================================
+
+      let totalLunas = 0;
+
+
+      results.forEach(
+        (row) => {
+
+          if (
+            row.status === 'lunas'
+          ) {
+
+            totalLunas +=
+              Number(
+                row.harga_bulanan || 0
+              );
+
+          }
+
+        }
+      );
+
+
+      // ==================================================
+      // BUAT PDF
+      // ==================================================
+
+      const doc =
+        new PDFDocument({
+          size: 'A4',
+          margin: 40
+        });
+
+
+      // ==================================================
+      // HEADER RESPONSE
+      // ==================================================
+
+      res.setHeader(
+        'Content-Type',
+        'application/pdf'
+      );
+
+
+      res.setHeader(
+        'Content-Disposition',
+        `inline; filename="Pembayaran-BIMBEL-AKSI-${namaBulanCetak}-${tahun}.pdf"`
+      );
+
+
+      doc.pipe(res);
+
+
+      // ==================================================
+      // JUDUL
+      // ==================================================
+
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(18)
+        .text(
+          'BIMBEL AKSI',
+          {
+            align: 'center'
+          }
+        );
+
+
+      doc
+        .font('Helvetica-Bold')
+        .fontSize(14)
+        .text(
+          'LAPORAN PEMBAYARAN',
+          {
+            align: 'center'
+          }
+        );
+
+
+      doc.moveDown(0.5);
+
+
+      // ==================================================
+      // PERIODE
+      // ==================================================
+
+      doc
+        .font('Helvetica')
+        .fontSize(10)
+        .text(
+          `Periode: ${namaBulanCetak} ${tahun}`,
+          {
+            align: 'center'
+          }
+        );
+
+
+      doc.moveDown(1);
+
+
+      // ==================================================
+      // INFORMASI FILTER
+      // ==================================================
+
+      doc
+        .fontSize(9)
+        .font('Helvetica');
+
+
+      doc.text(
+        `Status: ${
+          filterStatus === 'semua'
+            ? 'Semua'
+            : filterStatus.toUpperCase()
+        }`
+      );
+
+
+      doc.text(
+        `Jenjang: ${
+          filterJenjang === 'semua'
+            ? 'Semua'
+            : filterJenjang
+        }`
+      );
+
+
+      doc.text(
+        `Jenis Kelamin: ${
+          filterJenisKelamin === 'semua'
+            ? 'Semua'
+            : filterJenisKelamin
+        }`
+      );
+
+
+      if (
+        keyword.trim() !== ''
+      ) {
+
+        doc.text(
+          `Pencarian: ${keyword.trim()}`
+        );
+
+      }
+
+
+      doc.moveDown(1);
+
+
+      // ==================================================
+      // GARIS
+      // ==================================================
+
+      doc
+        .moveTo(40, doc.y)
+        .lineTo(555, doc.y)
+        .stroke();
+
+
+      doc.moveDown(0.5);
+
+
+      // ==================================================
+      // HEADER TABEL
+      // ==================================================
+
+      const col = {
+
+        no: 40,
+
+        nama: 62,
+
+        jenjang: 185,
+
+        kelas: 240,
+
+        tagihan: 285,
+
+        bayar: 355,
+
+        status: 425,
+
+        nominal: 475
+
+      };
+
+
+      function drawHeader() {
+
+        const headerY =
+          doc.y;
+
+
+        doc
+          .fontSize(7)
+          .font('Helvetica-Bold');
+
+
+        doc.text(
+          'No',
+          col.no,
+          headerY,
+          {
+            width: 20
+          }
+        );
+
+
+        doc.text(
+          'Nama Siswa',
+          col.nama,
+          headerY,
+          {
+            width: 115
+          }
+        );
+
+
+        doc.text(
+          'Jenjang',
+          col.jenjang,
+          headerY,
+          {
+            width: 50
+          }
+        );
+
+
+        doc.text(
+          'Kelas',
+          col.kelas,
+          headerY,
+          {
+            width: 40
+          }
+        );
+
+
+        doc.text(
+          'Tgl Tagihan',
+          col.tagihan,
+          headerY,
+          {
+            width: 65
+          }
+        );
+
+
+        doc.text(
+          'Tgl Bayar',
+          col.bayar,
+          headerY,
+          {
+            width: 65
+          }
+        );
+
+
+        doc.text(
+          'Status',
+          col.status,
+          headerY,
+          {
+            width: 45
+          }
+        );
+
+
+        doc.text(
+          'Nominal',
+          col.nominal,
+          headerY,
+          {
+            width: 75,
+            align: 'right'
+          }
+        );
+
+
+        doc.moveDown(1);
+
+
+        doc
+          .moveTo(40, doc.y)
+          .lineTo(555, doc.y)
+          .stroke();
+
+
+        doc.moveDown(0.5);
+
+
+        doc.font('Helvetica');
+
+      }
+
+
+      drawHeader();
+
+
+      // ==================================================
+      // DATA PEMBAYARAN
+      // ==================================================
+
+      results.forEach(
+        (row, index) => {
+
+          // ==============================================
+          // CEK HALAMAN
+          // ==============================================
+
+          if (
+            doc.y > 735
+          ) {
+
+            doc.addPage();
+
+            drawHeader();
+
+          }
+
+
+          const y =
+            doc.y;
+
+
+          // ==============================================
+          // TANGGAL TAGIHAN
+          // ==============================================
+
+          const tanggalTagihan =
+            row.tanggal_tagihan
+              ? new Date(
+                  row.tanggal_tagihan
+                ).toLocaleDateString(
+                  'id-ID'
+                )
+              : '-';
+
+
+          // ==============================================
+          // TANGGAL BAYAR
+          // ==============================================
+
+          const tanggalBayar =
+            row.tanggal_bayar
+              ? new Date(
+                  row.tanggal_bayar
+                ).toLocaleDateString(
+                  'id-ID'
+                )
+              : '-';
+
+
+          // ==============================================
+          // NOMINAL
+          // ==============================================
+
+          let nominal = '-';
+
+
+          if (
+            row.status === 'lunas' ||
+            row.status === 'menunggu'
+          ) {
+
+            nominal =
+              `Rp ${Number(
+                row.harga_bulanan || 0
+              ).toLocaleString(
+                'id-ID'
+              )}`;
+
+          }
+
+
+          // ==============================================
+          // DATA
+          // ==============================================
+
+          doc
+            .fontSize(7)
+            .font('Helvetica');
+
+
+          doc.text(
+            String(index + 1),
+            col.no,
+            y,
+            {
+              width: 20
+            }
+          );
+
+
+          doc.text(
+            row.nama_lengkap || '-',
+            col.nama,
+            y,
+            {
+              width: 115
+            }
+          );
+
+
+          doc.text(
+            row.jenjang || '-',
+            col.jenjang,
+            y,
+            {
+              width: 50
+            }
+          );
+
+
+          doc.text(
+            row.kelas_sekolah || '-',
+            col.kelas,
+            y,
+            {
+              width: 40
+            }
+          );
+
+
+          doc.text(
+            tanggalTagihan,
+            col.tagihan,
+            y,
+            {
+              width: 65
+            }
+          );
+
+
+          doc.text(
+            tanggalBayar,
+            col.bayar,
+            y,
+            {
+              width: 65
+            }
+          );
+
+
+          doc.text(
+            (
+              row.status || '-'
+            ).toUpperCase(),
+            col.status,
+            y,
+            {
+              width: 45
+            }
+          );
+
+
+          doc.text(
+            nominal,
+            col.nominal,
+            y,
+            {
+              width: 75,
+              align: 'right'
+            }
+          );
+
+
+          doc.moveDown(1.5);
+
+        }
+      );
+
+
+      // ==================================================
+      // RINGKASAN
+      // ==================================================
+
+      if (
+        doc.y > 700
+      ) {
+
+        doc.addPage();
+
+      }
+
+
+      doc.moveDown(1);
+
+
+      doc
+        .moveTo(40, doc.y)
+        .lineTo(555, doc.y)
+        .stroke();
+
+
+      doc.moveDown(0.8);
+
+
+      doc
+        .fontSize(9)
+        .font('Helvetica-Bold')
+        .text(
+          `Total Data: ${results.length}`
+        );
+
+
+      doc
+        .font('Helvetica-Bold')
+        .text(
+          `Total Pembayaran Lunas: Rp ${totalLunas.toLocaleString('id-ID')}`
+        );
+
+
+      // ==================================================
+      // FOOTER
+      // ==================================================
+
+      doc.moveDown(1);
+
+
+      doc
+        .fontSize(8)
+        .font('Helvetica')
+        .text(
+          'Laporan ini dibuat oleh Sistem Informasi Manajemen Bimbel AKSI.',
+          {
+            align: 'center'
+          }
+        );
+
+
+      // ==================================================
+      // SELESAI
+      // ==================================================
+
+      doc.end();
+
+    }
+  );
+
+};
 
 // ======================================================
 // RIWAYAT PEMBAYARAN SISWA
