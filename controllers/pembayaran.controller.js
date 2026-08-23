@@ -2293,10 +2293,18 @@ exports.tandaiWhatsapp = async (req, res) => {
 // KIRIM WHATSAPP
 // ======================================================
 
+// ======================================================
+// KIRIM WHATSAPP PENGINGAT JATUH TEMPO
+// ======================================================
+
 exports.kirimWhatsapp = (req, res) => {
 
   const { id } = req.params;
 
+
+  // ==================================================
+  // QUERY DATA PEMBAYARAN
+  // ==================================================
 
   const query = `
     SELECT
@@ -2319,6 +2327,10 @@ exports.kirimWhatsapp = (req, res) => {
     [id],
     (err, rows) => {
 
+      // ==================================================
+      // ERROR QUERY
+      // ==================================================
+
       if (err) {
 
         console.error(err);
@@ -2328,16 +2340,25 @@ exports.kirimWhatsapp = (req, res) => {
           message:
             'Gagal mengambil data pembayaran'
         });
+
       }
 
 
-      if (rows.length === 0) {
+      // ==================================================
+      // DATA TIDAK DITEMUKAN
+      // ==================================================
+
+      if (
+        !rows ||
+        rows.length === 0
+      ) {
 
         return res.json({
           error: true,
           message:
             'Data pembayaran tidak ditemukan'
         });
+
       }
 
 
@@ -2345,7 +2366,7 @@ exports.kirimWhatsapp = (req, res) => {
 
 
       // ==================================================
-      // CEK NOMOR WA
+      // CEK NOMOR WHATSAPP
       // ==================================================
 
       if (!data.wa_siswa) {
@@ -2355,8 +2376,13 @@ exports.kirimWhatsapp = (req, res) => {
           message:
             'Nomor WA siswa kosong'
         });
+
       }
 
+
+      // ==================================================
+      // FORMAT NOMOR WA
+      // ==================================================
 
       const nomor =
         formatNomorWA(
@@ -2365,7 +2391,7 @@ exports.kirimWhatsapp = (req, res) => {
 
 
       // ==================================================
-      // TANGGAL
+      // FORMAT TANGGAL TAGIHAN
       // ==================================================
 
       const tanggal =
@@ -2377,7 +2403,7 @@ exports.kirimWhatsapp = (req, res) => {
 
 
       // ==================================================
-      // JUMLAH
+      // FORMAT JUMLAH PEMBAYARAN
       // ==================================================
 
       const jumlah =
@@ -2389,15 +2415,36 @@ exports.kirimWhatsapp = (req, res) => {
 
 
       // ==================================================
-      // PESAN
+      // PESAN PENGINGAT JATUH TEMPO
       // ==================================================
+      //
+      // Jika admin sudah menyimpan custom_pesan,
+      // gunakan pesan tersebut.
+      //
+      // Jika custom_pesan kosong,
+      // gunakan template otomatis.
+      //
 
       const pesan =
-        data.custom_pesan || '';
+        data.custom_pesan &&
+        data.custom_pesan.trim() !== ''
+
+          ? data.custom_pesan
+
+          : `Halo ${data.nama_lengkap} 👋
+
+Kami dari *Bimbel AKSI* ingin mengingatkan pembayaran les:
+
+📅 Jatuh Tempo: ${tanggal}
+💰 Jumlah: Rp ${jumlah}
+
+Sebelumnya kami juga ingin menanyakan, apakah lesnya masih ingin dilanjutkan untuk bulan berikutnya? 😊
+
+Mohon konfirmasinya, Terima kasih 🙏`;
 
 
       // ==================================================
-      // BUAT LINK WA
+      // BUAT LINK WHATSAPP
       // ==================================================
 
       const linkWA =
@@ -2408,12 +2455,20 @@ exports.kirimWhatsapp = (req, res) => {
         );
 
 
+      // ==================================================
+      // KIRIM RESPONSE
+      // ==================================================
+
       return res.json({
+
         success: true,
+
         waLink: linkWA
+
       });
 
     }
+
   );
 
 };
@@ -2468,18 +2523,70 @@ exports.generateTagihan = async (
 // VERIFIKASI PEMBAYARAN
 // ======================================================
 
+// ======================================================
+// VERIFIKASI PEMBAYARAN
+// ======================================================
+
 exports.verifikasiPembayaran = async (
   req,
   res
 ) => {
 
-  const id = req.params.id;
+  const id =
+    req.params.id;
 
 
   try {
 
     // ==================================================
-    // AMBIL DATA PEMBAYARAN + SISWA
+    // AMBIL DATA PEMBAYARAN
+    // ==================================================
+
+    const pembayaran =
+      await new Promise(
+        (resolve, reject) => {
+
+          db.query(
+
+            'SELECT * FROM pembayaran WHERE id_pembayaran = ?',
+
+            [id],
+
+            (err, result) => {
+
+              if (err) {
+
+                reject(err);
+
+              } else {
+
+                resolve(result[0]);
+
+              }
+
+            }
+
+          );
+
+        }
+      );
+
+
+    // ==================================================
+    // CEK DATA PEMBAYARAN
+    // ==================================================
+
+    if (!pembayaran) {
+
+      return res.send(
+        'Data pembayaran tidak ditemukan'
+      );
+
+    }
+
+
+    // ==================================================
+    // AMBIL DATA SISWA
     // ==================================================
 
     const rows =
@@ -2487,13 +2594,9 @@ exports.verifikasiPembayaran = async (
         (resolve, reject) => {
 
           db.query(
+
             `
               SELECT
-                p.id_pembayaran,
-                p.status,
-                p.tanggal_bayar,
-
-                s.id_siswa,
                 s.nama_lengkap,
                 s.wa_siswa
 
@@ -2504,16 +2607,23 @@ exports.verifikasiPembayaran = async (
 
               WHERE p.id_pembayaran = ?
             `,
+
             [id],
+
             (err, result) => {
 
               if (err) {
+
                 reject(err);
+
               } else {
+
                 resolve(result);
+
               }
 
             }
+
           );
 
         }
@@ -2521,143 +2631,130 @@ exports.verifikasiPembayaran = async (
 
 
     // ==================================================
-    // DATA TIDAK DITEMUKAN
+    // PROSES VERIFIKASI
     // ==================================================
 
     if (
-      !rows ||
-      rows.length === 0
+      rows.length > 0
     ) {
 
-      return res.status(404).json({
-
-        success: false,
-
-        message:
-          'Data pembayaran tidak ditemukan.'
-
-      });
-
-    }
+      const siswa =
+        rows[0];
 
 
-    const siswa = rows[0];
+      // ==================================================
+      // UBAH STATUS MENJADI LUNAS
+      // ==================================================
 
+      await new Promise(
+        (resolve, reject) => {
 
-    // ==================================================
-    // VALIDASI STATUS
-    // ==================================================
+          db.query(
 
-    if (siswa.status !== 'menunggu') {
+            `
+              UPDATE pembayaran
 
-      return res.status(400).json({
+              SET
+                status = 'lunas',
+                tanggal_bayar = NOW()
 
-        success: false,
+              WHERE id_pembayaran = ?
+            `,
 
-        message:
-          'Pembayaran tidak berada dalam status menunggu.'
+            [id],
 
-      });
+            (err) => {
 
-    }
+              if (err) {
 
+                reject(err);
 
-    // ==================================================
-    // UPDATE STATUS MENJADI LUNAS
-    // ==================================================
+              } else {
 
-    await new Promise(
-      (resolve, reject) => {
+                resolve();
 
-        db.query(
-          `
-            UPDATE pembayaran
+              }
 
-            SET
-              status = 'lunas',
-              tanggal_bayar = NOW()
-
-            WHERE id_pembayaran = ?
-          `,
-          [id],
-          (err) => {
-
-            if (err) {
-              reject(err);
-            } else {
-              resolve();
             }
 
-          }
-        );
+          );
+
+        }
+      );
+
+
+      // ==================================================
+      // WHATSAPP SETELAH VERIFIKASI
+      // ==================================================
+      //
+      // SENGAJA TANPA PESAN.
+      //
+      // Karena admin akan:
+      // 1. Klik Verifikasi
+      // 2. WhatsApp terbuka
+      // 3. Kwitansi PDF terbuka
+      // 4. Admin mengirim kwitansi secara manual
+      //
+
+      let linkWA = null;
+
+
+      if (
+        siswa.wa_siswa
+      ) {
+
+        const nomorSiswa =
+          formatNomorWA(
+            siswa.wa_siswa
+          );
+
+
+        linkWA =
+          createWALink(
+            nomorSiswa,
+            '',
+            req.headers['user-agent']
+          );
 
       }
-    );
 
 
-    // ==================================================
-    // LINK WHATSAPP
-    // ==================================================
-    // Tidak ada pesan otomatis.
-    // WhatsApp hanya membuka chat siswa.
-    // Admin kemudian mengirim PDF kwitansi secara manual.
+      // ==================================================
+      // RESPONSE
+      // ==================================================
 
-    let waLink = null;
+      return res.json({
 
+        success: true,
 
-    if (siswa.wa_siswa) {
+        waLink: linkWA
 
-      const nomorSiswa =
-        formatNomorWA(
-          siswa.wa_siswa
-        );
-
-
-      // HANYA MEMBUKA CHAT
-      waLink =
-        createWALink(
-          nomorSiswa,
-          '',
-          req.headers['user-agent']
-        );
+      });
 
     }
 
 
     // ==================================================
-    // RESPONSE
+    // DATA SISWA TIDAK DITEMUKAN
     // ==================================================
 
     return res.json({
 
-      success: true,
-
-      message:
-        'Pembayaran berhasil diverifikasi dan status pembayaran menjadi LUNAS.',
-
-      waLink: waLink,
-
-      kwitansiUrl:
-        `/pembayaran/kwitansi/${id}`
-
-    });
-
-  } catch (error) {
-
-    console.error(
-      'Error verifikasi pembayaran:',
-      error
-    );
-
-
-    return res.status(500).json({
-
       success: false,
 
       message:
-        'Terjadi kesalahan saat memverifikasi pembayaran.'
+        'Data siswa tidak ditemukan.'
 
     });
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    return res.redirect(
+      '/pembayaran'
+    );
 
   }
 
