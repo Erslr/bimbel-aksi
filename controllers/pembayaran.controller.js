@@ -3284,39 +3284,66 @@ exports.verifikasiPembayaran = async (req, res) => {
 
 
     // ==================================================
-    // WHATSAPP
+    // CEK FILE KWITANSI
     // ==================================================
 
-    let linkWA = null;
+    if (!fs.existsSync(filePath)) {
+
+      console.error(
+        'File kwitansi tidak ditemukan:',
+        filePath
+      );
+
+      return res.status(500).json({
+
+        success: false,
+
+        message:
+          'Kwitansi gagal dibuat.'
+
+      });
+
+    }
+
+
+    // ==================================================
+    // NOMOR WHATSAPP SISWA
+    // ==================================================
+
+    let nomorWA = null;
 
 
     if (data.wa_siswa) {
 
-      const nomorSiswa =
+      nomorWA =
         formatNomorWA(
           data.wa_siswa
-        );
-
-
-      linkWA =
-        createWALink(
-          nomorSiswa,
-          '',
-          req.headers['user-agent']
         );
 
     }
 
 
     // ==================================================
-    // RESPONSE
+    // URL DOWNLOAD KWITANSI
+    // ==================================================
+
+    const kwitansiUrl =
+      `/pembayaran/download-kwitansi/${encodeURIComponent(
+        namaFile
+      )}`;
+
+
+    // ==================================================
+    // RESPONSE KE INDEX.EJS
     // ==================================================
 
     return res.json({
 
       success: true,
 
-      waLink: linkWA,
+      nomorWA: nomorWA,
+
+      kwitansiUrl: kwitansiUrl,
 
       kwitansiFile: namaFile,
 
@@ -3342,6 +3369,83 @@ exports.verifikasiPembayaran = async (req, res) => {
         'Gagal memverifikasi pembayaran dan membuat kwitansi.'
 
     });
+
+  }
+
+};
+
+// ======================================================
+// DOWNLOAD KWITANSI
+// ======================================================
+
+exports.downloadKwitansi = (req, res) => {
+
+  try {
+
+    const namaFile =
+      req.params.namaFile;
+
+
+    const folderKwitansi =
+      path.join(
+        __dirname,
+        '../uploads/kwitansi'
+      );
+
+
+    const filePath =
+      path.join(
+        folderKwitansi,
+        namaFile
+      );
+
+
+    // ==================================================
+    // CEK FILE
+    // ==================================================
+
+    if (!fs.existsSync(filePath)) {
+
+      return res.status(404).send(
+        'File kwitansi tidak ditemukan.'
+      );
+
+    }
+
+
+    // ==================================================
+    // DOWNLOAD KE LAPTOP
+    // ==================================================
+
+    return res.download(
+      filePath,
+      namaFile,
+      (err) => {
+
+        if (err) {
+
+          console.error(
+            'Gagal download kwitansi:',
+            err
+          );
+
+        }
+
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      'Error download kwitansi:',
+      error
+    );
+
+
+    return res.status(500).send(
+      'Gagal mengunduh kwitansi.'
+    );
 
   }
 

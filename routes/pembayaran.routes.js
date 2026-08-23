@@ -142,6 +142,10 @@ router.post(
   pembayaranController.verifikasiPembayaran
 );
 
+router.get(
+  '/download-kwitansi/:namaFile',
+  pembayaranController.downloadKwitansi
+);
 
 // ======================================================
 // GENERATE TAGIHAN

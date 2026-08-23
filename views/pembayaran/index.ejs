@@ -873,181 +873,264 @@
     return false;
   }
 
+// ==================================================
+// VERIFIKASI PEMBAYARAN
+// DOWNLOAD KWITANSI + BUKA CHAT WHATSAPP SISWA
+// ==================================================
+
+async function verifikasiPembayaran(id) {
 
   // ==================================================
-  // VERIFIKASI PEMBAYARAN
+  // KONFIRMASI VERIFIKASI
   // ==================================================
 
-  async function verifikasiPembayaran(id) {
+  const konfirmasi =
+    await Swal.fire({
 
-    const konfirmasi =
-      await Swal.fire({
+      title:
+        "Verifikasi Pembayaran?",
 
-        title:
-          "Verifikasi Pembayaran?",
+      text:
+        "Status pembayaran akan diubah menjadi Lunas, kwitansi akan diunduh, dan WhatsApp siswa akan dibuka.",
 
-        text:
-          "Status pembayaran akan diubah menjadi Lunas.",
+      icon:
+        "question",
 
-        icon:
-          "question",
+      width:
+        "330px",
 
-        width:
-          "330px",
+      showCancelButton:
+        true,
 
-        showCancelButton:
-          true,
+      confirmButtonText:
+        "Ya, Verifikasi",
 
-        confirmButtonText:
-          "Ya, Verifikasi",
+      cancelButtonText:
+        "Batal",
 
-        cancelButtonText:
-          "Batal",
+      confirmButtonColor:
+        "#28a745",
 
-        confirmButtonColor:
-          "#28a745",
+      cancelButtonColor:
+        "#d33"
 
-        cancelButtonColor:
-          "#d33"
-
-      });
+    });
 
 
-    if (!konfirmasi.isConfirmed) {
+  // ==================================================
+  // JIKA BATAL
+  // ==================================================
 
-      return;
+  if (!konfirmasi.isConfirmed) {
+
+    return;
+
+  }
+
+
+  try {
+
+    // ==================================================
+    // PANGGIL SERVER
+    // ==================================================
+
+    const response =
+      await fetch(
+        `/pembayaran/verifikasi/${id}`,
+        {
+          method: "POST"
+        }
+      );
+
+
+    // ==================================================
+    // CEK RESPONSE
+    // ==================================================
+
+    if (!response.ok) {
+
+      const errorText =
+        await response.text();
+
+      console.error(
+        "Response server:",
+        errorText
+      );
+
+      throw new Error(
+        "Gagal memverifikasi pembayaran."
+      );
 
     }
 
 
-    try {
+    // ==================================================
+    // AMBIL DATA JSON DARI CONTROLLER
+    // ==================================================
 
-      const response =
-        await fetch(
-          `/pembayaran/verifikasi/${id}`,
-          {
-            method: "POST"
-          }
+    const data =
+      await response.json();
+
+
+    // ==================================================
+    // CEK HASIL VERIFIKASI
+    // ==================================================
+
+    if (!data.success) {
+
+      throw new Error(
+        data.message ||
+        "Verifikasi pembayaran gagal."
+      );
+
+    }
+
+
+    // ==================================================
+    // DOWNLOAD KWITANSI
+    // ==================================================
+
+    if (data.kwitansiUrl) {
+
+      const link =
+        document.createElement(
+          "a"
         );
 
 
-      const data =
-        await response.json();
+      link.href =
+        data.kwitansiUrl;
 
 
-      // ================================================
-      // BERHASIL
-      // ================================================
-
-      if (data.success) {
-
-        await Swal.fire({
-
-          icon:
-            "success",
-
-          title:
-            "Berhasil",
-
-          text:
-            "Pembayaran berhasil diverifikasi.",
-
-          timer:
-            1500,
-
-          showConfirmButton:
-            false,
-
-          width:
-            "330px"
-
-        });
+      link.download =
+        data.kwitansiFile ||
+        `Kwitansi-BIMBEL-AKSI-${id}.pdf`;
 
 
-        // ==============================================
-        // BUKA WHATSAPP
-        // ==============================================
-
-        if (data.waLink) {
-
-          window.open(
-            data.waLink,
-            "_blank"
-          );
-
-        }
+      document.body.appendChild(
+        link
+      );
 
 
-        // ==============================================
-        // BUKA KWITANSI PDF
-        // ==============================================
+      // ==================================================
+      // TRIGGER DOWNLOAD
+      // ==================================================
 
-        if (data.kwitansiUrl) {
-
-          window.open(
-            data.kwitansiUrl,
-            "_blank"
-          );
-
-        }
-
-        // ==============================================
-        // RELOAD
-        // ==============================================
-
-        setTimeout(() => {
-
-          location.reload();
-
-        }, 500);
+      link.click();
 
 
-      } else {
+      // ==================================================
+      // HAPUS LINK
+      // ==================================================
 
-        Swal.fire({
-
-          icon:
-            "error",
-
-          title:
-            "Gagal",
-
-          text:
-            data.message ||
-            "Verifikasi pembayaran gagal.",
-
-          width:
-            "330px"
-
-        });
-
-      }
-
-
-    } catch (err) {
-
-      console.error(err);
-
-
-      Swal.fire({
-
-        icon:
-          "error",
-
-        title:
-          "Terjadi Kesalahan",
-
-        text:
-          "Tidak dapat memverifikasi pembayaran.",
-
-        width:
-          "330px"
-
-      });
+      link.remove();
 
     }
 
+
+    // ==================================================
+    // TUNGGU DOWNLOAD TERPICU
+    // ==================================================
+
+    await new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          700
+        )
+    );
+
+
+    // ==================================================
+    // BUKA WHATSAPP LANGSUNG KE CHAT SISWA
+    // ==================================================
+
+    if (data.nomorWA) {
+
+      const waUrl =
+        `https://wa.me/${data.nomorWA}`;
+
+
+      window.open(
+        waUrl,
+        "_blank"
+      );
+
+    }
+
+
+    // ==================================================
+    // BERHASIL
+    // ==================================================
+
+    await Swal.fire({
+
+      icon:
+        "success",
+
+      title:
+        "Pembayaran Berhasil Diverifikasi",
+
+      text:
+        data.nomorWA
+          ? "Kwitansi berhasil diunduh dan WhatsApp siswa telah dibuka."
+          : "Kwitansi berhasil diunduh, tetapi nomor WhatsApp siswa tidak tersedia.",
+
+      timer:
+        1800,
+
+      showConfirmButton:
+        false,
+
+      width:
+        "330px"
+
+    });
+  
+
+    // ==================================================
+    // RELOAD HALAMAN
+    // ==================================================
+
+    setTimeout(() => {
+
+      location.reload();
+
+    }, 500);
+
+
+  } catch (err) {
+
+    console.error(
+      "Error verifikasi:",
+      err
+    );
+
+
+    // ==================================================
+    // ERROR
+    // ==================================================
+
+    Swal.fire({
+
+      icon:
+        "error",
+
+      title:
+        "Terjadi Kesalahan",
+
+      text:
+        err.message ||
+        "Tidak dapat memverifikasi pembayaran atau mengunduh kwitansi.",
+
+      width:
+        "330px"
+
+    });
+
   }
+
+}
 
 
   // ==================================================
@@ -1083,7 +1166,5 @@
 
   }
 
-</script>
-
-
+  </script>
 <%- include('../partials/footer') %>
