@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Akun Saya | Bimbel AKSI</title>
+
+
+  <!-- ==================================================
+       FAVICON
+  ================================================== -->
+
+  <link
+    rel="icon"
+    href="/favicon.ico?v=2"
+  >
+
+
+  <!-- ==================================================
+       GOOGLE FONT
+  ================================================== -->
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+
+  <!-- ==================================================
+       CSS
+  ================================================== -->
+
+  <link
+    rel="stylesheet"
+    href="/css/style.css"
+  >
+
+
+  <!-- ==================================================
+       SWEETALERT
+  ================================================== -->
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+  <!-- ==================================================
+       LUCIDE ICON
+  ================================================== -->
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+
+<body>
+
+
+  <!-- ==================================================
+       SIDEBAR
+  ================================================== -->
+
+  <%- include('../partials/sidebar') %>
+
+
+  <!-- ==================================================
+       MAIN CONTENT
+  ================================================== -->
+
+  <div class="main-content">
+
+
+    <!-- ==================================================
+         HEADER
+    ================================================== -->
+
+    <div class="page-header">
+
+      <div>
+
+        <h1>
+          Akun Saya
+        </h1>
+
+        <p>
+          Kelola informasi dan keamanan akun admin Bimbel AKSI.
+        </p>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- ==================================================
+         CONTENT
+    ================================================== -->
+
+    <div class="setting-account-grid">
+
+
+      <!-- ==================================================
+           INFORMASI AKUN
+      ================================================== -->
+
+      <div class="setting-card">
+
+
+        <!-- HEADER CARD -->
+
+        <div class="setting-section-header">
+
+          <div class="setting-card-icon">
+
+            <i data-lucide="user-round"></i>
+
+          </div>
+
+          <div>
+
+            <h2>
+              Informasi Akun
+            </h2>
+
+            <p>
+              Informasi admin yang digunakan untuk mengakses sistem.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ==================================================
+             FORM PROFIL
+        ================================================== -->
+
+        <form
+          id="formProfil"
+          action="/setting/profil"
+          method="POST"
+        >
+
+
+          <!-- NAMA ADMIN -->
+
+          <div class="setting-form-group">
+
+            <label for="nama_admin">
+              Nama Admin
+            </label>
+
+            <input
+              type="text"
+              id="nama_admin"
+              name="nama_admin"
+              value="<%= admin.nama_admin || '' %>"
+              placeholder="Masukkan nama admin"
+              required
+            >
+
+          </div>
+
+
+
+          <!-- USERNAME -->
+
+          <div class="setting-form-group">
+
+            <label for="username">
+              Username
+            </label>
+
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value="<%= admin.username || '' %>"
+              placeholder="Masukkan username"
+              autocomplete="username"
+              required
+            >
+
+          </div>
+
+
+
+          <!-- NOMOR WHATSAPP -->
+
+          <div class="setting-form-group">
+
+            <label for="nomor_wa">
+              Nomor WhatsApp
+            </label>
+
+            <input
+              type="text"
+              id="nomor_wa"
+              name="nomor_wa"
+              value="<%= admin.nomor_wa || '' %>"
+              placeholder="Contoh: 081234567890"
+              autocomplete="tel"
+            >
+
+            <small>
+              Nomor ini dapat digunakan sebagai nomor WhatsApp utama Bimbel AKSI.
+            </small>
+
+          </div>
+
+
+
+          <!-- TOMBOL -->
+
+          <div class="setting-form-actions">
+
+            <button
+              type="submit"
+              class="setting-primary-button"
+              id="btnSimpanProfil"
+            >
+
+              <i data-lucide="save"></i>
+
+              <span>
+                Simpan Perubahan
+              </span>
+
+            </button>
+
+          </div>
+
+
+        </form>
+
+
+      </div>
+
+
+
+      <!-- ==================================================
+           KEAMANAN AKUN
+      ================================================== -->
+
+      <div class="setting-card">
+
+
+        <!-- HEADER CARD -->
+
+        <div class="setting-section-header">
+
+          <div class="setting-card-icon">
+
+            <i data-lucide="shield-check"></i>
+
+          </div>
+
+          <div>
+
+            <h2>
+              Keamanan Akun
+            </h2>
+
+            <p>
+              Ubah password untuk menjaga keamanan akun.
+            </p>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- ==================================================
+             FORM PASSWORD
+        ================================================== -->
+
+        <form
+          id="formPassword"
+          action="/setting/password"
+          method="POST"
+        >
+
+
+          <!-- PASSWORD LAMA -->
+
+          <div class="setting-form-group">
+
+            <label for="password_lama">
+              Password Lama
+            </label>
+
+            <div class="setting-password-wrapper">
+
+              <input
+                type="password"
+                id="password_lama"
+                name="password_lama"
+                placeholder="Masukkan password lama"
+                autocomplete="current-password"
+                required
+              >
+
+              <button
+                type="button"
+                class="setting-password-toggle"
+                onclick="togglePassword('password_lama', this)"
+                aria-label="Tampilkan password"
+              >
+
+                <i data-lucide="eye"></i>
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- PASSWORD BARU -->
+
+          <div class="setting-form-group">
+
+            <label for="password_baru">
+              Password Baru
+            </label>
+
+            <div class="setting-password-wrapper">
+
+              <input
+                type="password"
+                id="password_baru"
+                name="password_baru"
+                placeholder="Masukkan password baru"
+                autocomplete="new-password"
+                required
+              >
+
+              <button
+                type="button"
+                class="setting-password-toggle"
+                onclick="togglePassword('password_baru', this)"
+                aria-label="Tampilkan password"
+              >
+
+                <i data-lucide="eye"></i>
+
+              </button>
+
+            </div>
+
+            <small>
+              Password minimal 6 karakter.
+            </small>
+
+          </div>
+
+
+
+          <!-- KONFIRMASI PASSWORD -->
+
+          <div class="setting-form-group">
+
+            <label for="konfirmasi_password">
+              Konfirmasi Password Baru
+            </label>
+
+            <div class="setting-password-wrapper">
+
+              <input
+                type="password"
+                id="konfirmasi_password"
+                name="konfirmasi_password"
+                placeholder="Ulangi password baru"
+                autocomplete="new-password"
+                required
+              >
+
+              <button
+                type="button"
+                class="setting-password-toggle"
+                onclick="togglePassword('konfirmasi_password', this)"
+                aria-label="Tampilkan password"
+              >
+
+                <i data-lucide="eye"></i>
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- TOMBOL -->
+
+          <div class="setting-form-actions">
+
+            <button
+              type="submit"
+              class="setting-primary-button"
+              id="btnUbahPassword"
+            >
+
+              <i data-lucide="key-round"></i>
+
+              <span>
+                Ubah Password
+              </span>
+
+            </button>
+
+          </div>
+
+
+        </form>
+
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- ==================================================
+         KEMBALI KE SETTING
+    ================================================== -->
+
+    <div class="setting-back-wrapper">
+
+      <a
+        href="/setting"
+        class="setting-back-button"
+      >
+
+        <i data-lucide="arrow-left"></i>
+
+        <span>
+          Kembali ke Setting
+        </span>
+
+      </a>
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- ==================================================
+       JAVASCRIPT
+  ================================================== -->
+
+  <script>
+
+
+    // ==================================================
+    // LUCIDE ICON
+    // ==================================================
+
+    lucide.createIcons();
+
+
+
+    // ==================================================
+    // TOGGLE PASSWORD
+    // ==================================================
+
+    function togglePassword(
+      inputId,
+      button
+    ){
+
+      const input =
+        document.getElementById(inputId);
+
+
+      if (!input) {
+        return;
+      }
+
+
+      if (
+        input.type === 'password'
+      ){
+
+        input.type = 'text';
+
+        button.innerHTML =
+          '<i data-lucide="eye-off"></i>';
+
+      } else {
+
+        input.type = 'password';
+
+        button.innerHTML =
+          '<i data-lucide="eye"></i>';
+
+      }
+
+
+      lucide.createIcons();
+
+    }
+
+
+
+    // ==================================================
+    // FORM UPDATE PROFIL
+    // ==================================================
+
+    const formProfil =
+      document.getElementById('formProfil');
+
+
+    formProfil.addEventListener(
+      'submit',
+      async function(event){
+
+        event.preventDefault();
+
+
+        const button =
+          document.getElementById(
+            'btnSimpanProfil'
+          );
+
+
+        const formData =
+          new FormData(formProfil);
+
+
+        // ==============================================
+        // LOADING
+        // ==============================================
+
+        button.disabled = true;
+
+        button.innerHTML = `
+          <span class="setting-spinner"></span>
+          <span>Menyimpan...</span>
+        `;
+
+
+        try {
+
+
+          const response =
+            await fetch(
+              '/setting/profil',
+              {
+                method: 'POST',
+                body: formData
+              }
+            );
+
+
+          const result =
+            await response.json();
+
+
+          // ============================================
+          // BERHASIL
+          // ============================================
+
+          if (result.success) {
+
+
+            await Swal.fire({
+
+              icon: 'success',
+
+              title: 'Berhasil',
+
+              text: result.message,
+
+              confirmButtonText: 'OK',
+
+              confirmButtonColor: '#2563eb',
+
+              width: 380
+
+            });
+
+
+            // ==========================================
+            // REFRESH HALAMAN
+            // ==========================================
+
+            window.location.reload();
+
+
+          } else {
+
+
+            Swal.fire({
+
+              icon: 'error',
+
+              title: 'Gagal',
+
+              text: result.message,
+
+              confirmButtonText: 'OK',
+
+              confirmButtonColor: '#2563eb',
+
+              width: 380
+
+            });
+
+          }
+
+
+        } catch (error) {
+
+
+          console.error(
+            'Error update profil:',
+            error
+          );
+
+
+          Swal.fire({
+
+            icon: 'error',
+
+            title: 'Terjadi Kesalahan',
+
+            text:
+              'Tidak dapat terhubung ke server.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb',
+
+            width: 380
+
+          });
+
+
+        } finally {
+
+
+          button.disabled = false;
+
+
+          button.innerHTML = `
+            <i data-lucide="save"></i>
+            <span>Simpan Perubahan</span>
+          `;
+
+
+          lucide.createIcons();
+
+        }
+
+      }
+    );
+
+
+
+    // ==================================================
+    // FORM UBAH PASSWORD
+    // ==================================================
+
+    const formPassword =
+      document.getElementById('formPassword');
+
+
+    formPassword.addEventListener(
+      'submit',
+      async function(event){
+
+        event.preventDefault();
+
+
+        const passwordBaru =
+          document.getElementById(
+            'password_baru'
+          ).value;
+
+
+        const konfirmasiPassword =
+          document.getElementById(
+            'konfirmasi_password'
+          ).value;
+
+
+        // ==============================================
+        // CEK PASSWORD
+        // ==============================================
+
+        if (
+          passwordBaru !==
+          konfirmasiPassword
+        ){
+
+          Swal.fire({
+
+            icon: 'warning',
+
+            title: 'Password Tidak Sesuai',
+
+            text:
+              'Password baru dan konfirmasi password harus sama.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb',
+
+            width: 380
+
+          });
+
+          return;
+
+        }
+
+
+        if (
+          passwordBaru.length < 6
+        ){
+
+          Swal.fire({
+
+            icon: 'warning',
+
+            title: 'Password Terlalu Pendek',
+
+            text:
+              'Password baru minimal 6 karakter.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb',
+
+            width: 380
+
+          });
+
+          return;
+
+        }
+
+
+        const button =
+          document.getElementById(
+            'btnUbahPassword'
+          );
+
+
+        const formData =
+          new FormData(formPassword);
+
+
+        // ==============================================
+        // LOADING
+        // ==============================================
+
+        button.disabled = true;
+
+        button.innerHTML = `
+          <span class="setting-spinner"></span>
+          <span>Mengubah...</span>
+        `;
+
+
+        try {
+
+
+          const response =
+            await fetch(
+              '/setting/password',
+              {
+                method: 'POST',
+                body: formData
+              }
+            );
+
+
+          const result =
+            await response.json();
+
+
+          // ============================================
+          // BERHASIL
+          // ============================================
+
+          if (result.success) {
+
+
+            await Swal.fire({
+
+              icon: 'success',
+
+              title: 'Password Berhasil Diubah',
+
+              text: result.message,
+
+              confirmButtonText: 'OK',
+
+              confirmButtonColor: '#2563eb',
+
+              width: 380
+
+            });
+
+
+            // ==========================================
+            // KOSONGKAN FORM
+            // ==========================================
+
+            formPassword.reset();
+
+
+          } else {
+
+
+            Swal.fire({
+
+              icon: 'error',
+
+              title: 'Gagal',
+
+              text: result.message,
+
+              confirmButtonText: 'OK',
+
+              confirmButtonColor: '#2563eb',
+
+              width: 380
+
+            });
+
+          }
+
+
+        } catch (error) {
+
+
+          console.error(
+            'Error update password:',
+            error
+          );
+
+
+          Swal.fire({
+
+            icon: 'error',
+
+            title: 'Terjadi Kesalahan',
+
+            text:
+              'Tidak dapat terhubung ke server.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb',
+
+            width: 380
+
+          });
+
+
+        } finally {
+
+
+          button.disabled = false;
+
+
+          button.innerHTML = `
+            <i data-lucide="key-round"></i>
+            <span>Ubah Password</span>
+          `;
+
+
+          lucide.createIcons();
+
+        }
+
+      }
+    );
+
+
+  </script>
+
+
+</body>
+
+</html>

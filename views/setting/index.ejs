@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Setting | Bimbel AKSI</title>
+
+  <link
+    rel="icon"
+    href="/favicon.ico?v=2"
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="/css/style.css"
+  >
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+
+  <!-- ==================================================
+       SIDEBAR
+  ================================================== -->
+
+  <%- include('../partials/sidebar', {
+    activePage: 'setting'
+  }) %>
+
+
+  <!-- ==================================================
+       MAIN CONTENT
+  ================================================== -->
+
+  <div class="main-content">
+
+    <div class="page-header">
+
+      <div>
+
+        <h1>
+          Setting
+        </h1>
+
+        <p>
+          Kelola akun dan administrasi pengguna sistem Bimbel AKSI.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==================================================
+         SETTING GRID
+    ================================================== -->
+
+    <div class="setting-grid">
+
+
+      <!-- ==================================================
+           AKUN SAYA
+      ================================================== -->
+
+      <div class="setting-card">
+
+        <div class="setting-card-icon">
+          <i data-lucide="user-round"></i>
+        </div>
+
+        <div class="setting-card-content">
+
+          <h2>
+            Akun Saya
+          </h2>
+
+          <p>
+            Kelola informasi akun, username, nomor WhatsApp,
+            dan password yang digunakan untuk login ke sistem.
+          </p>
+
+          <a
+            href="/setting/akun"
+            class="setting-card-button"
+          >
+
+            <span>
+              Kelola Akun
+            </span>
+
+            <i data-lucide="arrow-right"></i>
+
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <!-- ==================================================
+           MANAJEMEN ADMIN
+      ================================================== -->
+
+      <div class="setting-card">
+
+        <div class="setting-card-icon">
+          <i data-lucide="users-round"></i>
+        </div>
+
+        <div class="setting-card-content">
+
+          <h2>
+            Manajemen Admin
+          </h2>
+
+          <p>
+            Kelola akun admin yang memiliki akses
+            untuk menggunakan sistem Bimbel AKSI.
+          </p>
+
+          <a
+            href="/setting/admin"
+            class="setting-card-button"
+          >
+
+            <span>
+              Kelola Admin
+            </span>
+
+            <i data-lucide="arrow-right"></i>
+
+          </a>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+  <!-- ==================================================
+       LUCIDE
+  ================================================== -->
+
+  <script>
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      function () {
+
+        lucide.createIcons();
+
+      }
+    );
+
+  </script>
+
+</body>
+
+</html>
