@@ -537,9 +537,10 @@
           );
 
 
-        const formData =
-          new FormData(formProfil);
-
+       const formData =
+        new URLSearchParams(
+          new FormData(formProfil)
+        );
 
         // ==============================================
         // LOADING
@@ -762,8 +763,9 @@
 
 
         const formData =
-          new FormData(formPassword);
-
+          new URLSearchParams(
+            new FormData(formPassword)
+          );
 
         // ==============================================
         // LOADING
