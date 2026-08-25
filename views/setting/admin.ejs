@@ -1140,128 +1140,207 @@
 
     }
 
+  // ==================================================
+  // SUBMIT TAMBAH ADMIN
+  // ==================================================
 
-    // ==================================================
-    // SUBMIT TAMBAH ADMIN
-    // ==================================================
+  document
+    .getElementById('formTambahAdmin')
+    .addEventListener('submit', async function (event) {
 
-    document
-      .getElementById('formTambahAdmin')
-      .addEventListener('submit', async function (event) {
+      event.preventDefault();
 
-        event.preventDefault();
+      const form = this;
+
+      const submitButton =
+        form.querySelector('button[type="submit"]');
+
+      const originalButtonHTML =
+        submitButton.innerHTML;
+
+      const data =
+        new FormData(form);
+
+      const password =
+        data.get('password');
 
 
-        const form = this;
+      // ==================================================
+      // VALIDASI PASSWORD
+      // ==================================================
 
-        const data =
-          new FormData(form);
+      if (!password || password.length < 6) {
+
+        Swal.fire({
+
+          icon: 'warning',
+
+          title: 'Password Terlalu Pendek',
+
+          text: 'Password minimal 6 karakter.',
+
+          confirmButtonText: 'OK',
+
+          confirmButtonColor: '#2563eb'
+
+        });
+
+        return;
+
+      }
 
 
-        const password =
-          data.get('password');
+      // ==================================================
+      // LOADING BUTTON
+      // ==================================================
+
+      submitButton.disabled = true;
+
+      submitButton.innerHTML = `
+        <i data-lucide="loader-circle"></i>
+        Menambahkan...
+      `;
+
+      lucide.createIcons();
 
 
-        if (!password || password.length < 6) {
+      try {
 
-          Swal.fire({
+        const response =
+          await fetch(
+            form.action,
+            {
+              method: 'POST',
+              body: data,
+              headers: {
+                'Accept': 'application/json'
+              }
+            }
+          );
 
-            icon: 'warning',
 
-            title: 'Password Terlalu Pendek',
+        // ==================================================
+        // CEK RESPONSE SERVER
+        // ==================================================
 
-            text: 'Password minimal 6 karakter.',
+        const contentType =
+          response.headers.get('content-type') || '';
+
+
+        if (!contentType.includes('application/json')) {
+
+          console.error(
+            'Response bukan JSON:',
+            await response.text()
+          );
+
+          throw new Error(
+            'Server tidak mengembalikan response JSON.'
+          );
+
+        }
+
+
+        const result =
+          await response.json();
+
+
+        // ==================================================
+        // BERHASIL
+        // ==================================================
+
+        if (response.ok && result.success) {
+
+          // Tutup modal TERLEBIH DAHULU
+          tutupModalTambah();
+
+
+          // Tampilkan SweetAlert setelah modal benar-benar ditutup
+          await Swal.fire({
+
+            icon: 'success',
+
+            title: 'Berhasil',
+
+            text: result.message,
 
             confirmButtonText: 'OK',
 
             confirmButtonColor: '#2563eb'
 
           });
+
+
+          // Refresh halaman setelah SweetAlert ditutup
+          window.location.reload();
+
 
           return;
 
         }
 
 
-        try {
+        // ==================================================
+        // GAGAL DARI SERVER
+        // ==================================================
 
-          const response =
-            await fetch(
-              form.action,
-              {
-                method: 'POST',
-                body: data
-              }
-            );
+        Swal.fire({
 
+          icon: 'error',
 
-          const result =
-            await response.json();
+          title: 'Gagal',
 
+          text:
+            result.message ||
+            'Gagal menambahkan admin.',
 
-          if (result.success) {
+          confirmButtonText: 'OK',
 
-            tutupModalTambah();
+          confirmButtonColor: '#2563eb'
 
-
-            await Swal.fire({
-
-              icon: 'success',
-
-              title: 'Berhasil',
-
-              text: result.message,
-
-              confirmButtonText: 'OK',
-
-              confirmButtonColor: '#2563eb'
-
-            });
+        });
 
 
-            window.location.reload();
+      } catch (error) {
 
-          } else {
-
-            Swal.fire({
-
-              icon: 'error',
-
-              title: 'Gagal',
-
-              text: result.message,
-
-              confirmButtonText: 'OK',
-
-              confirmButtonColor: '#2563eb'
-
-            });
-
-          }
+        console.error(
+          'Error tambah admin:',
+          error
+        );
 
 
-        } catch (error) {
+        Swal.fire({
 
-          console.error(error);
+          icon: 'error',
 
-          Swal.fire({
+          title: 'Terjadi Kesalahan',
 
-            icon: 'error',
+          text:
+            'Tidak dapat memproses penambahan admin. Silakan coba lagi.',
 
-            title: 'Terjadi Kesalahan',
+          confirmButtonText: 'OK',
 
-            text: 'Tidak dapat terhubung ke server.',
+          confirmButtonColor: '#2563eb'
 
-            confirmButtonText: 'OK',
+        });
 
-            confirmButtonColor: '#2563eb'
 
-          });
+      } finally {
 
-        }
+        // ==================================================
+        // KEMBALIKAN TOMBOL
+        // ==================================================
 
-      });
+        submitButton.disabled = false;
 
+        submitButton.innerHTML =
+          originalButtonHTML;
+
+        lucide.createIcons();
+
+      }
+
+    });
 
     // ==================================================
     // SUBMIT EDIT ADMIN
