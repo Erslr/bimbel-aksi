@@ -8,63 +8,59 @@
   <hr>
 
   <a href="/dashboard" class="<%= activePage === 'dashboard' ? 'active' : '' %>">
-  <i data-lucide="house"></i>
-  <span>Dashboard</span>
-</a>
+    <i data-lucide="house"></i>
+    <span>Dashboard</span>
+  </a>
 
-<a href="/siswa" class="<%= activePage === 'siswa' ? 'active' : '' %>">
+  <a href="/siswa" class="<%= activePage === 'siswa' ? 'active' : '' %>">
     <i data-lucide="user"></i>
-
     <span>Siswa</span>
 
     <% if (siswaBaru > 0) { %>
-        <span class="badge-notif">
-            <%= siswaBaru > 99 ? '99+' : siswaBaru %>
-        </span>
+      <span class="badge-notif">
+        <%= siswaBaru > 99 ? '99+' : siswaBaru %>
+      </span>
     <% } %>
-</a>
+  </a>
 
-<a href="/kelas" class="<%= activePage === 'kelas' ? 'active' : '' %>">
-  <i data-lucide="monitor"></i>
-  <span>Kelas</span>
-</a>
+  <a href="/kelas" class="<%= activePage === 'kelas' ? 'active' : '' %>">
+    <i data-lucide="monitor"></i>
+    <span>Kelas</span>
+  </a>
 
-<a href="/tentor" class="<%= activePage === 'tentor' ? 'active' : '' %>">
-  <i data-lucide="book-open"></i>
-  <span>Tentor</span>
-</a>
+  <a href="/tentor" class="<%= activePage === 'tentor' ? 'active' : '' %>">
+    <i data-lucide="book-open"></i>
+    <span>Tentor</span>
+  </a>
 
-<a href="/pembayaran" class="<%= activePage === 'pembayaran' ? 'active' : '' %>">
-  <i data-lucide="credit-card"></i>
-  <span>Pembayaran</span>
-</a>
+  <a href="/pembayaran" class="<%= activePage === 'pembayaran' ? 'active' : '' %>">
+    <i data-lucide="credit-card"></i>
+    <span>Pembayaran</span>
+  </a>
 
-<hr>
+  <hr>
 
-<!-- SETTING -->
+  <!-- SETTING -->
+  <a
+    href="/setting"
+    class="<%= activePage === 'setting' ? 'active' : '' %>"
+  >
+    <i data-lucide="settings"></i>
+    <span>Setting</span>
+  </a>
 
-<a
-  href="/setting"
-  class="<%= activePage === 'setting' ? 'active' : '' %>"
->
+  <!-- LOGOUT -->
+  <a
+    href="/logout"
+    onclick="konfirmasiLogout(event)"
+  >
+    <i data-lucide="log-out"></i>
+    <span>Logout</span>
+  </a>
 
-  <i data-lucide="settings"></i>
+</div>
 
-  <span>Setting</span>
-
-</a>
-
-
-<!-- LOGOUT -->
-
-<a
-  href="#"
-  onclick="konfirmasiLogout(event)"
->
-  <i data-lucide="log-out"></i>
-  <span>Logout</span>
-</a>
-
+<!-- SWEETALERT LOGOUT -->
 <script>
 async function konfirmasiLogout(event) {
 
