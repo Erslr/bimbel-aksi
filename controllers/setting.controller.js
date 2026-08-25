@@ -26,6 +26,7 @@ exports.akun = (req, res) => {
 
   const query = `
     SELECT
+
       id_admin,
       username,
       nama_admin,
@@ -82,14 +83,19 @@ exports.akun = (req, res) => {
 
 exports.updateProfil = (req, res) => {
 
+  console.log('===== UPDATE PROFIL =====');
+  console.log('SESSION USER:', req.session.user);
+  console.log('BODY:', req.body);
+
   const idAdmin = req.session.user.id;
+
+  console.log('ID ADMIN:', idAdmin);
 
   const {
     nama_admin,
     username,
     nomor_wa
   } = req.body;
-
 
   // ==================================================
   // VALIDASI
@@ -192,14 +198,19 @@ exports.updateProfil = (req, res) => {
 
 exports.updatePassword = async (req, res) => {
 
+  console.log('===== UPDATE PASSWORD =====');
+  console.log('SESSION USER:', req.session.user);
+  console.log('BODY:', req.body);
+
   const idAdmin = req.session.user.id;
 
-  const {
-    password_lama,
-    password_baru,
-    konfirmasi_password
-  } = req.body;
+  console.log('ID ADMIN:', idAdmin);
 
+  const {
+  password_lama,
+  password_baru,
+  konfirmasi_password
+} = req.body;
 
   // ==================================================
   // VALIDASI KOLOM
@@ -405,6 +416,7 @@ exports.manajemenAdmin = (req, res) => {
 
   }
 
+
   const idAdminLogin =
     req.session.user.id;
 
@@ -439,526 +451,46 @@ exports.manajemenAdmin = (req, res) => {
       }
 
 
+      // ==================================================
+      // AMBIL DATA ADMIN YANG SEDANG ONLINE
+      // ==================================================
+
+      const onlineAdmins =
+        req.app.locals.onlineAdmins || new Map();
+
+
+      // ==================================================
+      // TAMBAHKAN STATUS ONLINE
+      // ==================================================
+
+      const admins =
+        (results || []).map(admin => {
+
+          return {
+
+            ...admin,
+
+            online:
+              onlineAdmins.has(
+                Number(admin.id_admin)
+              )
+
+          };
+
+        });
+
+
       res.render('setting/admin', {
-        admins: results || [],
+
+        admins: admins,
+
         idAdminLogin: idAdminLogin,
+
         activePage: 'setting'
+
       });
 
     }
   );
-
-};
-
-
-// ======================================================
-// TAMBAH ADMIN
-// ======================================================
-
-exports.tambahAdmin = async (req, res) => {
-
-if (req.session.user.role !== 'utama') {
-  return res.status(403).json({
-    success: false,
-    message: 'Hanya Admin Utama yang dapat menambahkan admin.'
-  });
-}
-  const {
-  nama_admin,
-  username,
-  password,
-  nomor_wa
-} = req.body || {};
-
-
-  // ==================================================
-  // VALIDASI
-  // ==================================================
-
-  if (
-    !nama_admin ||
-    !username ||
-    !password
-  ) {
-
-    return res.json({
-      success: false,
-      message: 'Nama admin, username, dan password wajib diisi.'
-    });
-
-  }
-
-
-  if (
-    password.length < 6
-  ) {
-
-    return res.json({
-      success: false,
-      message: 'Password minimal 6 karakter.'
-    });
-
-  }
-
-
-  try {
-
-    // ==================================================
-    // CEK USERNAME
-    // ==================================================
-
-    const cekQuery = `
-      SELECT id_admin
-      FROM admin
-      WHERE username = ?
-    `;
-
-
-    db.query(
-      cekQuery,
-      [username.trim()],
-      async (cekErr, result) => {
-
-        if (cekErr) {
-
-          console.error(
-            'Error cek username admin:',
-            cekErr
-          );
-
-          return res.status(500).json({
-            success: false,
-            message: 'Terjadi kesalahan server.'
-          });
-
-        }
-
-
-        if (
-          result &&
-          result.length > 0
-        ) {
-
-          return res.json({
-            success: false,
-            message: 'Username sudah digunakan.'
-          });
-
-        }
-
-
-        // ==================================================
-        // HASH PASSWORD
-        // ==================================================
-
-        const passwordHash =
-          await bcrypt.hash(
-            password,
-            10
-          );
-
-
-        // ==================================================
-        // INSERT ADMIN
-        // ==================================================
-
-        const insertQuery = `
-          INSERT INTO admin
-          (
-            username,
-            password,
-            nama_admin,
-            nomor_wa
-          )
-          VALUES (?, ?, ?, ?)
-        `;
-
-
-        db.query(
-          insertQuery,
-          [
-            username.trim(),
-            passwordHash,
-            nama_admin.trim(),
-            nomor_wa
-              ? nomor_wa.trim()
-              : null
-          ],
-          (insertErr) => {
-
-            if (insertErr) {
-
-              console.error(
-                'Error tambah admin:',
-                insertErr
-              );
-
-              return res.status(500).json({
-                success: false,
-                message: 'Gagal menambahkan admin.'
-              });
-
-            }
-
-
-            return res.json({
-              success: true,
-              message: 'Admin berhasil ditambahkan.'
-            });
-
-          }
-        );
-
-      }
-    );
-
-  } catch (error) {
-
-    console.error(
-      'Error tambah admin:',
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      message: 'Terjadi kesalahan saat menambahkan admin.'
-    });
-
-  }
-
-};
-
-
-// ======================================================
-// EDIT ADMIN
-// ======================================================
-
-exports.editAdmin = (req, res) => {
-
-  if (req.session.user.role !== 'utama') {
-    return res.status(403).json({
-      success: false,
-      message: 'Hanya Admin Utama yang dapat mengedit admin lain.'
-    });
-  }
-  const idAdmin =
-    req.params.id;
-
-
-  const {
-    nama_admin,
-    username,
-    nomor_wa
-  } = req.body;
-
-
-  // ==================================================
-  // VALIDASI
-  // ==================================================
-
-  if (
-    !nama_admin ||
-    !username
-  ) {
-
-    return res.json({
-      success: false,
-      message: 'Nama admin dan username wajib diisi.'
-    });
-
-  }
-
-
-  const query = `
-    UPDATE admin
-    SET
-      nama_admin = ?,
-      username = ?,
-      nomor_wa = ?
-    WHERE id_admin = ?
-  `;
-
-
-  db.query(
-    query,
-    [
-      nama_admin.trim(),
-      username.trim(),
-      nomor_wa
-        ? nomor_wa.trim()
-        : null,
-      idAdmin
-    ],
-    (err) => {
-
-      if (err) {
-
-        console.error(
-          'Error edit admin:',
-          err
-        );
-
-
-        if (
-          err.code === 'ER_DUP_ENTRY'
-        ) {
-
-          return res.json({
-            success: false,
-            message: 'Username sudah digunakan.'
-          });
-
-        }
-
-
-        return res.status(500).json({
-          success: false,
-          message: 'Gagal mengubah data admin.'
-        });
-
-      }
-
-
-      return res.json({
-        success: true,
-        message: 'Data admin berhasil diperbarui.'
-      });
-
-    }
-  );
-
-};
-
-
-// ======================================================
-// HAPUS ADMIN
-// ======================================================
-
-exports.hapusAdmin = (req, res) => {
-
-  if (req.session.user.role !== 'utama') {
-    return res.status(403).json({
-      success: false,
-      message: 'Hanya Admin Utama yang dapat menghapus admin.'
-    });
-  }
-
-  const idAdmin =
-    Number(req.params.id);
-
-
-  const idAdminLogin =
-    Number(req.session.user.id);
-
-
-  // ==================================================
-  // CEGAH HAPUS AKUN SENDIRI
-  // ==================================================
-
-  if (
-    idAdmin === idAdminLogin
-  ) {
-
-    return res.json({
-      success: false,
-      message: 'Akun yang sedang digunakan tidak dapat dihapus.'
-    });
-
-  }
-
-
-  const query = `
-    DELETE FROM admin
-    WHERE id_admin = ?
-  `;
-
-
-  db.query(
-    query,
-    [idAdmin],
-    (err, result) => {
-
-      if (err) {
-
-        console.error(
-          'Error hapus admin:',
-          err
-        );
-
-        return res.status(500).json({
-          success: false,
-          message: 'Gagal menghapus admin.'
-        });
-
-      }
-
-
-      if (
-        result.affectedRows === 0
-      ) {
-
-        return res.json({
-          success: false,
-          message: 'Admin tidak ditemukan.'
-        });
-
-      }
-
-
-      return res.json({
-        success: true,
-        message: 'Admin berhasil dihapus.'
-      });
-
-    }
-  );
-
-};
-
-
-// ======================================================
-// RESET PASSWORD ADMIN
-// ======================================================
-
-exports.resetPasswordAdmin = async (req, res) => {
-
-  if (req.session.user.role !== 'utama') {
-    return res.status(403).json({
-      success: false,
-      message: 'Hanya Admin Utama yang dapat mereset password admin lain.'
-    });
-  }
-
-  const idAdmin =
-    Number(req.params.id);
-
-
-  const {
-    password_baru,
-    konfirmasi_password
-  } = req.body;
-
-
-  // ==================================================
-  // VALIDASI
-  // ==================================================
-
-  if (
-    !password_baru ||
-    !konfirmasi_password
-  ) {
-
-    return res.json({
-      success: false,
-      message: 'Password baru dan konfirmasi password wajib diisi.'
-    });
-
-  }
-
-
-  if (
-    password_baru !== konfirmasi_password
-  ) {
-
-    return res.json({
-      success: false,
-      message: 'Konfirmasi password tidak sesuai.'
-    });
-
-  }
-
-
-  if (
-    password_baru.length < 6
-  ) {
-
-    return res.json({
-      success: false,
-      message: 'Password minimal 6 karakter.'
-    });
-
-  }
-
-
-  try {
-
-    // ==================================================
-    // HASH PASSWORD
-    // ==================================================
-
-    const passwordHash =
-      await bcrypt.hash(
-        password_baru,
-        10
-      );
-
-
-    // ==================================================
-    // UPDATE PASSWORD
-    // ==================================================
-
-    const query = `
-      UPDATE admin
-      SET password = ?
-      WHERE id_admin = ?
-    `;
-
-
-    db.query(
-      query,
-      [
-        passwordHash,
-        idAdmin
-      ],
-      (err, result) => {
-
-        if (err) {
-
-          console.error(
-            'Error reset password admin:',
-            err
-          );
-
-          return res.status(500).json({
-            success: false,
-            message: 'Gagal mereset password admin.'
-          });
-
-        }
-
-
-        if (
-          result.affectedRows === 0
-        ) {
-
-          return res.json({
-            success: false,
-            message: 'Admin tidak ditemukan.'
-          });
-
-        }
-
-
-        return res.json({
-          success: true,
-          message: 'Password admin berhasil direset.'
-        });
-
-      }
-    );
-
-  } catch (error) {
-
-    console.error(
-      'Error reset password admin:',
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      message: 'Terjadi kesalahan saat mereset password admin.'
-    });
-
-  }
 
 };

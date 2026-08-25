@@ -73,6 +73,9 @@ exports.login = (req, res) => {
     role: admin.role
   };
 
+    // Tandai admin sedang online
+    req.session.user.online = true;
+    
     res.redirect("/dashboard");
 
   });

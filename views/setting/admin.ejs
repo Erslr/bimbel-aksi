@@ -283,33 +283,20 @@
 
                   <td>
 
-                    <% if (
-                      Number(admin.id_admin) ===
-                      Number(idAdminLogin)
-                    ) { %>
-
-                      <span class="admin-status active">
+                      <span
+                        class="admin-status <%= admin.online ? 'active' : '' %>"
+                        id="status-admin-<%= admin.id_admin %>"
+                      >
 
                         <span class="status-dot"></span>
 
-                        Sedang Login
+                        <span class="status-text">
+                          <%= admin.online ? 'Sedang Online' : 'Aktif' %>
+                        </span>
 
                       </span>
 
-                    <% } else { %>
-
-                      <span class="admin-status">
-
-                        <span class="status-dot"></span>
-
-                        Aktif
-
-                      </span>
-
-                    <% } %>
-
-                  </td>
-
+                    </td>
 
                   <!-- AKSI -->
 
@@ -1802,6 +1789,65 @@
 
     });
 
+  // ==================================================
+  // SOCKET.IO ADMIN ONLINE
+  // ==================================================
+
+  socket.emit('adminOnline');
+
+
+  // ==================================================
+  // PERUBAHAN STATUS ADMIN
+  // ==================================================
+
+  socket.on(
+    'statusAdmin',
+    function (data) {
+
+      const statusElement =
+        document.getElementById(
+          'status-admin-' + data.id_admin
+        );
+
+
+      if (!statusElement) {
+        return;
+      }
+
+
+      const statusText =
+        statusElement.querySelector(
+          '.status-text'
+        );
+
+
+      if (!statusText) {
+        return;
+      }
+
+
+      if (data.online) {
+
+        statusElement.classList.add(
+          'active'
+        );
+
+        statusText.textContent =
+          'Sedang Online';
+
+      } else {
+
+        statusElement.classList.remove(
+          'active'
+        );
+
+        statusText.textContent =
+          'Aktif';
+
+      }
+
+    }
+  );
   </script>
 
 

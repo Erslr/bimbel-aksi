@@ -152,6 +152,14 @@ app.use('/admin/pembayaran', adminPembayaranRoutes);
 app.use(notifikasiRoutes); 
 app.use(settingRoutes);
 
+
+// =====================================
+// ADMIN YANG SEDANG ONLINE
+// =====================================
+const onlineAdmins = new Map();
+
+app.locals.onlineAdmins = onlineAdmins;
+
 // =====================================
 // SOCKET.IO EVENTS
 // =====================================
@@ -159,13 +167,72 @@ io.on('connection', (socket) => {
 
   console.log('🟢 User Connected:', socket.id);
 
+
+  // ===================================
+  // ADMIN ONLINE
+  // ===================================
+  socket.on('adminOnline', (adminId) => {
+
+    if (!adminId) {
+      return;
+    }
+
+    const id = Number(adminId);
+
+    onlineAdmins.set(id, socket.id);
+
+    console.log(
+      `🟢 Admin ${id} sedang online`
+    );
+
+    io.emit('statusAdmin', {
+      id_admin: id,
+      online: true
+    });
+
+  });
+
+
+  // ===================================
+  // ADMIN DISCONNECT
+  // ===================================
   socket.on('disconnect', () => {
 
-    console.log('🔴 User Disconnected:', socket.id);
+    console.log(
+      '🔴 User Disconnected:',
+      socket.id
+    );
+
+
+    // Cari admin berdasarkan socket ID
+    for (const [adminId, socketId] of onlineAdmins.entries()) {
+
+      if (socketId === socket.id) {
+
+        onlineAdmins.delete(adminId);
+
+        console.log(
+          `🔴 Admin ${adminId} sudah offline`
+        );
+
+
+        io.emit('statusAdmin', {
+          id_admin: adminId,
+          online: false
+        });
+
+
+        break;
+
+      }
+
+    }
 
   });
 
 });
+
+
 // =====================================
 // START SERVER
 // =====================================
