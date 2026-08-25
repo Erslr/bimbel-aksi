@@ -464,11 +464,11 @@ if (req.session.user.role !== 'utama') {
   });
 }
   const {
-    nama_admin,
-    username,
-    password,
-    nomor_wa
-  } = req.body;
+  nama_admin,
+  username,
+  password,
+  nomor_wa
+} = req.body || {};
 
 
   // ==================================================
