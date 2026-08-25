@@ -49,7 +49,6 @@
   <%- include('../partials/sidebar') %>
 
 
-
   <!-- ==================================================
        MAIN CONTENT
   ================================================== -->
@@ -93,7 +92,6 @@
       </a>
 
     </div>
-
 
 
     <!-- ==================================================
@@ -143,7 +141,6 @@
     </div>
 
 
-
     <!-- ==================================================
          TABLE ADMIN
     ================================================== -->
@@ -158,33 +155,17 @@
 
             <tr>
 
-              <th>
-                No
-              </th>
+              <th>No</th>
 
-              <th>
-                Nama Admin
-              </th>
+              <th>Nama Admin</th>
 
-              <th>
-                Username
-              </th>
+              <th>Username</th>
 
-              <th>
-                Nomor WhatsApp
-              </th>
+              <th>Nomor WhatsApp</th>
 
-              <th>
-                Dibuat
-              </th>
+              <th>Status</th>
 
-              <th>
-                Status
-              </th>
-
-              <th>
-                Aksi
-              </th>
+              <th>Aksi</th>
 
             </tr>
 
@@ -199,7 +180,7 @@
               <tr>
 
                 <td
-                  colspan="7"
+                  colspan="6"
                   class="setting-empty-state"
                 >
 
@@ -298,36 +279,6 @@
                   </td>
 
 
-                  <!-- CREATED -->
-
-                  <td>
-
-                    <%
-                      let tanggalDibuat = '-';
-
-                      if (admin.created_at) {
-
-                        const tanggal =
-                          new Date(admin.created_at);
-
-                        tanggalDibuat =
-                          tanggal.toLocaleDateString(
-                            'id-ID',
-                            {
-                              day: '2-digit',
-                              month: '2-digit',
-                              year: 'numeric'
-                            }
-                          );
-
-                      }
-                    %>
-
-                    <%= tanggalDibuat %>
-
-                  </td>
-
-
                   <!-- STATUS -->
 
                   <td>
@@ -367,13 +318,19 @@
                     <div class="admin-action-buttons">
 
 
-                      <!-- EDIT -->
+                      <!-- EDIT ADMIN -->
 
                       <button
                         type="button"
                         class="admin-icon-button edit"
                         title="Edit Admin"
-                        onclick='bukaModalEdit(<%- JSON.stringify(admin) %>)'
+
+                        data-id="<%= admin.id_admin %>"
+                        data-nama="<%= admin.nama_admin || '' %>"
+                        data-username="<%= admin.username || '' %>"
+                        data-nomorwa="<%= admin.nomor_wa || '' %>"
+
+                        onclick="bukaModalEdit(this)"
                       >
 
                         <i data-lucide="pencil"></i>
@@ -387,7 +344,11 @@
                         type="button"
                         class="admin-icon-button password"
                         title="Reset Password"
-                        onclick="bukaModalResetPassword(<%= admin.id_admin %>, '<%= (admin.nama_admin || '').replace(/'/g, "\\'") %>')"
+
+                        data-id="<%= admin.id_admin %>"
+                        data-nama="<%= admin.nama_admin || '' %>"
+
+                        onclick="bukaModalResetPassword(this)"
                       >
 
                         <i data-lucide="key-round"></i>
@@ -406,7 +367,11 @@
                           type="button"
                           class="admin-icon-button delete"
                           title="Hapus Admin"
-                          onclick="hapusAdmin(<%= admin.id_admin %>, '<%= (admin.nama_admin || '').replace(/'/g, "\\'") %>')"
+
+                          data-id="<%= admin.id_admin %>"
+                          data-nama="<%= admin.nama_admin || '' %>"
+
+                          onclick="hapusAdmin(this)"
                         >
 
                           <i data-lucide="trash-2"></i>
@@ -454,7 +419,6 @@
   </div>
 
 
-
   <!-- ==================================================
        MODAL TAMBAH ADMIN
   ================================================== -->
@@ -464,8 +428,10 @@
     class="setting-modal"
   >
 
-    <div class="setting-modal-overlay"
-         onclick="tutupModalTambah()">
+    <div
+      class="setting-modal-overlay"
+      onclick="tutupModalTambah()"
+    >
     </div>
 
 
@@ -507,7 +473,6 @@
         </button>
 
       </div>
-
 
 
       <!-- FORM -->
@@ -622,7 +587,9 @@
             class="setting-secondary-button"
             onclick="tutupModalTambah()"
           >
+
             Batal
+
           </button>
 
           <button
@@ -644,7 +611,6 @@
     </div>
 
   </div>
-
 
 
   <!-- ==================================================
@@ -700,7 +666,6 @@
         </button>
 
       </div>
-
 
 
       <!-- FORM -->
@@ -777,7 +742,9 @@
             class="setting-secondary-button"
             onclick="tutupModalEdit()"
           >
+
             Batal
+
           </button>
 
           <button
@@ -799,7 +766,6 @@
     </div>
 
   </div>
-
 
 
   <!-- ==================================================
@@ -855,7 +821,6 @@
         </button>
 
       </div>
-
 
 
       <!-- FORM -->
@@ -943,7 +908,9 @@
             class="setting-secondary-button"
             onclick="tutupModalResetPassword()"
           >
+
             Batal
+
           </button>
 
           <button
@@ -967,20 +934,21 @@
   </div>
 
 
-
   <!-- ==================================================
        JAVASCRIPT
   ================================================== -->
 
   <script>
 
-
     // ==================================================
     // LUCIDE
     // ==================================================
 
-    lucide.createIcons();
+    document.addEventListener('DOMContentLoaded', function () {
 
+      lucide.createIcons();
+
+    });
 
 
     // ==================================================
@@ -990,15 +958,11 @@
     function bukaModalTambah() {
 
       const modal =
-        document.getElementById(
-          'modalTambahAdmin'
-        );
+        document.getElementById('modalTambahAdmin');
 
       modal.classList.add('show');
 
-      document.body.classList.add(
-        'modal-open'
-      );
+      document.body.classList.add('modal-open');
 
     }
 
@@ -1006,75 +970,68 @@
     function tutupModalTambah() {
 
       const modal =
-        document.getElementById(
-          'modalTambahAdmin'
-        );
+        document.getElementById('modalTambahAdmin');
 
       modal.classList.remove('show');
 
-      document.body.classList.remove(
-        'modal-open'
-      );
+      document.body.classList.remove('modal-open');
 
-      document
-        .getElementById(
-          'formTambahAdmin'
-        )
-        .reset();
+      const form =
+        document.getElementById('formTambahAdmin');
+
+      if (form) {
+        form.reset();
+      }
 
     }
-
 
 
     // ==================================================
     // MODAL EDIT
     // ==================================================
 
-    function bukaModalEdit(admin) {
+    function bukaModalEdit(button) {
+
+      const id =
+        button.dataset.id;
+
+      const nama =
+        button.dataset.nama || '';
+
+      const username =
+        button.dataset.username || '';
+
+      const nomorWa =
+        button.dataset.nomorwa || '';
+
+
+      document.getElementById(
+        'editNamaAdmin'
+      ).value = nama;
+
+
+      document.getElementById(
+        'editUsername'
+      ).value = username;
+
+
+      document.getElementById(
+        'editNomorWa'
+      ).value = nomorWa;
+
+
+      document.getElementById(
+        'formEditAdmin'
+      ).action =
+        '/setting/admin/edit/' + id;
+
 
       const modal =
-        document.getElementById(
-          'modalEditAdmin'
-        );
-
-
-      document
-        .getElementById(
-          'editNamaAdmin'
-        )
-        .value =
-        admin.nama_admin || '';
-
-
-      document
-        .getElementById(
-          'editUsername'
-        )
-        .value =
-        admin.username || '';
-
-
-      document
-        .getElementById(
-          'editNomorWa'
-        )
-        .value =
-        admin.nomor_wa || '';
-
-
-      document
-        .getElementById(
-          'formEditAdmin'
-        )
-        .action =
-        `/setting/admin/edit/${admin.id_admin}`;
-
+        document.getElementById('modalEditAdmin');
 
       modal.classList.add('show');
 
-      document.body.classList.add(
-        'modal-open'
-      );
+      document.body.classList.add('modal-open');
 
     }
 
@@ -1082,70 +1039,56 @@
     function tutupModalEdit() {
 
       const modal =
-        document.getElementById(
-          'modalEditAdmin'
-        );
+        document.getElementById('modalEditAdmin');
 
       modal.classList.remove('show');
 
-      document.body.classList.remove(
-        'modal-open'
-      );
+      document.body.classList.remove('modal-open');
 
     }
-
 
 
     // ==================================================
     // MODAL RESET PASSWORD
     // ==================================================
 
-    function bukaModalResetPassword(
-      id,
-      nama
-    ) {
+    function bukaModalResetPassword(button) {
+
+      const id =
+        button.dataset.id;
+
+      const nama =
+        button.dataset.nama || 'admin';
+
+
+      document.getElementById(
+        'resetPasswordDescription'
+      ).textContent =
+        'Buat password baru untuk ' + nama + '.';
+
+
+      document.getElementById(
+        'formResetPassword'
+      ).action =
+        '/setting/admin/reset-password/' + id;
+
+
+      document.getElementById(
+        'passwordReset'
+      ).value = '';
+
+
+      document.getElementById(
+        'passwordResetConfirm'
+      ).value = '';
+
 
       const modal =
-        document.getElementById(
-          'modalResetPassword'
-        );
-
-
-      document
-        .getElementById(
-          'resetPasswordDescription'
-        )
-        .textContent =
-        `Buat password baru untuk ${nama}.`;
-
-
-      document
-        .getElementById(
-          'formResetPassword'
-        )
-        .action =
-        `/setting/admin/reset-password/${id}`;
-
-
-      document
-        .getElementById(
-          'passwordReset'
-        )
-        .value = '';
-
-
-      document
-        .getElementById(
-          'passwordResetConfirm'
-        )
-        .value = '';
-
+        document.getElementById('modalResetPassword');
 
       modal.classList.add('show');
 
-      document.body.classList.add(
-        'modal-open'
-      );
+      document.body.classList.add('modal-open');
 
     }
 
@@ -1153,37 +1096,30 @@
     function tutupModalResetPassword() {
 
       const modal =
-        document.getElementById(
-          'modalResetPassword'
-        );
+        document.getElementById('modalResetPassword');
 
       modal.classList.remove('show');
 
-      document.body.classList.remove(
-        'modal-open'
-      );
+      document.body.classList.remove('modal-open');
 
     }
-
 
 
     // ==================================================
     // TOGGLE PASSWORD
     // ==================================================
 
-    function togglePassword(
-      inputId,
-      button
-    ) {
+    function togglePassword(inputId, button) {
 
       const input =
-        document.getElementById(
-          inputId
-        );
+        document.getElementById(inputId);
 
-      if (
-        input.type === 'password'
-      ) {
+      if (!input) {
+        return;
+      }
+
+
+      if (input.type === 'password') {
 
         input.type = 'text';
 
@@ -1199,10 +1135,10 @@
 
       }
 
+
       lucide.createIcons();
 
     }
-
 
 
     // ==================================================
@@ -1210,38 +1146,71 @@
     // ==================================================
 
     document
-      .getElementById(
-        'formTambahAdmin'
-      )
-      .addEventListener(
-        'submit',
-        async function(event) {
+      .getElementById('formTambahAdmin')
+      .addEventListener('submit', async function (event) {
 
-          event.preventDefault();
+        event.preventDefault();
 
 
-          const form = this;
+        const form = this;
 
-          const data =
-            new FormData(form);
-
-
-          const password =
-            data.get('password');
+        const data =
+          new FormData(form);
 
 
-          if (
-            password.length < 6
-          ) {
+        const password =
+          data.get('password');
 
-            Swal.fire({
 
-              icon: 'warning',
+        if (!password || password.length < 6) {
 
-              title: 'Password Terlalu Pendek',
+          Swal.fire({
 
-              text:
-                'Password minimal 6 karakter.',
+            icon: 'warning',
+
+            title: 'Password Terlalu Pendek',
+
+            text: 'Password minimal 6 karakter.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb'
+
+          });
+
+          return;
+
+        }
+
+
+        try {
+
+          const response =
+            await fetch(
+              form.action,
+              {
+                method: 'POST',
+                body: data
+              }
+            );
+
+
+          const result =
+            await response.json();
+
+
+          if (result.success) {
+
+            tutupModalTambah();
+
+
+            await Swal.fire({
+
+              icon: 'success',
+
+              title: 'Berhasil',
+
+              text: result.message,
 
               confirmButtonText: 'OK',
 
@@ -1249,82 +1218,18 @@
 
             });
 
-            return;
 
-          }
+            window.location.reload();
 
-
-          try {
-
-            const response =
-              await fetch(
-                form.action,
-                {
-                  method: 'POST',
-                  body: data
-                }
-              );
-
-
-            const result =
-              await response.json();
-
-
-            if (
-              result.success
-            ) {
-
-              tutupModalTambah();
-
-
-              await Swal.fire({
-
-                icon: 'success',
-
-                title: 'Berhasil',
-
-                text: result.message,
-
-                confirmButtonText: 'OK',
-
-                confirmButtonColor: '#2563eb'
-
-              });
-
-
-              window.location.reload();
-
-            } else {
-
-              Swal.fire({
-
-                icon: 'error',
-
-                title: 'Gagal',
-
-                text: result.message,
-
-                confirmButtonText: 'OK',
-
-                confirmButtonColor: '#2563eb'
-
-              });
-
-            }
-
-
-          } catch (error) {
-
-            console.error(error);
+          } else {
 
             Swal.fire({
 
               icon: 'error',
 
-              title: 'Terjadi Kesalahan',
+              title: 'Gagal',
 
-              text:
-                'Tidak dapat terhubung ke server.',
+              text: result.message,
 
               confirmButtonText: 'OK',
 
@@ -1334,9 +1239,28 @@
 
           }
 
-        }
-      );
 
+        } catch (error) {
+
+          console.error(error);
+
+          Swal.fire({
+
+            icon: 'error',
+
+            title: 'Terjadi Kesalahan',
+
+            text: 'Tidak dapat terhubung ke server.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb'
+
+          });
+
+        }
+
+      });
 
 
     // ==================================================
@@ -1344,93 +1268,65 @@
     // ==================================================
 
     document
-      .getElementById(
-        'formEditAdmin'
-      )
-      .addEventListener(
-        'submit',
-        async function(event) {
+      .getElementById('formEditAdmin')
+      .addEventListener('submit', async function (event) {
 
-          event.preventDefault();
+        event.preventDefault();
 
 
-          const form = this;
+        const form = this;
 
-          const data =
-            new FormData(form);
-
-
-          try {
-
-            const response =
-              await fetch(
-                form.action,
-                {
-                  method: 'POST',
-                  body: data
-                }
-              );
+        const data =
+          new FormData(form);
 
 
-            const result =
-              await response.json();
+        try {
+
+          const response =
+            await fetch(
+              form.action,
+              {
+                method: 'POST',
+                body: data
+              }
+            );
 
 
-            if (
-              result.success
-            ) {
-
-              tutupModalEdit();
+          const result =
+            await response.json();
 
 
-              await Swal.fire({
+          if (result.success) {
 
-                icon: 'success',
-
-                title: 'Berhasil',
-
-                text: result.message,
-
-                confirmButtonText: 'OK',
-
-                confirmButtonColor: '#2563eb'
-
-              });
+            tutupModalEdit();
 
 
-              window.location.reload();
+            await Swal.fire({
 
-            } else {
+              icon: 'success',
 
-              Swal.fire({
+              title: 'Berhasil',
 
-                icon: 'error',
+              text: result.message,
 
-                title: 'Gagal',
+              confirmButtonText: 'OK',
 
-                text: result.message,
+              confirmButtonColor: '#2563eb'
 
-                confirmButtonText: 'OK',
-
-                confirmButtonColor: '#2563eb'
-
-              });
-
-            }
+            });
 
 
-          } catch (error) {
+            window.location.reload();
 
-            console.error(error);
+          } else {
 
             Swal.fire({
 
               icon: 'error',
 
-              title: 'Terjadi Kesalahan',
+              title: 'Gagal',
 
-              text:
-                'Tidak dapat terhubung ke server.',
+              text: result.message,
 
               confirmButtonText: 'OK',
 
@@ -1440,9 +1336,28 @@
 
           }
 
-        }
-      );
 
+        } catch (error) {
+
+          console.error(error);
+
+          Swal.fire({
+
+            icon: 'error',
+
+            title: 'Terjadi Kesalahan',
+
+            text: 'Tidak dapat terhubung ke server.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb'
+
+          });
+
+        }
+
+      });
 
 
     // ==================================================
@@ -1450,47 +1365,96 @@
     // ==================================================
 
     document
-      .getElementById(
-        'formResetPassword'
-      )
-      .addEventListener(
-        'submit',
-        async function(event) {
+      .getElementById('formResetPassword')
+      .addEventListener('submit', async function (event) {
 
-          event.preventDefault();
+        event.preventDefault();
 
 
-          const form = this;
+        const form = this;
 
-          const data =
-            new FormData(form);
+        const data =
+          new FormData(form);
 
 
-          const passwordBaru =
-            data.get(
-              'password_baru'
+        const passwordBaru =
+          data.get('password_baru');
+
+
+        const konfirmasi =
+          data.get('konfirmasi_password');
+
+
+        if (!passwordBaru || passwordBaru.length < 6) {
+
+          Swal.fire({
+
+            icon: 'warning',
+
+            title: 'Password Terlalu Pendek',
+
+            text: 'Password minimal 6 karakter.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb'
+
+          });
+
+          return;
+
+        }
+
+
+        if (passwordBaru !== konfirmasi) {
+
+          Swal.fire({
+
+            icon: 'warning',
+
+            title: 'Password Tidak Sama',
+
+            text: 'Konfirmasi password tidak sesuai.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb'
+
+          });
+
+          return;
+
+        }
+
+
+        try {
+
+          const response =
+            await fetch(
+              form.action,
+              {
+                method: 'POST',
+                body: data
+              }
             );
 
 
-          const konfirmasi =
-            data.get(
-              'konfirmasi_password'
-            );
+          const result =
+            await response.json();
 
 
-          if (
-            passwordBaru.length < 6
-          ) {
+          if (result.success) {
 
-            Swal.fire({
+            tutupModalResetPassword();
 
-              icon: 'warning',
 
-              title:
-                'Password Terlalu Pendek',
+            await Swal.fire({
 
-              text:
-                'Password minimal 6 karakter.',
+              icon: 'success',
+
+              title: 'Berhasil',
+
+              text: result.message,
 
               confirmButtonText: 'OK',
 
@@ -1498,108 +1462,18 @@
 
             });
 
-            return;
 
-          }
+            window.location.reload();
 
-
-          if (
-            passwordBaru !==
-            konfirmasi
-          ) {
-
-            Swal.fire({
-
-              icon: 'warning',
-
-              title:
-                'Password Tidak Sama',
-
-              text:
-                'Konfirmasi password tidak sesuai.',
-
-              confirmButtonText: 'OK',
-
-              confirmButtonColor: '#2563eb'
-
-            });
-
-            return;
-
-          }
-
-
-          try {
-
-            const response =
-              await fetch(
-                form.action,
-                {
-                  method: 'POST',
-                  body: data
-                }
-              );
-
-
-            const result =
-              await response.json();
-
-
-            if (
-              result.success
-            ) {
-
-              tutupModalResetPassword();
-
-
-              await Swal.fire({
-
-                icon: 'success',
-
-                title: 'Berhasil',
-
-                text: result.message,
-
-                confirmButtonText: 'OK',
-
-                confirmButtonColor: '#2563eb'
-
-              });
-
-
-              window.location.reload();
-
-            } else {
-
-              Swal.fire({
-
-                icon: 'error',
-
-                title: 'Gagal',
-
-                text: result.message,
-
-                confirmButtonText: 'OK',
-
-                confirmButtonColor: '#2563eb'
-
-              });
-
-            }
-
-
-          } catch (error) {
-
-            console.error(error);
+          } else {
 
             Swal.fire({
 
               icon: 'error',
 
-              title: 'Terjadi Kesalahan',
+              title: 'Gagal',
 
-              text:
-                'Tidak dapat terhubung ke server.',
+              text: result.message,
 
               confirmButtonText: 'OK',
 
@@ -1609,19 +1483,41 @@
 
           }
 
-        }
-      );
 
+        } catch (error) {
+
+          console.error(error);
+
+          Swal.fire({
+
+            icon: 'error',
+
+            title: 'Terjadi Kesalahan',
+
+            text: 'Tidak dapat terhubung ke server.',
+
+            confirmButtonText: 'OK',
+
+            confirmButtonColor: '#2563eb'
+
+          });
+
+        }
+
+      });
 
 
     // ==================================================
     // HAPUS ADMIN
     // ==================================================
 
-    async function hapusAdmin(
-      id,
-      nama
-    ) {
+    async function hapusAdmin(button) {
+
+      const id =
+        button.dataset.id;
+
+      const nama =
+        button.dataset.nama || 'admin';
 
 
       const konfirmasi =
@@ -1629,33 +1525,28 @@
 
           icon: 'warning',
 
-          title:
-            'Hapus Admin?',
+          title: 'Hapus Admin?',
 
           html:
-            `Apakah kamu yakin ingin menghapus akun admin <strong>${nama}</strong>?<br><br>` +
-            `<small>Tindakan ini tidak dapat dibatalkan.</small>`,
+            'Apakah kamu yakin ingin menghapus akun admin ' +
+            '<strong>' + nama + '</strong>?' +
+            '<br><br>' +
+            '<small>Tindakan ini tidak dapat dibatalkan.</small>',
 
           showCancelButton: true,
 
-          confirmButtonText:
-            'Ya, Hapus',
+          confirmButtonText: 'Ya, Hapus',
 
-          cancelButtonText:
-            'Batal',
+          cancelButtonText: 'Batal',
 
-          confirmButtonColor:
-            '#dc2626',
+          confirmButtonColor: '#dc2626',
 
-          cancelButtonColor:
-            '#6b7280'
+          cancelButtonColor: '#6b7280'
 
         });
 
 
-      if (
-        !konfirmasi.isConfirmed
-      ) {
+      if (!konfirmasi.isConfirmed) {
 
         return;
 
@@ -1666,7 +1557,7 @@
 
         const response =
           await fetch(
-            `/setting/admin/hapus/${id}`,
+            '/setting/admin/hapus/' + id,
             {
               method: 'POST'
             }
@@ -1677,9 +1568,7 @@
           await response.json();
 
 
-        if (
-          result.success
-        ) {
+        if (result.success) {
 
           await Swal.fire({
 
@@ -1689,11 +1578,9 @@
 
             text: result.message,
 
-            confirmButtonText:
-              'OK',
+            confirmButtonText: 'OK',
 
-            confirmButtonColor:
-              '#2563eb'
+            confirmButtonColor: '#2563eb'
 
           });
 
@@ -1710,11 +1597,9 @@
 
             text: result.message,
 
-            confirmButtonText:
-              'OK',
+            confirmButtonText: 'OK',
 
-            confirmButtonColor:
-              '#2563eb'
+            confirmButtonColor: '#2563eb'
 
           });
 
@@ -1729,17 +1614,13 @@
 
           icon: 'error',
 
-          title:
-            'Terjadi Kesalahan',
+          title: 'Terjadi Kesalahan',
 
-          text:
-            'Tidak dapat terhubung ke server.',
+          text: 'Tidak dapat terhubung ke server.',
 
-          confirmButtonText:
-            'OK',
+          confirmButtonText: 'OK',
 
-          confirmButtonColor:
-            '#2563eb'
+          confirmButtonColor: '#2563eb'
 
         });
 
@@ -1748,33 +1629,24 @@
     }
 
 
-
     // ==================================================
     // ESC UNTUK MENUTUP MODAL
     // ==================================================
 
-    document.addEventListener(
-      'keydown',
-      function(event) {
+    document.addEventListener('keydown', function (event) {
 
-        if (
-          event.key !== 'Escape'
-        ) {
-
-          return;
-
-        }
-
-
-        tutupModalTambah();
-
-        tutupModalEdit();
-
-        tutupModalResetPassword();
-
+      if (event.key !== 'Escape') {
+        return;
       }
-    );
 
+
+      tutupModalTambah();
+
+      tutupModalEdit();
+
+      tutupModalResetPassword();
+
+    });
 
   </script>
 

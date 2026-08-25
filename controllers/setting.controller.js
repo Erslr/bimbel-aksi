@@ -401,15 +401,14 @@ exports.manajemenAdmin = (req, res) => {
 
 
   const query = `
-    SELECT
-      id_admin,
-      username,
-      nama_admin,
-      nomor_wa,
-      created_at
-    FROM admin
-    ORDER BY id_admin ASC
-  `;
+  SELECT
+    id_admin,
+    username,
+    nama_admin,
+    nomor_wa
+  FROM admin
+  ORDER BY id_admin ASC
+`;
 
 
   db.query(
