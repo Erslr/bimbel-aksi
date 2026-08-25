@@ -1,7 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="id">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -27,6 +29,7 @@
   >
 
   <script src="https://unpkg.com/lucide@latest"></script>
+
 </head>
 
 <body>
@@ -38,6 +41,7 @@
   <%- include('../partials/sidebar', {
     activePage: 'setting'
   }) %>
+
 
 
   <!-- ==================================================
@@ -63,11 +67,13 @@
     </div>
 
 
+
     <!-- ==================================================
          SETTING GRID
     ================================================== -->
 
     <div class="setting-grid">
+
 
 
       <!-- ==================================================
@@ -109,48 +115,56 @@
       </div>
 
 
+
       <!-- ==================================================
            MANAJEMEN ADMIN
+           HANYA UNTUK ADMIN UTAMA
       ================================================== -->
 
-      <div class="setting-card">
+      <% if (user && user.role === 'utama') { %>
 
-        <div class="setting-card-icon">
-          <i data-lucide="users-round"></i>
+        <div class="setting-card">
+
+          <div class="setting-card-icon">
+            <i data-lucide="users-round"></i>
+          </div>
+
+          <div class="setting-card-content">
+
+            <h2>
+              Manajemen Admin
+            </h2>
+
+            <p>
+              Kelola akun admin yang memiliki akses
+              untuk menggunakan sistem Bimbel AKSI.
+            </p>
+
+            <a
+              href="/setting/admin"
+              class="setting-card-button"
+            >
+
+              <span>
+                Kelola Admin
+              </span>
+
+              <i data-lucide="arrow-right"></i>
+
+            </a>
+
+          </div>
+
         </div>
 
-        <div class="setting-card-content">
+      <% } %>
 
-          <h2>
-            Manajemen Admin
-          </h2>
-
-          <p>
-            Kelola akun admin yang memiliki akses
-            untuk menggunakan sistem Bimbel AKSI.
-          </p>
-
-          <a
-            href="/setting/admin"
-            class="setting-card-button"
-          >
-
-            <span>
-              Kelola Admin
-            </span>
-
-            <i data-lucide="arrow-right"></i>
-
-          </a>
-
-        </div>
-
-      </div>
 
 
     </div>
 
   </div>
+
 
 
   <!-- ==================================================

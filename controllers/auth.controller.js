@@ -30,7 +30,8 @@ exports.login = (req, res) => {
     username,
     password,
     nama_admin,
-    nomor_wa
+    nomor_wa,
+    role
   FROM admin
   WHERE username = ?
 `;
@@ -65,11 +66,12 @@ exports.login = (req, res) => {
     }
 
     req.session.user = {
-      id: admin.id_admin,
-      username: admin.username,
-      nama_admin: admin.nama_admin,
-      nomor_wa: admin.nomor_wa || ''
-    };
+    id: admin.id_admin,
+    username: admin.username,
+    nama_admin: admin.nama_admin,
+    nomor_wa: admin.nomor_wa || '',
+    role: admin.role
+  };
 
     res.redirect("/dashboard");
 

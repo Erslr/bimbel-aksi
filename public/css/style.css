@@ -3956,7 +3956,7 @@ line-height:20px; /* tambahkan ini */
 ========================================================= */
 
 .setting-admin-table thead {
-    background: #f8fafc;
+    background: #2d4357;
 }
 
 .setting-admin-table th {
@@ -3967,9 +3967,9 @@ line-height:20px; /* tambahkan ini */
     font-size: 11px;
     font-weight: 700;
 
-    color: #334155;
+    color: #f1f5f9;
 
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #40566b;
 
     white-space: nowrap;
 }
@@ -3998,7 +3998,6 @@ line-height:20px; /* tambahkan ini */
 .setting-admin-table th:nth-child(6) {
     width: 145px;
 }
-
 
 /* =========================================================
    TABLE BODY

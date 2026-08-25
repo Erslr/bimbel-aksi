@@ -9,7 +9,8 @@ const db = require('../config/database');
 exports.index = (req, res) => {
 
   res.render('setting/index', {
-    activePage: 'setting'
+    activePage: 'setting',
+    user: req.session.user
   });
 
 };
@@ -396,6 +397,14 @@ exports.updatePassword = async (req, res) => {
 
 exports.manajemenAdmin = (req, res) => {
 
+  if (req.session.user.role !== 'utama') {
+
+    return res.status(403).send(
+      'Akses ditolak. Hanya Admin Utama yang dapat mengakses Manajemen Admin.'
+    );
+
+  }
+
   const idAdminLogin =
     req.session.user.id;
 
@@ -405,7 +414,8 @@ exports.manajemenAdmin = (req, res) => {
     id_admin,
     username,
     nama_admin,
-    nomor_wa
+    nomor_wa,
+    role
   FROM admin
   ORDER BY id_admin ASC
 `;
@@ -447,6 +457,12 @@ exports.manajemenAdmin = (req, res) => {
 
 exports.tambahAdmin = async (req, res) => {
 
+if (req.session.user.role !== 'utama') {
+  return res.status(403).json({
+    success: false,
+    message: 'Hanya Admin Utama yang dapat menambahkan admin.'
+  });
+}
   const {
     nama_admin,
     username,
@@ -619,6 +635,12 @@ exports.tambahAdmin = async (req, res) => {
 
 exports.editAdmin = (req, res) => {
 
+  if (req.session.user.role !== 'utama') {
+    return res.status(403).json({
+      success: false,
+      message: 'Hanya Admin Utama yang dapat mengedit admin lain.'
+    });
+  }
   const idAdmin =
     req.params.id;
 
@@ -714,6 +736,13 @@ exports.editAdmin = (req, res) => {
 
 exports.hapusAdmin = (req, res) => {
 
+  if (req.session.user.role !== 'utama') {
+    return res.status(403).json({
+      success: false,
+      message: 'Hanya Admin Utama yang dapat menghapus admin.'
+    });
+  }
+
   const idAdmin =
     Number(req.params.id);
 
@@ -792,6 +821,13 @@ exports.hapusAdmin = (req, res) => {
 // ======================================================
 
 exports.resetPasswordAdmin = async (req, res) => {
+
+  if (req.session.user.role !== 'utama') {
+    return res.status(403).json({
+      success: false,
+      message: 'Hanya Admin Utama yang dapat mereset password admin lain.'
+    });
+  }
 
   const idAdmin =
     Number(req.params.id);
