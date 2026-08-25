@@ -3704,88 +3704,171 @@ line-height:20px; /* tambahkan ini */
 }
 
 /* =========================================================
-   MANAJEMEN ADMIN
+   MANAJEMEN ADMIN - VERSI BARU
 ========================================================= */
 
-.admin-management {
-    width: 100%;
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.page-header p {
+    margin: 7px 0 0;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
 }
 
 
 /* =========================================================
-   HEADER MANAJEMEN ADMIN
+   TOMBOL KEMBALI
 ========================================================= */
 
-.admin-management-header {
+.setting-back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 9px 14px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+
+    background: #ffffff;
+    color: #475569;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.setting-back-button:hover {
+    background: #f8fafc;
+    color: #2563eb;
+    border-color: #bfdbfe;
+    transform: translateY(-1px);
+}
+
+.setting-back-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* =========================================================
+   ACTION BAR
+========================================================= */
+
+.admin-action-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     gap: 20px;
-    margin-bottom: 25px;
+
+    margin-bottom: 18px;
+    padding: 17px 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+
+    box-shadow:
+        0 2px 8px rgba(15, 23, 42, 0.04);
 }
 
-.admin-management-title {
+
+/* =========================================================
+   ACTION INFO
+========================================================= */
+
+.admin-action-info {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 13px;
 }
 
-.admin-management-title-icon {
-    width: 48px;
-    height: 48px;
+.admin-action-icon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    border-radius: 12px;
+    border-radius: 10px;
 
     background: #eff6ff;
     color: #2563eb;
 }
 
-.admin-management-title-icon svg {
-    width: 24px;
-    height: 24px;
+.admin-action-icon svg {
+    width: 21px;
+    height: 21px;
 }
 
-.admin-management-title h2 {
+.admin-action-info h2 {
     margin: 0;
 
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 600;
 
     color: #1e293b;
 }
 
-.admin-management-title p {
-    margin: 4px 0 0;
+.admin-action-info p {
+    margin: 3px 0 0;
 
-    font-size: 13px;
+    font-size: 11px;
     color: #64748b;
 }
 
 
 /* =========================================================
-   BUTTON TAMBAH ADMIN
+   BUTTON PRIMARY
 ========================================================= */
 
-.btn-tambah-admin {
+.setting-primary-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 7px;
 
-    padding: 11px 17px;
+    padding: 9px 14px;
 
     border: none;
-    border-radius: 9px;
+    border-radius: 8px;
 
     background: #2563eb;
-    color: white;
+    color: #ffffff;
 
     font-family: inherit;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
 
     cursor: pointer;
@@ -3796,36 +3879,37 @@ line-height:20px; /* tambahkan ini */
         box-shadow 0.2s ease;
 }
 
-.btn-tambah-admin:hover {
+.setting-primary-button:hover {
     background: #1d4ed8;
 
     transform: translateY(-1px);
 
     box-shadow:
-        0 5px 12px rgba(37, 99, 235, 0.20);
+        0 5px 12px rgba(37, 99, 235, 0.18);
 }
 
-.btn-tambah-admin svg {
-    width: 17px;
-    height: 17px;
+.setting-primary-button svg {
+    width: 16px;
+    height: 16px;
 }
 
 
 /* =========================================================
-   CARD TABEL ADMIN
+   TABLE CARD
 ========================================================= */
 
-.admin-table-card {
+.setting-table-card {
+    width: 100%;
+
     background: #ffffff;
 
     border: 1px solid #e2e8f0;
-
-    border-radius: 14px;
-
-    box-shadow:
-        0 3px 12px rgba(15, 23, 42, 0.05);
+    border-radius: 12px;
 
     overflow: hidden;
+
+    box-shadow:
+        0 2px 10px rgba(15, 23, 42, 0.04);
 }
 
 
@@ -3833,47 +3917,54 @@ line-height:20px; /* tambahkan ini */
    TABLE WRAPPER
 ========================================================= */
 
-.admin-table-wrapper {
+.setting-table-wrapper {
     width: 100%;
     overflow-x: auto;
 }
 
-.admin-table-wrapper::-webkit-scrollbar {
+.setting-table-wrapper::-webkit-scrollbar {
     height: 7px;
 }
 
-.admin-table-wrapper::-webkit-scrollbar-track {
-    background: #f1f5f9;
+.setting-table-wrapper::-webkit-scrollbar-track {
+    background: #f8fafc;
 }
 
-.admin-table-wrapper::-webkit-scrollbar-thumb {
+.setting-table-wrapper::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 10px;
 }
 
 
 /* =========================================================
-   TABLE
+   TABLE ADMIN
 ========================================================= */
 
-.admin-table {
+.setting-admin-table {
     width: 100%;
+
+    min-width: 780px;
 
     border-collapse: collapse;
 
-    min-width: 750px;
+    table-layout: fixed;
 }
 
-.admin-table thead {
+
+/* =========================================================
+   TABLE HEADER
+========================================================= */
+
+.setting-admin-table thead {
     background: #f8fafc;
 }
 
-.admin-table th {
-    padding: 15px 18px;
+.setting-admin-table th {
+    padding: 12px 15px;
 
     text-align: left;
 
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
 
     color: #475569;
@@ -3883,10 +3974,40 @@ line-height:20px; /* tambahkan ini */
     white-space: nowrap;
 }
 
-.admin-table td {
-    padding: 15px 18px;
+.setting-admin-table th:nth-child(1) {
+    width: 45px;
+    text-align: center;
+}
 
-    font-size: 13px;
+.setting-admin-table th:nth-child(2) {
+    width: 21%;
+}
+
+.setting-admin-table th:nth-child(3) {
+    width: 17%;
+}
+
+.setting-admin-table th:nth-child(4) {
+    width: 20%;
+}
+
+.setting-admin-table th:nth-child(5) {
+    width: 15%;
+}
+
+.setting-admin-table th:nth-child(6) {
+    width: 145px;
+}
+
+
+/* =========================================================
+   TABLE BODY
+========================================================= */
+
+.setting-admin-table td {
+    padding: 13px 15px;
+
+    font-size: 12px;
 
     color: #334155;
 
@@ -3895,15 +4016,15 @@ line-height:20px; /* tambahkan ini */
     vertical-align: middle;
 }
 
-.admin-table tbody tr {
+.setting-admin-table tbody tr {
     transition: background 0.15s ease;
 }
 
-.admin-table tbody tr:hover {
+.setting-admin-table tbody tr:hover {
     background: #f8fafc;
 }
 
-.admin-table tbody tr:last-child td {
+.setting-admin-table tbody tr:last-child td {
     border-bottom: none;
 }
 
@@ -3912,27 +4033,26 @@ line-height:20px; /* tambahkan ini */
    NOMOR
 ========================================================= */
 
-.admin-number {
-    width: 55px;
-
+.setting-admin-table td:first-child {
     text-align: center;
     color: #64748b;
+    font-size: 12px;
 }
 
 
 /* =========================================================
-   INFORMASI ADMIN
+   NAMA ADMIN
 ========================================================= */
 
-.admin-name {
+.admin-name-cell {
     display: flex;
     align-items: center;
-    gap: 11px;
+    gap: 10px;
 }
 
 .admin-avatar {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
 
     flex-shrink: 0;
 
@@ -3945,26 +4065,19 @@ line-height:20px; /* tambahkan ini */
     background: #eff6ff;
     color: #2563eb;
 
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
 }
 
-.admin-name-info {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-}
+.admin-name-cell strong {
+    display: block;
 
-.admin-name-info strong {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
 
     color: #1e293b;
-}
 
-.admin-name-info span {
-    font-size: 11px;
-    color: #94a3b8;
+    line-height: 1.4;
 }
 
 
@@ -3973,17 +4086,21 @@ line-height:20px; /* tambahkan ini */
 ========================================================= */
 
 .admin-username {
-    font-family: monospace;
+    display: inline-flex;
+    align-items: center;
 
-    color: #475569;
-
-    background: #f8fafc;
-
-    padding: 5px 9px;
+    padding: 5px 8px;
 
     border-radius: 6px;
 
-    font-size: 12px;
+    background: #f8fafc;
+
+    color: #475569;
+
+    font-family: monospace;
+    font-size: 11px;
+
+    border: 1px solid #f1f5f9;
 }
 
 
@@ -3991,25 +4108,26 @@ line-height:20px; /* tambahkan ini */
    NOMOR WHATSAPP
 ========================================================= */
 
-.admin-whatsapp {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-
+.setting-admin-table td:nth-child(4) {
     color: #475569;
+
+    font-size: 12px;
 }
 
-.admin-whatsapp svg {
-    width: 15px;
-    height: 15px;
+.admin-muted {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-style: italic;
 }
 
 
 /* =========================================================
-   ADMIN YANG SEDANG LOGIN
+   STATUS
 ========================================================= */
 
-.admin-current {
+.admin-status {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -4018,35 +4136,44 @@ line-height:20px; /* tambahkan ini */
 
     border-radius: 20px;
 
-    background: #ecfdf5;
+    background: #f0fdf4;
 
-    color: #059669;
+    color: #16a34a;
 
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
+
+    white-space: nowrap;
 }
 
-.admin-current-dot {
+.admin-status.active {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.status-dot {
     width: 6px;
     height: 6px;
 
+    flex-shrink: 0;
+
     border-radius: 50%;
 
-    background: #10b981;
+    background: #22c55e;
 }
 
 
 /* =========================================================
-   ACTION BUTTON
+   ACTION BUTTONS
 ========================================================= */
 
-.admin-actions {
+.admin-action-buttons {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 6px;
 }
 
-.admin-action-btn {
+.admin-icon-button {
     width: 34px;
     height: 34px;
 
@@ -4055,58 +4182,81 @@ line-height:20px; /* tambahkan ini */
     justify-content: center;
 
     border: none;
-    border-radius: 8px;
+    border-radius: 7px;
 
     cursor: pointer;
 
     transition:
         background 0.2s ease,
+        color 0.2s ease,
         transform 0.2s ease;
 }
 
-.admin-action-btn:hover {
-    transform: translateY(-1px);
-}
-
-.admin-action-btn svg {
+.admin-icon-button svg {
     width: 16px;
     height: 16px;
 }
 
+.admin-icon-button:hover {
+    transform: translateY(-1px);
+}
 
-/* EDIT */
 
-.admin-action-edit {
+/* =========================================================
+   EDIT
+========================================================= */
+
+.admin-icon-button.edit {
     background: #eff6ff;
     color: #2563eb;
 }
 
-.admin-action-edit:hover {
+.admin-icon-button.edit:hover {
     background: #dbeafe;
 }
 
 
-/* RESET PASSWORD */
+/* =========================================================
+   RESET PASSWORD
+========================================================= */
 
-.admin-action-reset {
+.admin-icon-button.password {
     background: #fff7ed;
     color: #ea580c;
 }
 
-.admin-action-reset:hover {
+.admin-icon-button.password:hover {
     background: #ffedd5;
 }
 
 
-/* HAPUS */
+/* =========================================================
+   DELETE
+========================================================= */
 
-.admin-action-delete {
+.admin-icon-button.delete {
     background: #fef2f2;
     color: #dc2626;
 }
 
-.admin-action-delete:hover {
+.admin-icon-button.delete:hover {
     background: #fee2e2;
+}
+
+
+/* =========================================================
+   DISABLED
+========================================================= */
+
+.admin-icon-button.disabled {
+    background: #f8fafc;
+    color: #cbd5e1;
+
+    cursor: not-allowed;
+}
+
+.admin-icon-button.disabled:hover {
+    transform: none;
 }
 
 
@@ -4114,56 +4264,52 @@ line-height:20px; /* tambahkan ini */
    EMPTY STATE
 ========================================================= */
 
-.admin-empty {
-    padding: 55px 20px;
+.setting-empty-state {
+    padding: 65px 20px !important;
 
-    text-align: center;
+    text-align: center !important;
 
     color: #64748b;
 }
 
-.admin-empty-icon {
-    width: 55px;
-    height: 55px;
-
-    margin: 0 auto 15px;
-
+.setting-empty-state > div {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+}
 
-    border-radius: 50%;
+.setting-empty-state svg {
+    width: 42px;
+    height: 42px;
 
-    background: #f1f5f9;
+    margin-bottom: 12px;
+
     color: #94a3b8;
 }
 
-.admin-empty-icon svg {
-    width: 25px;
-    height: 25px;
-}
+.setting-empty-state h3 {
+    margin: 0 0 5px;
 
-.admin-empty h3 {
-    margin: 0 0 6px;
-
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
 
     color: #475569;
 }
 
-.admin-empty p {
+.setting-empty-state p {
     margin: 0;
 
-    font-size: 12px;
+    font-size: 11px;
+
+    color: #94a3b8;
 }
 
 
 /* =========================================================
-   MODAL ADMIN
+   MODAL
 ========================================================= */
 
-.admin-modal-overlay {
+.setting-modal {
     position: fixed;
 
     inset: 0;
@@ -4175,32 +4321,56 @@ line-height:20px; /* tambahkan ini */
 
     padding: 20px;
 
-    background: rgba(15, 23, 42, 0.45);
-
     z-index: 9999;
 }
 
-.admin-modal-overlay.show {
+.setting-modal.show {
     display: flex;
 }
 
-.admin-modal {
-    width: 100%;
-    max-width: 500px;
 
-    background: white;
+/* =========================================================
+   MODAL OVERLAY
+========================================================= */
 
-    border-radius: 15px;
+.setting-modal-overlay {
+    position: absolute;
 
-    box-shadow:
-        0 20px 50px rgba(15, 23, 42, 0.20);
+    inset: 0;
 
-    overflow: hidden;
+    background: rgba(15, 23, 42, 0.48);
 
-    animation: adminModalShow 0.2s ease;
+    backdrop-filter: blur(2px);
 }
 
-@keyframes adminModalShow {
+
+/* =========================================================
+   MODAL BOX
+========================================================= */
+
+.setting-modal-box {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+    max-width: 480px;
+
+    max-height: calc(100vh - 40px);
+
+    overflow-y: auto;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 25px 60px rgba(15, 23, 42, 0.22);
+
+    animation: settingModalShow 0.2s ease;
+}
+
+@keyframes settingModalShow {
 
     from {
         opacity: 0;
@@ -4219,28 +4389,77 @@ line-height:20px; /* tambahkan ini */
    MODAL HEADER
 ========================================================= */
 
-.admin-modal-header {
+.setting-modal-header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
+
+    gap: 15px;
 
     padding: 20px 22px;
 
     border-bottom: 1px solid #e2e8f0;
 }
 
-.admin-modal-header h3 {
+.setting-modal-header > div:first-child {
+    position: relative;
+
+    padding-left: 50px;
+}
+
+.setting-modal-icon {
+    position: absolute;
+
+    left: 0;
+    top: 0;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.setting-modal-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.setting-modal-header h2 {
     margin: 0;
 
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
 
     color: #1e293b;
 }
 
-.admin-modal-close {
-    width: 32px;
-    height: 32px;
+.setting-modal-header p {
+    margin: 4px 0 0;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    color: #64748b;
+}
+
+
+/* =========================================================
+   MODAL CLOSE
+========================================================= */
+
+.setting-modal-close {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
 
     display: flex;
     align-items: center;
@@ -4249,60 +4468,64 @@ line-height:20px; /* tambahkan ini */
     border: none;
     border-radius: 7px;
 
-    background: #f1f5f9;
+    background: #f8fafc;
     color: #64748b;
 
     cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
 }
 
-.admin-modal-close:hover {
-    background: #e2e8f0;
+.setting-modal-close:hover {
+    background: #f1f5f9;
+    color: #1e293b;
 }
 
-.admin-modal-close svg {
-    width: 17px;
-    height: 17px;
-}
-
-
-/* =========================================================
-   MODAL BODY
-========================================================= */
-
-.admin-modal-body {
-    padding: 22px;
+.setting-modal-close svg {
+    width: 16px;
+    height: 16px;
 }
 
 
 /* =========================================================
-   FORM ADMIN
+   FORM GROUP
 ========================================================= */
 
-.admin-form-group {
-    margin-bottom: 17px;
+.setting-modal-box form {
+    padding: 20px 22px;
 }
 
-.admin-form-group:last-child {
+.setting-form-group {
+    margin-bottom: 16px;
+}
+
+.setting-form-group:last-of-type {
     margin-bottom: 0;
 }
 
-.admin-form-group label {
+.setting-form-group label {
     display: block;
 
-    margin-bottom: 7px;
+    margin-bottom: 6px;
 
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 11px;
+    font-weight: 600;
 
     color: #475569;
 }
 
-.admin-form-group input {
+.setting-form-group label span {
+    color: #dc2626;
+}
+
+.setting-form-group input {
     width: 100%;
 
     box-sizing: border-box;
 
-    padding: 10px 12px;
+    padding: 10px 11px;
 
     border: 1px solid #cbd5e1;
 
@@ -4310,21 +4533,89 @@ line-height:20px; /* tambahkan ini */
 
     outline: none;
 
-    font-family: inherit;
-    font-size: 13px;
+    background: #ffffff;
 
     color: #1e293b;
+
+    font-family: inherit;
+    font-size: 12px;
 
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease;
 }
 
-.admin-form-group input:focus {
+.setting-form-group input::placeholder {
+    color: #94a3b8;
+}
+
+.setting-form-group input:focus {
     border-color: #2563eb;
 
     box-shadow:
         0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.setting-form-group small {
+    display: block;
+
+    margin-top: 5px;
+
+    font-size: 10px;
+
+    color: #94a3b8;
+}
+
+
+/* =========================================================
+   PASSWORD INPUT
+========================================================= */
+
+.setting-password-wrapper {
+    position: relative;
+}
+
+.setting-password-wrapper input {
+    padding-right: 42px;
+}
+
+.setting-password-wrapper button {
+    position: absolute;
+
+    top: 50%;
+    right: 8px;
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transform: translateY(-50%);
+
+    border: none;
+    border-radius: 6px;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.setting-password-wrapper button:hover {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.setting-password-wrapper button svg {
+    width: 15px;
+    height: 15px;
 }
 
 
@@ -4332,47 +4623,76 @@ line-height:20px; /* tambahkan ini */
    MODAL FOOTER
 ========================================================= */
 
-.admin-modal-footer {
+.setting-modal-footer {
     display: flex;
+
+    align-items: center;
     justify-content: flex-end;
 
-    gap: 9px;
+    gap: 8px;
 
-    padding: 17px 22px;
+    margin-top: 20px;
+
+    padding-top: 16px;
 
     border-top: 1px solid #e2e8f0;
 }
 
-.admin-btn-cancel,
-.admin-btn-save {
-    padding: 9px 15px;
 
-    border: none;
+/* =========================================================
+   SECONDARY BUTTON
+========================================================= */
+
+.setting-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 9px 14px;
+
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
 
+    background: #ffffff;
+    color: #475569;
+
     font-family: inherit;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
 
     cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 
-.admin-btn-cancel {
-    background: #f1f5f9;
-    color: #475569;
+.setting-secondary-button:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
 }
 
-.admin-btn-cancel:hover {
-    background: #e2e8f0;
+
+/* =========================================================
+   MODAL PRIMARY BUTTON
+========================================================= */
+
+.setting-modal-footer .setting-primary-button {
+    padding: 9px 13px;
 }
 
-.admin-btn-save {
-    background: #2563eb;
-    color: white;
+.setting-modal-footer .setting-primary-button svg {
+    width: 15px;
+    height: 15px;
 }
 
-.admin-btn-save:hover {
-    background: #1d4ed8;
+
+/* =========================================================
+   BODY SAAT MODAL TERBUKA
+========================================================= */
+
+body.modal-open {
+    overflow: hidden;
 }
 
 
@@ -4380,53 +4700,92 @@ line-height:20px; /* tambahkan ini */
    RESPONSIVE
 ========================================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 
-    .admin-management-header {
+    .page-header {
+        flex-direction: column;
+    }
+
+    .setting-back-button {
+        align-self: flex-start;
+    }
+
+    .admin-action-bar {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    .btn-tambah-admin {
-        width: 100%;
-    }
-
-    .admin-table-card {
-        border-radius: 10px;
-    }
-
-    .admin-table th,
-    .admin-table td {
-        padding: 12px 13px;
-    }
-
-    .admin-modal {
-        max-width: 100%;
+    .setting-primary-button {
+        align-self: flex-start;
     }
 
 }
 
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
 
-    .admin-management-title h2 {
-        font-size: 17px;
+    .page-header h1 {
+        font-size: 21px;
     }
 
-    .admin-management-title p {
-        font-size: 11px;
+    .page-header p {
+        font-size: 12px;
     }
 
-    .admin-management-title-icon {
-        width: 42px;
-        height: 42px;
+    .admin-action-bar {
+        padding: 15px;
     }
 
-    .admin-modal-header,
-    .admin-modal-body,
-    .admin-modal-footer {
-        padding-left: 17px;
-        padding-right: 17px;
+    .admin-action-info {
+        align-items: flex-start;
+    }
+
+    .admin-action-icon {
+        width: 38px;
+        height: 38px;
+    }
+
+    .admin-action-info h2 {
+        font-size: 14px;
+    }
+
+    .admin-action-info p {
+        font-size: 10px;
+    }
+
+    .admin-action-bar > .setting-primary-button {
+        width: 100%;
+    }
+
+    .setting-modal {
+        padding: 12px;
+    }
+
+    .setting-modal-box {
+        max-height: calc(100vh - 24px);
+        border-radius: 12px;
+    }
+
+    .setting-modal-header {
+        padding: 17px;
+    }
+
+    .setting-modal-box form {
+        padding: 17px;
+    }
+
+}
+
+
+@media (max-width: 450px) {
+
+    .setting-modal-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .setting-modal-footer button {
+        width: 100%;
     }
 
 }
