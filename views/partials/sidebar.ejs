@@ -59,13 +59,44 @@
 
 <a
   href="#"
-  onclick="konfirmasiLogout()"
+  onclick="konfirmasiLogout(event)"
 >
-
   <i data-lucide="log-out"></i>
-
   <span>Logout</span>
-
 </a>
 
-</div>
+<script>
+async function konfirmasiLogout(event) {
+
+    event.preventDefault();
+
+    const hasil = await Swal.fire({
+
+        icon: "warning",
+
+        title: "Keluar dari Sistem?",
+
+        text: "Apakah kamu yakin ingin keluar dari akun?",
+
+        showCancelButton: true,
+
+        confirmButtonText: "Ya, Logout",
+
+        cancelButtonText: "Batal",
+
+        confirmButtonColor: "#dc2626",
+
+        cancelButtonColor: "#6b7280",
+
+        reverseButtons: true
+
+    });
+
+    if (hasil.isConfirmed) {
+
+        window.location.href = "/logout";
+
+    }
+
+}
+</script>

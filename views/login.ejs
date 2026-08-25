@@ -17,6 +17,9 @@
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body class="login-page">
@@ -65,17 +68,7 @@
 
                 <span class="toggle-password" onclick="togglePassword()">
 
-                    <!-- Eye -->
-                    <svg id="eyeOpen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8"/>
-                        <circle cx="12" cy="12" r="3"/>
-                    </svg>
-
-                    <!-- Eye Slash -->
-                    <svg id="eyeSlash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M1 1l22 22"/>
-                        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8"/>
-                    </svg>
+                    <i id="eyeIcon" data-lucide="eye-off"></i>
 
                 </span>
 
@@ -97,25 +90,26 @@ const loginError = `<%= error || '' %>`;
    TOGGLE PASSWORD
 ================================ */
 
-function togglePassword(){
+function togglePassword() {
 
     const input = document.getElementById("password");
-    const eyeOpen = document.getElementById("eyeOpen");
-    const eyeSlash = document.getElementById("eyeSlash");
+    const eyeIcon = document.getElementById("eyeIcon");
 
-    if(input.type === "password"){
+    if (input.type === "password") {
 
         input.type = "text";
-        eyeOpen.style.display = "block";
-        eyeSlash.style.display = "none";
 
-    }else{
+        eyeIcon.setAttribute("data-lucide", "eye");
+
+    } else {
 
         input.type = "password";
-        eyeOpen.style.display = "none";
-        eyeSlash.style.display = "block";
+
+        eyeIcon.setAttribute("data-lucide", "eye-off");
 
     }
+
+    lucide.createIcons();
 
 }
 
@@ -136,34 +130,36 @@ function handleLogin(){
    INIT
 ================================ */
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", () => {
 
-    document.getElementById("eyeOpen").style.display="none";
-    document.getElementById("eyeSlash").style.display="block";
+    // Aktifkan Lucide
+    lucide.createIcons();
 
-    const btn = document.querySelector("button");
+    const btn = document.getElementById("loginBtn");
+
     btn.disabled = false;
     btn.innerHTML = "Login";
 
     if (loginError && loginError.trim() !== "") {
+
         Swal.fire({
 
-            icon:"error",
+            icon: "error",
 
-            title:"Login Gagal",
+            title: "Login Gagal",
 
-            text:loginError,
+            text: loginError,
 
-            width:380,
+            width: 380,
 
-            allowOutsideClick:true,
+            allowOutsideClick: true,
 
-            confirmButtonText:"OK",
+            confirmButtonText: "OK",
 
-            confirmButtonColor:"#2563eb",
+            confirmButtonColor: "#2563eb",
 
-            customClass:{
-                popup:"login-swal"
+            customClass: {
+                popup: "login-swal"
             }
 
         });
