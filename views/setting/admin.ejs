@@ -163,6 +163,8 @@
 
               <th>Nomor WhatsApp</th>
 
+              <th>Role</th>
+
               <th>Status</th>
 
               <th>Aksi</th>
@@ -180,7 +182,7 @@
               <tr>
 
                 <td
-                  colspan="6"
+                  colspan="7"
                   class="setting-empty-state"
                 >
 
@@ -279,24 +281,46 @@
                   </td>
 
 
+                  <!-- ROLE -->
+
+                  <td>
+
+                    <% if (admin.role === 'utama') { %>
+
+                      <span class="admin-role utama">
+                        Admin Utama
+                      </span>
+
+                    <% } else { %>
+
+                      <span class="admin-role">
+                        Admin
+                      </span>
+
+                    <% } %>
+
+                  </td>
+
+
                   <!-- STATUS -->
 
                   <td>
 
-                      <span
-                        class="admin-status <%= admin.online ? 'active' : '' %>"
-                        id="status-admin-<%= admin.id_admin %>"
-                      >
+                    <span
+                      class="admin-status <%= admin.online ? 'active' : '' %>"
+                      id="status-admin-<%= admin.id_admin %>"
+                    >
 
-                        <span class="status-dot"></span>
+                      <span class="status-dot"></span>
 
-                        <span class="status-text">
-                          <%= admin.online ? 'Sedang Online' : 'Aktif' %>
-                        </span>
-
+                      <span class="status-text">
+                        <%= admin.online ? 'Sedang Online' : 'Offline' %>
                       </span>
 
-                    </td>
+                    </span>
+
+                  </td>
+
 
                   <!-- AKSI -->
 
@@ -316,6 +340,7 @@
                         data-nama="<%= admin.nama_admin || '' %>"
                         data-username="<%= admin.username || '' %>"
                         data-nomorwa="<%= admin.nomor_wa || '' %>"
+                        data-role="<%= admin.role || 'admin' %>"
 
                         onclick="bukaModalEdit(this)"
                       >
@@ -531,6 +556,40 @@
         </div>
 
 
+        <!-- ROLE -->
+
+        <div class="setting-form-group">
+
+          <label>
+            Role
+            <span>*</span>
+          </label>
+
+          <select
+            name="role"
+            required
+          >
+
+            <option
+              value="admin"
+              selected
+            >
+              Admin
+            </option>
+
+            <option value="utama">
+              Admin Utama
+            </option>
+
+          </select>
+
+          <small>
+            Admin Utama memiliki akses ke Manajemen Admin.
+          </small>
+
+        </div>
+
+
         <!-- PASSWORD -->
 
         <div class="setting-form-group">
@@ -716,6 +775,38 @@
             name="nomor_wa"
             placeholder="Contoh: 628xxxxxxxxxx"
           >
+
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="setting-form-group">
+
+          <label>
+            Role
+            <span>*</span>
+          </label>
+
+          <select
+            id="editRole"
+            name="role"
+            required
+          >
+
+            <option value="admin">
+              Admin
+            </option>
+
+            <option value="utama">
+              Admin Utama
+            </option>
+
+          </select>
+
+          <small>
+            Admin Utama memiliki akses ke Manajemen Admin.
+          </small>
 
         </div>
 
@@ -924,7 +1015,9 @@
   <!-- ==================================================
        JAVASCRIPT
   ================================================== -->
+
   <script src="/socket.io/socket.io.js"></script>
+
 
   <script>
 
@@ -932,11 +1025,14 @@
     // LUCIDE
     // ==================================================
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener(
+      'DOMContentLoaded',
+      function () {
 
-      lucide.createIcons();
+        lucide.createIcons();
 
-    });
+      }
+    );
 
 
     // ==================================================
@@ -946,11 +1042,19 @@
     function bukaModalTambah() {
 
       const modal =
-        document.getElementById('modalTambahAdmin');
+        document.getElementById(
+          'modalTambahAdmin'
+        );
+
+      if (!modal) {
+        return;
+      }
 
       modal.classList.add('show');
 
-      document.body.classList.add('modal-open');
+      document.body.classList.add(
+        'modal-open'
+      );
 
     }
 
@@ -958,17 +1062,29 @@
     function tutupModalTambah() {
 
       const modal =
-        document.getElementById('modalTambahAdmin');
+        document.getElementById(
+          'modalTambahAdmin'
+        );
+
+      if (!modal) {
+        return;
+      }
 
       modal.classList.remove('show');
 
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove(
+        'modal-open'
+      );
 
       const form =
-        document.getElementById('formTambahAdmin');
+        document.getElementById(
+          'formTambahAdmin'
+        );
 
       if (form) {
+
         form.reset();
+
       }
 
     }
@@ -992,6 +1108,9 @@
       const nomorWa =
         button.dataset.nomorwa || '';
 
+      const role =
+        button.dataset.role || 'admin';
+
 
       document.getElementById(
         'editNamaAdmin'
@@ -1009,17 +1128,26 @@
 
 
       document.getElementById(
+        'editRole'
+      ).value = role;
+
+
+      document.getElementById(
         'formEditAdmin'
       ).action =
         '/setting/admin/edit/' + id;
 
 
       const modal =
-        document.getElementById('modalEditAdmin');
+        document.getElementById(
+          'modalEditAdmin'
+        );
 
       modal.classList.add('show');
 
-      document.body.classList.add('modal-open');
+      document.body.classList.add(
+        'modal-open'
+      );
 
     }
 
@@ -1027,11 +1155,19 @@
     function tutupModalEdit() {
 
       const modal =
-        document.getElementById('modalEditAdmin');
+        document.getElementById(
+          'modalEditAdmin'
+        );
+
+      if (!modal) {
+        return;
+      }
 
       modal.classList.remove('show');
 
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove(
+        'modal-open'
+      );
 
     }
 
@@ -1052,13 +1188,16 @@
       document.getElementById(
         'resetPasswordDescription'
       ).textContent =
-        'Buat password baru untuk ' + nama + '.';
+        'Buat password baru untuk ' +
+        nama +
+        '.';
 
 
       document.getElementById(
         'formResetPassword'
       ).action =
-        '/setting/admin/reset-password/' + id;
+        '/setting/admin/reset-password/' +
+        id;
 
 
       document.getElementById(
@@ -1072,11 +1211,15 @@
 
 
       const modal =
-        document.getElementById('modalResetPassword');
+        document.getElementById(
+          'modalResetPassword'
+        );
 
       modal.classList.add('show');
 
-      document.body.classList.add('modal-open');
+      document.body.classList.add(
+        'modal-open'
+      );
 
     }
 
@@ -1084,11 +1227,19 @@
     function tutupModalResetPassword() {
 
       const modal =
-        document.getElementById('modalResetPassword');
+        document.getElementById(
+          'modalResetPassword'
+        );
+
+      if (!modal) {
+        return;
+      }
 
       modal.classList.remove('show');
 
-      document.body.classList.remove('modal-open');
+      document.body.classList.remove(
+        'modal-open'
+      );
 
     }
 
@@ -1097,17 +1248,24 @@
     // TOGGLE PASSWORD
     // ==================================================
 
-    function togglePassword(inputId, button) {
+    function togglePassword(
+      inputId,
+      button
+    ) {
 
       const input =
-        document.getElementById(inputId);
+        document.getElementById(
+          inputId
+        );
 
       if (!input) {
         return;
       }
 
 
-      if (input.type === 'password') {
+      if (
+        input.type === 'password'
+      ) {
 
         input.type = 'text';
 
@@ -1133,510 +1291,618 @@
     // SUBMIT TAMBAH ADMIN
     // ==================================================
 
-    document
-      .getElementById('formTambahAdmin')
-      .addEventListener('submit', async function (event) {
-
-        event.preventDefault();
-
-        const form = this;
-
-        const submitButton =
-          form.querySelector('button[type="submit"]');
-
-        const originalButtonHTML =
-          submitButton.innerHTML;
+    const formTambahAdmin =
+      document.getElementById(
+        'formTambahAdmin'
+      );
 
 
-        // ==================================================
-        // PERUBAHAN PENTING:
-        // FormData -> URLSearchParams
-        // ==================================================
+    if (formTambahAdmin) {
 
-        const data =
-          new URLSearchParams(
-            new FormData(form)
-          );
+      formTambahAdmin.addEventListener(
+        'submit',
+        async function (event) {
+
+          event.preventDefault();
 
 
-        const password =
-          data.get('password');
+          const form = this;
 
 
-        // ==================================================
-        // VALIDASI PASSWORD
-        // ==================================================
-
-        if (!password || password.length < 6) {
-
-          Swal.fire({
-
-            icon: 'warning',
-
-            title: 'Password Terlalu Pendek',
-
-            text: 'Password minimal 6 karakter.',
-
-            confirmButtonText: 'OK',
-
-            confirmButtonColor: '#2563eb'
-
-          });
-
-          return;
-
-        }
-
-
-        // ==================================================
-        // LOADING BUTTON
-        // ==================================================
-
-        submitButton.disabled = true;
-
-        submitButton.innerHTML = `
-          <i data-lucide="loader-circle"></i>
-          Menambahkan...
-        `;
-
-        lucide.createIcons();
-
-
-        try {
-
-          const response =
-            await fetch(
-              form.action,
-              {
-                method: 'POST',
-
-                body: data,
-
-                headers: {
-                  'Content-Type':
-                    'application/x-www-form-urlencoded;charset=UTF-8',
-
-                  'Accept':
-                    'application/json'
-                }
-              }
+          const submitButton =
+            form.querySelector(
+              'button[type="submit"]'
             );
 
 
-          // ==================================================
-          // CEK RESPONSE SERVER
-          // ==================================================
-
-          const contentType =
-            response.headers.get('content-type') || '';
+          const originalButtonHTML =
+            submitButton.innerHTML;
 
 
-          if (!contentType.includes('application/json')) {
-
-            console.error(
-              'Response bukan JSON:',
-              await response.text()
+          const data =
+            new URLSearchParams(
+              new FormData(form)
             );
 
-            throw new Error(
-              'Server tidak mengembalikan response JSON.'
-            );
 
-          }
+          const password =
+            data.get('password');
 
 
-          const result =
-            await response.json();
+          // ==============================================
+          // VALIDASI PASSWORD
+          // ==============================================
 
+          if (
+            !password ||
+            password.length < 6
+          ) {
 
-          // ==================================================
-          // BERHASIL
-          // ==================================================
+            Swal.fire({
 
-          if (response.ok && result.success) {
+              icon: 'warning',
 
-            // Tutup modal TERLEBIH DAHULU
-            tutupModalTambah();
-
-
-            // Tampilkan SweetAlert setelah modal ditutup
-            await Swal.fire({
-
-              icon: 'success',
-
-              title: 'Berhasil',
+              title:
+                'Password Terlalu Pendek',
 
               text:
-                result.message ||
-                'Admin berhasil ditambahkan.',
+                'Password minimal 6 karakter.',
 
               confirmButtonText: 'OK',
 
-              confirmButtonColor: '#2563eb'
+              confirmButtonColor:
+                '#2563eb'
 
             });
-
-
-            // Refresh halaman setelah SweetAlert ditutup
-            window.location.reload();
-
 
             return;
 
           }
 
 
-          // ==================================================
-          // GAGAL DARI SERVER
-          // ==================================================
+          // ==============================================
+          // LOADING
+          // ==============================================
 
-          Swal.fire({
+          submitButton.disabled = true;
 
-            icon: 'error',
-
-            title: 'Gagal',
-
-            text:
-              result.message ||
-              'Gagal menambahkan admin.',
-
-            confirmButtonText: 'OK',
-
-            confirmButtonColor: '#2563eb'
-
-          });
-
-
-        } catch (error) {
-
-          console.error(
-            'Error tambah admin:',
-            error
-          );
-
-
-          Swal.fire({
-
-            icon: 'error',
-
-            title: 'Terjadi Kesalahan',
-
-            text:
-              'Tidak dapat memproses penambahan admin. Silakan coba lagi.',
-
-            confirmButtonText: 'OK',
-
-            confirmButtonColor: '#2563eb'
-
-          });
-
-
-        } finally {
-
-          // ==================================================
-          // KEMBALIKAN TOMBOL
-          // ==================================================
-
-          submitButton.disabled = false;
-
-          submitButton.innerHTML =
-            originalButtonHTML;
+          submitButton.innerHTML = `
+            <i data-lucide="loader-circle"></i>
+            Menambahkan...
+          `;
 
           lucide.createIcons();
 
-        }
 
-      });
+          try {
+
+            const response =
+              await fetch(
+                form.action,
+                {
+
+                  method: 'POST',
+
+                  body: data,
+
+                  headers: {
+
+                    'Content-Type':
+                      'application/x-www-form-urlencoded;charset=UTF-8',
+
+                    'Accept':
+                      'application/json'
+
+                  }
+
+                }
+              );
+
+
+            const contentType =
+              response.headers.get(
+                'content-type'
+              ) || '';
+
+
+            if (
+              !contentType.includes(
+                'application/json'
+              )
+            ) {
+
+              const text =
+                await response.text();
+
+              console.error(
+                'Response bukan JSON:',
+                text
+              );
+
+              throw new Error(
+                'Server tidak mengembalikan response JSON.'
+              );
+
+            }
+
+
+            const result =
+              await response.json();
+
+
+            if (
+              response.ok &&
+              result.success
+            ) {
+
+              tutupModalTambah();
+
+
+              await Swal.fire({
+
+                icon: 'success',
+
+                title: 'Berhasil',
+
+                text:
+                  result.message ||
+                  'Admin berhasil ditambahkan.',
+
+                confirmButtonText: 'OK',
+
+                confirmButtonColor:
+                  '#2563eb'
+
+              });
+
+
+              window.location.reload();
+
+              return;
+
+            }
+
+
+            Swal.fire({
+
+              icon: 'error',
+
+              title: 'Gagal',
+
+              text:
+                result.message ||
+                'Gagal menambahkan admin.',
+
+              confirmButtonText: 'OK',
+
+              confirmButtonColor:
+                '#2563eb'
+
+            });
+
+
+          } catch (error) {
+
+            console.error(
+              'Error tambah admin:',
+              error
+            );
+
+
+            Swal.fire({
+
+              icon: 'error',
+
+              title:
+                'Terjadi Kesalahan',
+
+              text:
+                'Tidak dapat memproses penambahan admin. Silakan coba lagi.',
+
+              confirmButtonText: 'OK',
+
+              confirmButtonColor:
+                '#2563eb'
+
+            });
+
+          } finally {
+
+            submitButton.disabled = false;
+
+            submitButton.innerHTML =
+              originalButtonHTML;
+
+            lucide.createIcons();
+
+          }
+
+        }
+      );
+
+    }
 
 
     // ==================================================
     // SUBMIT EDIT ADMIN
     // ==================================================
 
-    document
-      .getElementById('formEditAdmin')
-      .addEventListener('submit', async function (event) {
-
-        event.preventDefault();
-
-
-        const form = this;
+    const formEditAdmin =
+      document.getElementById(
+        'formEditAdmin'
+      );
 
 
-        // ==================================================
-        // PERUBAHAN PENTING:
-        // FormData -> URLSearchParams
-        // ==================================================
+    if (formEditAdmin) {
 
-        const data =
-          new URLSearchParams(
-            new FormData(form)
-          );
+      formEditAdmin.addEventListener(
+        'submit',
+        async function (event) {
+
+          event.preventDefault();
 
 
-        try {
+          const form = this;
 
-          const response =
-            await fetch(
-              form.action,
-              {
-                method: 'POST',
 
-                body: data,
-
-                headers: {
-                  'Content-Type':
-                    'application/x-www-form-urlencoded;charset=UTF-8',
-
-                  'Accept':
-                    'application/json'
-                }
-              }
+          const data =
+            new URLSearchParams(
+              new FormData(form)
             );
 
 
-          const result =
-            await response.json();
+          try {
+
+            const response =
+              await fetch(
+                form.action,
+                {
+
+                  method: 'POST',
+
+                  body: data,
+
+                  headers: {
+
+                    'Content-Type':
+                      'application/x-www-form-urlencoded;charset=UTF-8',
+
+                    'Accept':
+                      'application/json'
+
+                  }
+
+                }
+              );
 
 
-          if (result.success) {
-
-            tutupModalEdit();
-
-
-            await Swal.fire({
-
-              icon: 'success',
-
-              title: 'Berhasil',
-
-              text:
-                result.message ||
-                'Data admin berhasil diperbarui.',
-
-              confirmButtonText: 'OK',
-
-              confirmButtonColor: '#2563eb'
-
-            });
+            const contentType =
+              response.headers.get(
+                'content-type'
+              ) || '';
 
 
-            window.location.reload();
+            if (
+              !contentType.includes(
+                'application/json'
+              )
+            ) {
 
-          } else {
+              throw new Error(
+                'Server tidak mengembalikan response JSON.'
+              );
+
+            }
+
+
+            const result =
+              await response.json();
+
+
+            if (result.success) {
+
+              tutupModalEdit();
+
+
+              await Swal.fire({
+
+                icon: 'success',
+
+                title: 'Berhasil',
+
+                text:
+                  result.message ||
+                  'Data admin berhasil diperbarui.',
+
+                confirmButtonText: 'OK',
+
+                confirmButtonColor:
+                  '#2563eb'
+
+              });
+
+
+              window.location.reload();
+
+            } else {
+
+              Swal.fire({
+
+                icon: 'error',
+
+                title: 'Gagal',
+
+                text:
+                  result.message ||
+                  'Gagal memperbarui data admin.',
+
+                confirmButtonText: 'OK',
+
+                confirmButtonColor:
+                  '#2563eb'
+
+              });
+
+            }
+
+
+          } catch (error) {
+
+            console.error(
+              'Error edit admin:',
+              error
+            );
+
 
             Swal.fire({
 
               icon: 'error',
 
-              title: 'Gagal',
+              title:
+                'Terjadi Kesalahan',
 
               text:
-                result.message ||
-                'Gagal memperbarui data admin.',
+                'Tidak dapat terhubung ke server.',
 
               confirmButtonText: 'OK',
 
-              confirmButtonColor: '#2563eb'
+              confirmButtonColor:
+                '#2563eb'
 
             });
 
           }
 
-
-        } catch (error) {
-
-          console.error(error);
-
-          Swal.fire({
-
-            icon: 'error',
-
-            title: 'Terjadi Kesalahan',
-
-            text:
-              'Tidak dapat terhubung ke server.',
-
-            confirmButtonText: 'OK',
-
-            confirmButtonColor: '#2563eb'
-
-          });
-
         }
+      );
 
-      });
+    }
 
 
     // ==================================================
     // SUBMIT RESET PASSWORD
     // ==================================================
 
-    document
-      .getElementById('formResetPassword')
-      .addEventListener('submit', async function (event) {
-
-        event.preventDefault();
-
-
-        const form = this;
+    const formResetPassword =
+      document.getElementById(
+        'formResetPassword'
+      );
 
 
-        // ==================================================
-        // PERUBAHAN PENTING:
-        // FormData -> URLSearchParams
-        // ==================================================
+    if (formResetPassword) {
 
-        const data =
-          new URLSearchParams(
-            new FormData(form)
-          );
+      formResetPassword.addEventListener(
+        'submit',
+        async function (event) {
+
+          event.preventDefault();
 
 
-        const passwordBaru =
-          data.get('password_baru');
+          const form = this;
 
 
-        const konfirmasi =
-          data.get('konfirmasi_password');
-
-
-        if (!passwordBaru || passwordBaru.length < 6) {
-
-          Swal.fire({
-
-            icon: 'warning',
-
-            title: 'Password Terlalu Pendek',
-
-            text:
-              'Password minimal 6 karakter.',
-
-            confirmButtonText: 'OK',
-
-            confirmButtonColor: '#2563eb'
-
-          });
-
-          return;
-
-        }
-
-
-        if (passwordBaru !== konfirmasi) {
-
-          Swal.fire({
-
-            icon: 'warning',
-
-            title: 'Password Tidak Sama',
-
-            text:
-              'Konfirmasi password tidak sesuai.',
-
-            confirmButtonText: 'OK',
-
-            confirmButtonColor: '#2563eb'
-
-          });
-
-          return;
-
-        }
-
-
-        try {
-
-          const response =
-            await fetch(
-              form.action,
-              {
-                method: 'POST',
-
-                body: data,
-
-                headers: {
-                  'Content-Type':
-                    'application/x-www-form-urlencoded;charset=UTF-8',
-
-                  'Accept':
-                    'application/json'
-                }
-              }
+          const data =
+            new URLSearchParams(
+              new FormData(form)
             );
 
 
-          const result =
-            await response.json();
+          const passwordBaru =
+            data.get(
+              'password_baru'
+            );
 
 
-          if (result.success) {
+          const konfirmasi =
+            data.get(
+              'konfirmasi_password'
+            );
 
-            tutupModalResetPassword();
 
+          // ==============================================
+          // VALIDASI PASSWORD
+          // ==============================================
 
-            await Swal.fire({
+          if (
+            !passwordBaru ||
+            passwordBaru.length < 6
+          ) {
 
-              icon: 'success',
+            Swal.fire({
 
-              title: 'Berhasil',
+              icon: 'warning',
+
+              title:
+                'Password Terlalu Pendek',
 
               text:
-                result.message ||
-                'Password admin berhasil diubah.',
+                'Password minimal 6 karakter.',
 
               confirmButtonText: 'OK',
 
-              confirmButtonColor: '#2563eb'
+              confirmButtonColor:
+                '#2563eb'
 
             });
 
+            return;
 
-            window.location.reload();
+          }
 
-          } else {
+
+          if (
+            passwordBaru !==
+            konfirmasi
+          ) {
+
+            Swal.fire({
+
+              icon: 'warning',
+
+              title:
+                'Password Tidak Sama',
+
+              text:
+                'Konfirmasi password tidak sesuai.',
+
+              confirmButtonText: 'OK',
+
+              confirmButtonColor:
+                '#2563eb'
+
+            });
+
+            return;
+
+          }
+
+
+          try {
+
+            const response =
+              await fetch(
+                form.action,
+                {
+
+                  method: 'POST',
+
+                  body: data,
+
+                  headers: {
+
+                    'Content-Type':
+                      'application/x-www-form-urlencoded;charset=UTF-8',
+
+                    'Accept':
+                      'application/json'
+
+                  }
+
+                }
+              );
+
+
+            const contentType =
+              response.headers.get(
+                'content-type'
+              ) || '';
+
+
+            if (
+              !contentType.includes(
+                'application/json'
+              )
+            ) {
+
+              throw new Error(
+                'Server tidak mengembalikan response JSON.'
+              );
+
+            }
+
+
+            const result =
+              await response.json();
+
+
+            if (result.success) {
+
+              tutupModalResetPassword();
+
+
+              await Swal.fire({
+
+                icon: 'success',
+
+                title: 'Berhasil',
+
+                text:
+                  result.message ||
+                  'Password admin berhasil diubah.',
+
+                confirmButtonText: 'OK',
+
+                confirmButtonColor:
+                  '#2563eb'
+
+              });
+
+
+              window.location.reload();
+
+            } else {
+
+              Swal.fire({
+
+                icon: 'error',
+
+                title: 'Gagal',
+
+                text:
+                  result.message ||
+                  'Gagal mengubah password admin.',
+
+                confirmButtonText: 'OK',
+
+                confirmButtonColor:
+                  '#2563eb'
+
+              });
+
+            }
+
+
+          } catch (error) {
+
+            console.error(
+              'Error reset password:',
+              error
+            );
+
 
             Swal.fire({
 
               icon: 'error',
 
-              title: 'Gagal',
+              title:
+                'Terjadi Kesalahan',
 
               text:
-                result.message ||
-                'Gagal mengubah password admin.',
+                'Tidak dapat terhubung ke server.',
 
               confirmButtonText: 'OK',
 
-              confirmButtonColor: '#2563eb'
+              confirmButtonColor:
+                '#2563eb'
 
             });
 
           }
 
-
-        } catch (error) {
-
-          console.error(error);
-
-          Swal.fire({
-
-            icon: 'error',
-
-            title: 'Terjadi Kesalahan',
-
-            text:
-              'Tidak dapat terhubung ke server.',
-
-            confirmButtonText: 'OK',
-
-            confirmButtonColor: '#2563eb'
-
-          });
-
         }
+      );
 
-      });
+    }
 
 
     // ==================================================
@@ -1661,24 +1927,32 @@
 
           html:
             'Apakah kamu yakin ingin menghapus akun admin ' +
-            '<strong>' + nama + '</strong>?' +
+            '<strong>' +
+            nama +
+            '</strong>?' +
             '<br><br>' +
             '<small>Tindakan ini tidak dapat dibatalkan.</small>',
 
           showCancelButton: true,
 
-          confirmButtonText: 'Ya, Hapus',
+          confirmButtonText:
+            'Ya, Hapus',
 
-          cancelButtonText: 'Batal',
+          cancelButtonText:
+            'Batal',
 
-          confirmButtonColor: '#dc2626',
+          confirmButtonColor:
+            '#dc2626',
 
-          cancelButtonColor: '#6b7280'
+          cancelButtonColor:
+            '#6b7280'
 
         });
 
 
-      if (!konfirmasi.isConfirmed) {
+      if (
+        !konfirmasi.isConfirmed
+      ) {
 
         return;
 
@@ -1689,16 +1963,40 @@
 
         const response =
           await fetch(
-            '/setting/admin/hapus/' + id,
+            '/setting/admin/hapus/' +
+            id,
             {
+
               method: 'POST',
 
               headers: {
+
                 'Accept':
                   'application/json'
+
               }
+
             }
           );
+
+
+        const contentType =
+          response.headers.get(
+            'content-type'
+          ) || '';
+
+
+        if (
+          !contentType.includes(
+            'application/json'
+          )
+        ) {
+
+          throw new Error(
+            'Server tidak mengembalikan response JSON.'
+          );
+
+        }
 
 
         const result =
@@ -1717,9 +2015,11 @@
               result.message ||
               'Admin berhasil dihapus.',
 
-            confirmButtonText: 'OK',
+            confirmButtonText:
+              'OK',
 
-            confirmButtonColor: '#2563eb'
+            confirmButtonColor:
+              '#2563eb'
 
           });
 
@@ -1738,9 +2038,11 @@
               result.message ||
               'Gagal menghapus admin.',
 
-            confirmButtonText: 'OK',
+            confirmButtonText:
+              'OK',
 
-            confirmButtonColor: '#2563eb'
+            confirmButtonColor:
+              '#2563eb'
 
           });
 
@@ -1749,20 +2051,27 @@
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          'Error hapus admin:',
+          error
+        );
+
 
         Swal.fire({
 
           icon: 'error',
 
-          title: 'Terjadi Kesalahan',
+          title:
+            'Terjadi Kesalahan',
 
           text:
             'Tidak dapat terhubung ke server.',
 
-          confirmButtonText: 'OK',
+          confirmButtonText:
+            'OK',
 
-          confirmButtonColor: '#2563eb'
+          confirmButtonColor:
+            '#2563eb'
 
         });
 
@@ -1775,97 +2084,111 @@
     // ESC UNTUK MENUTUP MODAL
     // ==================================================
 
-    document.addEventListener('keydown', function (event) {
+    document.addEventListener(
+      'keydown',
+      function (event) {
 
-      if (event.key !== 'Escape') {
-        return;
-      }
+        if (
+          event.key !== 'Escape'
+        ) {
 
+          return;
 
-      tutupModalTambah();
-
-      tutupModalEdit();
-
-      tutupModalResetPassword();
-
-    });
-  // ==================================================
-  // CONNECT SOCKET.IO
-  // ==================================================
-
-  const socket = io();
+        }
 
 
-  // ==================================================
-  // ID ADMIN YANG SEDANG LOGIN
-  // ==================================================
+        tutupModalTambah();
 
-  const idAdminLogin =
-    <%= Number(idAdminLogin) %>;
+        tutupModalEdit();
 
-
-  // ==================================================
-  // ADMIN ONLINE
-  // ==================================================
-
-  socket.emit(
-    'adminOnline',
-    idAdminLogin
-  );
-
-
-  // ==================================================
-  // PERUBAHAN STATUS ADMIN
-  // ==================================================
-
-  socket.on(
-    'statusAdmin',
-    function (data) {
-
-      const statusElement =
-        document.getElementById(
-          'status-admin-' + data.id_admin
-        );
-
-
-      if (!statusElement) {
-        return;
-      }
-
-
-      const statusText =
-        statusElement.querySelector(
-          '.status-text'
-        );
-
-
-      if (!statusText) {
-        return;
-      }
-
-
-      if (data.online) {
-
-        statusElement.classList.add(
-          'active'
-        );
-
-        statusText.textContent =
-          'Sedang Online';
-
-      } else {
-
-        statusElement.classList.remove(
-          'active'
-        );
-
-        statusText.textContent =
-          'Aktif';
+        tutupModalResetPassword();
 
       }
+    );
 
-    }
-  );
+
+    // ==================================================
+    // SOCKET.IO
+    // ==================================================
+
+    const socket = io();
+
+
+    // ==================================================
+    // ID ADMIN YANG SEDANG LOGIN
+    // ==================================================
+
+    const idAdminLogin =
+    Number('<%= idAdminLogin %>');
+
+
+    // ==================================================
+    // ADMIN ONLINE
+    // ==================================================
+
+    socket.emit(
+      'adminOnline',
+      idAdminLogin
+    );
+
+
+    // ==================================================
+    // PERUBAHAN STATUS ADMIN
+    // ==================================================
+
+    socket.on(
+      'statusAdmin',
+      function (data) {
+
+        const statusElement =
+          document.getElementById(
+            'status-admin-' +
+            data.id_admin
+          );
+
+
+        if (!statusElement) {
+
+          return;
+
+        }
+
+
+        const statusText =
+          statusElement.querySelector(
+            '.status-text'
+          );
+
+
+        if (!statusText) {
+
+          return;
+
+        }
+
+
+        if (data.online) {
+
+          statusElement.classList.add(
+            'active'
+          );
+
+          statusText.textContent =
+            'Sedang Online';
+
+        } else {
+
+          statusElement.classList.remove(
+            'active'
+          );
+
+          statusText.textContent =
+            'Offline';
+
+        }
+
+      }
+    );
 
   </script>
 
